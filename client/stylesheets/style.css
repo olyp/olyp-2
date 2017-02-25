@@ -1,0 +1,168 @@
+@font-face {
+    font-family: Fugue;
+    src: url(/fonts/Fugue-Regular.otf);
+}
+
+h1, h2, h3, h4, h5, p, a {
+	font-family: Fugue;
+}
+
+.spacer-50 {
+	height: 50px;
+}
+
+.spacer-10 {
+	height: 10px;
+}
+
+#custom-nav {
+	display: none;
+	
+}
+
+#custom-nav nav {
+	height: 100px;
+	background: none;
+	border: none;
+}
+
+#custom-nav .container {
+	padding: 0 100px 0 100px;
+}
+
+#custom-nav p, #custom-nav a {
+	color: rgb(38, 84, 249);
+	font-size: 18px;
+}
+
+#custom-nav img {
+	margin-top: 15px;
+	max-height: 40px;
+}
+
+#custom-nav .navbar-right {
+	margin-top: 23px;
+}
+
+#login-buttons {
+	margin: 17px 0 0 15px;
+}
+
+.jumbotron {
+	background: none;
+	border: none;
+	text-align: center;
+}
+
+.jumbotron h1 {
+	color: rgb(38, 84, 249);
+}
+
+#overlay-container {
+	position: fixed;
+	z-index: 0;
+	display: none;
+}
+
+#overlay-container .logo-fragment-container img {
+	max-height: 70px;
+}
+
+#arrow-container {
+	margin: 35px 0 0 0;
+	width: 100%;
+	text-align: center;
+}
+
+#arrow-container img {
+	height: 55px;
+}
+
+#overlay-container .logo-fragment-container {
+	position: absolute;
+}
+
+#splash-screen {
+	width: 100%;
+	text-align: center;
+}
+
+#splash-screen-logo {
+	max-height: 47px;
+	margin-top: 310px;
+}
+
+#splash-screen-logo-desktop {
+	display: none;
+}
+
+/*#splash-screen-logo-desktop img {
+	max-height: 47px;
+	margin-bottom: 10px;
+}*/
+
+.home-features {
+	text-align: center;
+}
+
+.home-features .row {
+	margin-bottom: 40px;
+}
+
+.home-features p {
+	color: rgb(38, 84, 249);
+	font-size: 18px;
+}
+
+#promo-images img {
+	max-width: 85%;
+	margin: 0 auto;
+	filter: grayscale(100%);
+	margin-bottom: 33px;
+}
+
+#home-footer {
+	background-color: rgb(242, 242, 242);
+	z-index: -1;
+	text-align: left;
+	padding-top: 70px;
+	padding-bottom: 50px;
+}
+
+/*==========  Mobile First Method  ==========*/
+
+/* Custom, iPhone Retina */ 
+@media only screen and (min-width : 320px) {
+
+}
+
+/* Extra Small Devices, Phones */ 
+@media only screen and (min-width : 480px) {
+
+}
+
+/* Small Devices, Tablets */
+@media only screen and (min-width : 768px) {
+
+}
+
+/* Medium Devices, Desktops */
+@media only screen and (min-width : 992px) {
+	#overlay-container {
+		display: block;
+	}
+
+/*	#splash-screen-logo {
+		display: none;
+	}
+
+	#splash-screen-logo-desktop {
+		display: block;
+	}*/
+
+}
+
+/* Large Devices, Wide Screens */
+@media only screen and (min-width : 1200px) {
+
+}
