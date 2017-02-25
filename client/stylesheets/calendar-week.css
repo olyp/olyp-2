@@ -1,0 +1,94 @@
+.calendar-grid-week {
+    min-width: 800px;
+}
+
+.calendar-grid-week-hours {
+    float: left;
+    width: 60px;
+}
+
+.calendar-grid-week-content {
+    overflow: hidden;
+}
+
+.calendar-grid-week-content-no-data {
+    background-color: #f7f7f7;
+}
+
+.calendar-grid-week-column {
+    float: left;
+    float: left;
+    width: 14.2%;
+    border-left: 1px solid #eee;
+}
+
+.calendar-grid-week-hours-header,
+.calendar-grid-week-day-header {
+    height: 30px;
+}
+
+.calendar-grid-week-day-header {
+    text-align: center;
+    color: #999;
+    font-size: 12px;
+}
+
+.calendar-grid-week-hour-cell {
+    height: 26px;
+    border-top: 1px solid #eee;
+}
+
+.calendar-grid-week-hour-cell-colored-row {
+    background: #f7f7f7;
+}
+
+.calendar-grid-week-day-reservations {
+    position: relative;
+}
+
+.calendar-grid-week-reservation {
+    position: absolute;
+    left: -1px;
+    right: -1px;
+    border: 2px solid rgb(200, 45, 15);
+    padding: 3px;
+    background: rgb(241, 85, 35);
+    overflow: hidden;
+}
+
+.calendar-grid-week-reservation-overlaps-previous {
+    border-top: none;
+}
+
+.calendar-grid-week-reservation-overlaps-next {
+    border-bottom: none;
+}
+
+.calendar-grid-week-reservation-buttons {
+    position: absolute;
+    bottom: 0px;
+    right: 0px;
+}
+
+.calendar-grid-week-reservation-buttons a {
+    color: rgb(160, 30, 8);
+}
+
+.calendar-grid-week-reservation-buttons a:hover {
+    text-decoration: none;
+    color: rgb(160, 30, 8);
+}
+
+.calendar-grid-week-reservation-user-name,
+.calendar-grid-week-reservation-comment {
+    font-size: 11px;
+}
+
+.calendar-grid-week-reservation-user-name {
+    font-weight: bold;
+}
+
+.calendar-grid-week-reservation-comment {
+    overflow: hidden;
+    white-space: nowrap;
+}

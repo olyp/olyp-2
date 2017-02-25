@@ -15,3 +15,11 @@ Meteor.publish('profile', function () {
 		}
 	);
 });
+
+Meteor.publish('reservations', function () {
+    return Reservations.find();
+});
+
+Meteor.publish('allProfiles', function () {
+    return Meteor.users.find({}, {fields: {"profile": 1}});
+});

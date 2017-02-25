@@ -10,6 +10,7 @@ import SecureLayout from './secure/components/SecureLayout.js';
 import Dashboard from './secure/components/Dashboard.js';
 import CodesAll from './secure/components/codes/CodesAll.js';
 import Profile from './secure/components/profile/Profile.js';
+import Booking from './secure/components/booking/Booking'
 
 // FRONT
 import Home from './front/components/pages/Home.js';
@@ -67,6 +68,7 @@ const routes = (
 
 		<Route path="/secure" component={SecureLayout} onEnter={authenticateSecure}>
 			<IndexRoute component={Dashboard} />
+			<Route path="booking" component={Booking} />		
 			<Route path="codes" component={CodesAll} />
 			<Route path="profile" component={Profile} />
 		</Route>
