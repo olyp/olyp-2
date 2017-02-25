@@ -37,7 +37,17 @@ export default class Login extends Component {
 			requestPermissions: ['public_profile', 'email']
 			}, (err) => {
 				if (err) {
-					console.log(err);
+					
+					// if (err.error == 200) {
+					// 	// Email already existed and integration has been given to that user
+					// 	console.log('facebook-integration given to user');
+
+					// 	Meteor.loginWithFacebook();
+
+
+					// } else {
+					// 	console.log(err);
+					// }
 			} else {
 				// successful login!
 				browserHistory.push('/secure');
@@ -50,7 +60,15 @@ export default class Login extends Component {
 			requestPermissions: ['email']
 			}, (err) => {
 				if (err) {
-					console.log(err);
+
+					
+					// if (err.error == 200) {
+					// 	// Email already existed and integration has been given to that user
+					// 	console.log('google-integration given to user');
+
+					// } else {
+					// 	console.log(err);
+					// }
 			} else {
 				// successful login!
 				browserHistory.push('/secure');

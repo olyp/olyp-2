@@ -11,6 +11,7 @@ Meteor.methods({
 		const profile = {};
 		profile.firstName = user.firstName;
 		profile.lastName = user.lastName;
+		profile.name = user.firstName + ' ' + user.lastName;
 
 		// Check if user exists
 		let userExists = Meteor.users.findOne( {'emails[0].address': user.email}, { fields: { "_id": 1 } } );

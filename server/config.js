@@ -11,7 +11,14 @@ Meteor.startup(function () {
 	if (!initialUserExists) {
 
 		// If Initial user doesn't exist, create it
-		let newUserId = Accounts.createUser( { email: initialUser.email, password: initialUser.password } );
+
+		const profile = {
+			'name': 'Jonas Barsten',
+			'firstName': 'Jonas',
+			'lastName': 'Barsten'
+		}
+
+		let newUserId = Accounts.createUser( { profile: profile, email: initialUser.email, password: initialUser.password } );
 
 		// Give initial user the role of admin
 		Roles.addUsersToRoles( newUserId, 'super-admin', Roles.GLOBAL_GROUP );
