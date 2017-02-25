@@ -103,5 +103,8 @@ Meteor.methods({
   				Roles.addUsersToRoles(user._id, 'moderator');
   			}
 		}
+	},
+	changeUserName (name) {
+		Meteor.users.update({_id: Meteor.userId}, {$set: {'profile.name': name}});
 	}
 });
