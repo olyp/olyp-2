@@ -3,10 +3,6 @@ import TrackerReact from 'meteor/ultimatejs:tracker-react';
 
 export default class Profile extends TrackerReact(React.Component) {
 
-	componentWillUnmount() {
-		this.state.subscription.profile.stop();
-	}
-
 	handleSubmit (e) {
 		e.preventDefault();
 
