@@ -27,6 +27,14 @@ const DoorCodesSchema = new SimpleSchema({
 	},
 	"addedBy": {
 		type: String
+	},
+	"validFrom": {
+		type: Date,
+		optional: true
+	},
+	"validTo": {
+		type: Date,
+		optional: true
 	}
 });
 

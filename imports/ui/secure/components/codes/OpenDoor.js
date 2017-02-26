@@ -8,7 +8,7 @@ export default class OpenDoor extends Component {
 	render () {
 		return (
 			<div>
-				<button onClick={this.openDoor.bind(this)} />
+				<button onClick={this.openDoor.bind(this)}>Open door</button>
 			</div>
 		);
 	}

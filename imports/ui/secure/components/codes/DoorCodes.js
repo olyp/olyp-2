@@ -8,11 +8,11 @@ export default class DoorCodes extends Component {
 	render() {
 		return(
 			<div className="container">
-				<h4>Add code</h4>
-				<CreateCode />
-				<h4>All codes</h4>
-				<CodeList />
 				<OpenDoor />
+				<hr />
+				<CreateCode />
+				<hr />
+				<CodeList />
 			</div>
 		);
 	}

@@ -5,7 +5,7 @@ import { check } from 'meteor/check';
 import DoorCodes from '../collections/doorCodes.js';
 
 Meteor.methods({
-	'doorCode.add': function (userId) {
+	'doorCode.add': function (userId, validFrom, validTo) {
 
 		const randomCode = Math.floor(Math.random() * (999999 - 100000 + 1)) + 100000;
 		const addedBy = Meteor.userId() ? Meteor.userId() : userId;
@@ -14,12 +14,17 @@ Meteor.methods({
 			code: randomCode,
 			userId: userId,
 			dateCreated: new Date,
-			addedBy: addedBy
+			addedBy: addedBy,
+			validFrom: validFrom,
+			validTo: validTo
 		}
 
 		// Remove users old code
-		DoorCodes.remove({userId: userId});
-
+		// If the code belongs to no user, keep it
+		if (userId !== 'no user') {
+			DoorCodes.remove({userId: userId});
+		}
+		
 		DoorCodes.insert(newCode);
 		
 	},

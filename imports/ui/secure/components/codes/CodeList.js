@@ -15,23 +15,42 @@ class CodeList extends Component {
 
 	render() {
 
-		console.log(this.props.users);
-		console.log(this.props.doorCodes);
-
 		return (
 			<div>
-				{this.props.doorCodes.map((code) => {
+				<h3>Temporary codes</h3>
 
-					const user = this.getUserProfileFromId(code.userId);
-					console.log('user: ' + user);
-					const userName = (user && user.profile) ? user.profile.name : '';
+				<div>
 
-					return (
-						<div key={code._id}>
-							{code.code} - {userName} <span onClick={() => this.deleteCode(code)}>delete</span>
-						</div>
-					);
-				})}
+					{this.props.doorCodes.map((code) => {
+
+						if (code.userId == 'no user') {
+							return (
+								<div key={code._id}>
+									{code.code} - No user - <span onClick={() => this.deleteCode(code)}>delete</span>
+								</div>
+							);
+						}
+					})}
+
+				</div>
+
+				<h3>User codes</h3>
+
+				<div>
+					{this.props.doorCodes.map((code) => {
+
+						const user = this.getUserProfileFromId(code.userId)[0];
+						const userName = (user && user.profile) ? user.profile.name : '';
+
+						if (userName) {
+							return (
+								<div key={code._id}>
+									{code.code} - {userName} - <span onClick={() => this.deleteCode(code)}>delete</span>
+								</div>
+							);
+						}
+					})}
+				</div>
 			</div>
 		);
 	}
@@ -42,7 +61,6 @@ export default createContainer(() => {
 	Meteor.subscribe('allDoorCodes');
 
 	return {
-		doorCodes: DoorCodes.find().fetch(),
-		users: Meteor.users.find().fetch(),
+		doorCodes: DoorCodes.find().fetch()
 	};
 }, CodeList);
