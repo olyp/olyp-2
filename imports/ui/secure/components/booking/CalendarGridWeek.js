@@ -25,17 +25,6 @@ function getOffset(offset) {
     return (offset / 30) * HALF_HOUR_HEIGHT;
 }
 
-class CalendarGridReservationButtons extends Component {
-    render() {
-        const props = this.props;
-        return React.DOM.span(
-            {className: "calendar-grid-week-reservation-buttons"},
-            React.DOM.a({
-                onClick: props.deleteBooking
-            }, React.DOM.span({className: "glyphicon glyphicon-trash"})));
-    }
-}
-
 export default class CalendarGridWeek extends Component {
     render() {
         const props = this.props;
