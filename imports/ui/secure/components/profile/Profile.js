@@ -12,19 +12,13 @@ class Profile extends Component {
 
 	save (e) {
 
-		console.log('saving');
-
-		console.log(this.state.name);
-		
-
-		// Meteor.call('changeUserName', this.refs.name.value, (err, res) => {
-		// 	if (err) {
-		// 		console.log(err);
-		// 	} else {
-		// 		Bert.alert('Name changed', 'success', 'growl-bottom-right', 'fa-smile-o');
-		// 		this.refs.name.value = '';
-		// 	}
-		// });
+		Meteor.call('changeUserName', this.state.name, (err, res) => {
+			if (err) {
+				console.log(err);
+			} else {
+				Bert.alert('Name changed', 'success', 'growl-bottom-right', 'fa-smile-o');
+			}
+		});
 	}
 
 
