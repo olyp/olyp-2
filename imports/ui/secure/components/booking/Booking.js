@@ -100,8 +100,7 @@ export default class Booking extends TrackerReact(React.Component) {
 		const payload = {
 			bookingForm: this.state.bookingForm,
 			roomId: this.getRoom()["_id"],
-			customerId: this.getUserCustomer()["_id"],
-			userId: Meteor.userId()
+			customerId: this.getUserCustomer()["_id"]
 		};
 		Meteor.call("booking.add", payload, (err, res) => {
 

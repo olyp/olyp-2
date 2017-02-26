@@ -9,7 +9,7 @@ Meteor.methods({
 	"booking.add": function (payload) {
 		const bookingForm = payload.bookingForm;
 		const roomId = payload.roomId;
-		const userId = payload.userId;
+		const userId = Meteor.userId();
 		const customerId = payload.customerId;
 
 		const from = bookingForm.from;
