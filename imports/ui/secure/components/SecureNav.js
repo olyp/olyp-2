@@ -1,9 +1,16 @@
 import React, {Component} from 'react';
 import {Link} from 'react-router';
+import { createContainer } from 'meteor/react-meteor-data';
+
 import AccountsUI from '../../AccountsUI.js';
 
-export default class SecureNav extends Component {
+class SecureNav extends Component {
 	render() {
+
+		const userId = (this.props.user) ? this.props.user._id : '';
+
+		const canManageUsers = Roles.userIsInRole(userId, ['super-admin', 'admin'], 'manage-users') ? <li><Link to="/secure/users">Users</Link></li> : '';
+
 		return (
 			<nav className="navbar navbar-default">
 				<div className="container-fluid">
@@ -25,7 +32,7 @@ export default class SecureNav extends Component {
 
 						<ul className="nav navbar-nav navbar-right">
 							<li><Link to="/secure">Dashboard</Link></li>
-							<li><Link to="/secure/users">Users</Link></li>
+							{canManageUsers}
 							<li><Link to="/secure/booking">Booking</Link></li>
 							<li><Link to="/secure/codes">Door Codes</Link></li>
 							<li><Link to="/secure/profile">Profile</Link></li>
@@ -36,3 +43,11 @@ export default class SecureNav extends Component {
 		);
 	}
 }
+
+export default createContainer(() => {
+	Meteor.subscribe('profile');
+
+	return {
+		user: Meteor.users.find().fetch()[0]
+	};
+}, SecureNav);
