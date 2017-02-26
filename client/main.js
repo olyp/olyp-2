@@ -3,24 +3,24 @@ import ReactDOM from 'react-dom';
 import {Router, Route, IndexRoute, browserHistory} from 'react-router';
 
 
-import FrontLayout from './front/components/FrontLayout.js';
-import SecureLayout from './secure/components/SecureLayout.js';
+import FrontLayout from '../imports/ui/front/components/FrontLayout.js';
+import SecureLayout from '../imports/ui/secure/components/SecureLayout.js';
 
 // ADMIN
-import Dashboard from './secure/components/Dashboard.js';
-import CodesAll from './secure/components/codes/CodesAll.js';
-import Profile from './secure/components/profile/Profile.js';
-import Booking from './secure/components/booking/Booking'
+import Dashboard from '../imports/ui/secure/components/Dashboard.js';
+import CodesAll from '../imports/ui/secure/components/codes/CodesAll.js';
+import Profile from '../imports/ui/secure/components/profile/Profile.js';
+import Booking from '../imports/ui/secure/components/booking/Booking'
 
 // FRONT
-import Home from './front/components/pages/Home.js';
+import Home from '../imports/ui/front/components/pages/Home.js';
 
 // ACCOUNT
 
-import Login from './front/components/users/Login.js';
-import InviteSignUp from './front/components/users/InviteSignUp.js';
-import Forgot from './front/components/users/Forgot.js';
-import SignUp from './front/components/users/SignUp.js';
+import Login from '../imports/ui/front/components/users/Login.js';
+import InviteSignUp from '../imports/ui/front/components/users/InviteSignUp.js';
+import Forgot from '../imports/ui/front/components/users/Forgot.js';
+import SignUp from '../imports/ui/front/components/users/SignUp.js';
 // ACCOUNT ROUTES
 
 // Redirect to '/' on logout, uses gwendall:accounts-helpers
@@ -77,5 +77,5 @@ const routes = (
 );
 
 Meteor.startup( () => {
-	ReactDOM.render(routes, document.querySelector('.render-target'));
+	ReactDOM.render(routes, document.getElementById('render-target'));
 });

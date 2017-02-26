@@ -5,6 +5,8 @@ import CalendarGridAgenda from "./CalendarGridAgenda"
 import CalendarGridWeek from "./CalendarGridWeek"
 import CalendarGridNav from "./CalendarGridNav"
 
+import Reservations from '../../../../api/collections/reservations.js';
+
 function getDaysForBaseDay(baseDay) {
     return [
         baseDay.clone().valueOf(),

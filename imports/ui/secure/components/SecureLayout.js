@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 
-import SecureNav from '../SecureNav.js';
+import SecureNav from './SecureNav.js';
 
 export default class SecureLayout extends Component {
 	render() {

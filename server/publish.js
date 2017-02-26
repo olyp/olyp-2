@@ -1,3 +1,7 @@
+import DoorCodeAttempts from '../imports/api/collections/doorCodeAttempts.js';
+import DoorCodes from '../imports/api/collections/doorCodes.js';
+import Reservations from '../imports/api/collections/reservations.js';
+
 Meteor.publish('doorCodes', function () {
 	return DoorCodes.find();
 });

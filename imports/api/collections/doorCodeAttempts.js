@@ -1,4 +1,6 @@
-DoorCodeAttempts = new Meteor.Collection( 'doorCodeAttempts' );
+import { Mongo } from 'meteor/mongo';
+
+const DoorCodeAttempts = new Mongo.Collection( 'doorCodeAttempts' );
 
 DoorCodeAttempts.allow({
 	insert: () => false,
@@ -23,3 +25,5 @@ const DoorCodeAttemptsSchema = new SimpleSchema({
 });
 
 DoorCodeAttempts.attachSchema( DoorCodeAttemptsSchema );
+
+export default DoorCodeAttempts;

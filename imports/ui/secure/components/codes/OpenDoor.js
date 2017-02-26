@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 
 export default class OpenDoor extends Component {
 	openDoor () {
-		Meteor.call('openDoor');
+		Meteor.call('doorCode.open');
 	}
 
 	render () {

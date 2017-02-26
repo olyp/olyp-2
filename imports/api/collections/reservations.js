@@ -1,4 +1,6 @@
-Reservations = new Meteor.Collection( 'reservations' );
+import { Mongo } from 'meteor/mongo';
+
+const Reservations = new Mongo.Collection( 'reservations' );
 
 Reservations.allow({
 	insert: () => false,
@@ -41,3 +43,5 @@ const ReservationsSchema = new SimpleSchema({
 });
 
 Reservations.attachSchema( ReservationsSchema );
+
+export default Reservations;

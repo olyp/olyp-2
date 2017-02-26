@@ -24,7 +24,7 @@ export default class CreateCode extends Component {
 		//     });
 		// });
 
-		Meteor.call('addCode', this.refs.code.value, (err, res) => {
+		Meteor.call('doorCode.add', this.refs.code.value, (err, res) => {
 			if (err) {
 				console.log(err);
 			} else {

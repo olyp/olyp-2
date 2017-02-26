@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import TrackerReact from 'meteor/ultimatejs:tracker-react';
 
+import DoorCodes from '../../../../api/collections/doorCodes.js';
+
 export default class CodeList extends TrackerReact(React.Component) {
 
 	constructor() {
@@ -21,7 +23,7 @@ export default class CodeList extends TrackerReact(React.Component) {
 	}
 
 	deleteCode(code) {
-		Meteor.call('deleteCode', code);
+		Meteor.call('doorCode.delete', code);
 	}
 
 	render() {

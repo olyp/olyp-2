@@ -1,4 +1,6 @@
-DoorCodes = new Meteor.Collection( 'doorCodes' );
+import { Mongo } from 'meteor/mongo';
+
+const DoorCodes = new Mongo.Collection( 'doorCodes' );
 
 DoorCodes.allow({
 	insert: () => false,
@@ -36,3 +38,5 @@ const DoorCodesSchema = new SimpleSchema({
 });
 
 DoorCodes.attachSchema( DoorCodesSchema );
+
+export default DoorCodes;
