@@ -1,25 +1,12 @@
 import React, {Component} from 'react';
-import TrackerReact from 'meteor/ultimatejs:tracker-react';
+import { createContainer } from 'meteor/react-meteor-data';
 
 import DoorCodes from '../../../../api/collections/doorCodes.js';
 
-export default class CodeList extends TrackerReact(React.Component) {
+class CodeList extends Component {
 
-	constructor() {
-		super();
-		this.state = {
-			subscription: {
-				doorCodes: Meteor.subscribe('allDoorCodes')
-			}
-		}
-	}
-
-	componentWillUnmount() {
-		this.state.subscription.doorCodes.stop();
-	}
-
-	getDoorCodes() {
-		return DoorCodes.find().fetch();
+	getUserProfileFromId (userId) {
+		return Meteor.users.find({_id: userId}).fetch();
 	}
 
 	deleteCode(code) {
@@ -27,12 +14,21 @@ export default class CodeList extends TrackerReact(React.Component) {
 	}
 
 	render() {
+
+		console.log(this.props.users);
+		console.log(this.props.doorCodes);
+
 		return (
 			<div>
-				{this.getDoorCodes().map((code) => {
+				{this.props.doorCodes.map((code) => {
+
+					const user = this.getUserProfileFromId(code.userId);
+					console.log('user: ' + user);
+					const userName = (user && user.profile) ? user.profile.name : '';
+
 					return (
 						<div key={code._id}>
-							{code.code} - <span onClick={() => this.deleteCode(code)}>delete</span>
+							{code.code} - {userName} <span onClick={() => this.deleteCode(code)}>delete</span>
 						</div>
 					);
 				})}
@@ -40,3 +36,13 @@ export default class CodeList extends TrackerReact(React.Component) {
 		);
 	}
 }
+
+export default createContainer(() => {
+	Meteor.subscribe('allProfiles');
+	Meteor.subscribe('allDoorCodes');
+
+	return {
+		doorCodes: DoorCodes.find().fetch(),
+		users: Meteor.users.find().fetch(),
+	};
+}, CodeList);

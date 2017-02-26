@@ -1,20 +1,20 @@
 import { Mongo } from 'meteor/mongo';
 
-const DoorCodes = new Mongo.Collection( 'doorCodes' );
+const DoorCodeLog = new Mongo.Collection( 'doorCodeLog' );
 
-DoorCodes.allow({
+DoorCodeLog.allow({
 	insert: () => false,
 	update: () => false,
 	remove: () => false
 });
 
-DoorCodes.deny({
+DoorCodeLog.deny({
 	insert: () => true,
 	update: () => true,
 	remove: () => true
 });
 
-const DoorCodesSchema = new SimpleSchema({
+const DoorCodeLogSchema = new SimpleSchema({
 	"code": {
 		type: String
 	},
@@ -22,14 +22,15 @@ const DoorCodesSchema = new SimpleSchema({
 		type: String,
 		optional: true
 	},
-	"dateCreated": {
+	"date": {
 		type: Date
 	},
-	"addedBy": {
-		type: String
+	"photo": {
+		type: String,
+		optional: true
 	}
 });
 
-DoorCodes.attachSchema( DoorCodesSchema );
+DoorCodeLog.attachSchema( DoorCodeLogSchema );
 
-export default DoorCodes;
+export default DoorCodeLog;

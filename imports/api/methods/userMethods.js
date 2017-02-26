@@ -26,6 +26,9 @@ Meteor.methods({
 			// Send verification mail
 			Accounts.sendVerificationEmail(userId);
 
+			// Generate user door code
+			Meteor.call('doorCode.add', userId);
+
 		} else {
 			throw new Meteor.Error( 'bad-match', 'User aleady exists' );
 		}

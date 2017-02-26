@@ -4,7 +4,7 @@ import CreateCode from './CreateCode.js';
 import CodeList from './CodeList.js';
 import OpenDoor from './OpenDoor.js';
 
-export default class CodesAll extends Component {
+export default class DoorCodes extends Component {
 	render() {
 		return(
 			<div className="container">

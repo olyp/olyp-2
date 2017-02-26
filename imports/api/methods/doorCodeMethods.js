@@ -8,12 +8,13 @@ Meteor.methods({
 	'doorCode.add': function (userId) {
 
 		const randomCode = Math.floor(Math.random() * (999999 - 100000 + 1)) + 100000;
+		const addedBy = Meteor.userId() ? Meteor.userId() : userId;
 
 		var newCode = {
 			code: randomCode,
 			userId: userId,
 			dateCreated: new Date,
-			addedBy: Meteor.userId()
+			addedBy: addedBy
 		}
 
 		// Remove users old code

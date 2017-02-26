@@ -8,7 +8,7 @@ import SecureLayout from '../imports/ui/secure/components/SecureLayout.js';
 
 // SECURE
 import Dashboard from '../imports/ui/secure/components/Dashboard.js';
-import CodesAll from '../imports/ui/secure/components/codes/CodesAll.js';
+import DoorCodes from '../imports/ui/secure/components/codes/DoorCodes.js';
 import Profile from '../imports/ui/secure/components/profile/Profile.js';
 import Booking from '../imports/ui/secure/components/booking/Booking.js';
 import Users from '../imports/ui/secure/components/users/Users.js';
@@ -70,7 +70,7 @@ const routes = (
 		<Route path="/secure" component={SecureLayout} onEnter={authenticateSecure}>
 			<IndexRoute component={Dashboard} />
 			<Route path="booking" component={Booking} />		
-			<Route path="codes" component={CodesAll} />
+			<Route path="codes" component={DoorCodes} />
 			<Route path="profile" component={Profile} />
 			<Route path="users" component={Users} />
 		</Route>

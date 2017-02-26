@@ -2,13 +2,15 @@ import {WebApp} from 'meteor/webapp';
 import ConnectRoute from 'connect-route';
 import {http} from 'meteor/http';
 
-var url = '/code/' + Meteor.settings.private.doorToken + '/:code';
+import DoorCodes from '../imports/api/collections/doorCodes.js';
+import DoorCodeLog from '../imports/api/collections/doorCodeLog.js';
+import DoorCodeAttempts from '../imports/api/collections/doorCodeAttempts.js';
 
+
+var url = '/code/' + Meteor.settings.private.doorToken + '/:code';
 var getUrl = 'http://maindoor.olyp.no/enu/trigger/' + Meteor.settings.private.doorToken;
 
 function onRoute (req, res, next) {
-
-	// TODO: encrypt door code in db
 
 	const numberCode = req.params.code;
 
@@ -23,7 +25,14 @@ function onRoute (req, res, next) {
 
 		// TODO: add photo
 
-		DoorCodes.update({_id: existingCode._id}, {$push: {uses: {date: new Date, photo: ''}}});
+		const logEntry = {
+			date: new Date(),
+			code: numberCode,
+			userId: existingCode.userId,
+			photo: ''
+		}
+
+		DoorCodeLog.insert(logEntry);
 
 	} else {
 

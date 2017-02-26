@@ -10,6 +10,7 @@ class SecureNav extends Component {
 		const userId = (this.props.user) ? this.props.user._id : '';
 
 		const canManageUsers = Roles.userIsInRole(userId, ['super-admin', 'admin'], 'manage-users') ? <li><Link to="/secure/users">Users</Link></li> : '';
+		const canEditDoorCodes = Roles.userIsInRole(userId, ['super-admin', 'admin'], 'booking') ? <li><Link to="/secure/codes">Door Codes</Link></li> : '';
 
 		return (
 			<nav className="navbar navbar-default">
@@ -33,8 +34,8 @@ class SecureNav extends Component {
 						<ul className="nav navbar-nav navbar-right">
 							<li><Link to="/secure">Dashboard</Link></li>
 							{canManageUsers}
+							{canEditDoorCodes}
 							<li><Link to="/secure/booking">Booking</Link></li>
-							<li><Link to="/secure/codes">Door Codes</Link></li>
 							<li><Link to="/secure/profile">Profile</Link></li>
 						</ul>
 					</div>
