@@ -1,9 +1,7 @@
 import React, {Component} from 'react';
 import TrackerReact from 'meteor/ultimatejs:tracker-react';
 import moment from "moment-timezone";
-import CalendarGridAgenda from "./CalendarGridAgenda"
-import CalendarGridWeek from "./CalendarGridWeek"
-import CalendarGridNav from "./CalendarGridNav"
+import Calendar from "./Calendar"
 
 import Reservations from '../../../../api/collections/reservations.js';
 
@@ -52,34 +50,22 @@ export default class Booking extends TrackerReact(React.Component) {
     }
 
     render() {
-        const days = getDaysForBaseDay(this.state.baseDay);
-
         return React.DOM.div(null,
-            React.createElement(CalendarGridNav, {
-                baseDay: this.state.baseDay,
-                days: days,
-                gotoToday: function () {
-                    this.setState({baseDay: getToday()})
-                }.bind(this),
-                gotoWeek: function (step) {
-                    this.setState({baseDay: this.state.baseDay.clone().add(step * 7, "days").startOf("day")})
-                }.bind(this)
-            }),
-            React.createElement(CalendarGridAgenda, {
-                reservations: this.getReservations(),
-                days: days,
-                currentUserId: Meteor.userId(),
-                getProfileNameById: this.getProfileNameById,
-                deleteReservation (reservationId) {
-                }
-            }),
-            React.createElement(CalendarGridWeek, {
-                reservations: this.getReservations(),
-                days: days,
-                currentUserId: Meteor.userId(),
-                getProfileNameById: this.getProfileNameById,
-                deleteReservation (reservationId) {
-                }
-            }));
+			React.createElement(Calendar, {
+				baseDay: this.state.baseDay,
+				days: getDaysForBaseDay(this.state.baseDay),
+				reservations: this.getReservations(),
+				currentUserId: Meteor.userId(),
+				getProfileNameById: this.getProfileNameById,
+				gotoToday: function () {
+					this.setState({baseDay: getToday()})
+				}.bind(this),
+				gotoWeek: function (step) {
+					this.setState({baseDay: this.state.baseDay.clone().add(step * 7, "days").startOf("day")})
+				}.bind(this),
+				deleteReservation (reservationId) {
+
+				}
+			}));
     }
 }
