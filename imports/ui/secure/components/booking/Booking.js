@@ -115,6 +115,19 @@ export default class Booking extends TrackerReact(React.Component) {
 		});
 	}
 
+	deleteReservation(reservationId) {
+    	if (confirm("Are you sure you want to delete this booking?")) {
+			Meteor.call("booking.delete", {id: reservationId}, (err, res) => {
+				if (err) {
+					console.error(err);
+					Bert.alert(err.reason, 'danger', 'growl-top-right', 'fa-warning');
+				} else {
+					Bert.alert('Booking deleted', 'success', 'growl-top-right', 'fa-smile-o');
+				}
+			});
+		}
+	}
+
     render() {
         return React.DOM.div(null,
 			React.DOM.div({className: "row booking-form-calendar-grid"},
@@ -143,9 +156,9 @@ export default class Booking extends TrackerReact(React.Component) {
 						gotoWeek: function (step) {
 							this.setState({baseDay: this.state.baseDay.clone().add(step * 7, "days").startOf("day")})
 						}.bind(this),
-						deleteReservation (reservationId) {
-
-						}
+						deleteReservation: function (reservationId) {
+							this.deleteReservation(reservationId);
+						}.bind(this)
 					}))));
     }
 }

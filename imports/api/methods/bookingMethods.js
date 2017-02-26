@@ -41,6 +41,11 @@ Meteor.methods({
 			to: new Date(bookingForm.to),
 			roomId: roomId
 		});
+	},
+
+	"booking.delete": function (payload) {
+		const reservationId = payload.id;
+		Reservations.remove({"_id": reservationId, "booking.userId": Meteor.userId()})
 	}
 })
 
