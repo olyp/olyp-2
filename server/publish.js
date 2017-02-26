@@ -33,7 +33,7 @@ Meteor.publish('allUsers', function () {
 	const canManageUsers = Roles.userIsInRole(this.userId, ['admin', 'super-admin'], 'manage-users');
 
 	if (canManageUsers) {
-		return Meteor.users.find({}, {fields: {"profile": 1, "emails": 1, "createdAt": 1}});
+		return Meteor.users.find({}, {fields: {"profile": 1, "emails": 1, "createdAt": 1, "roles": 1, "status": 1}});
 	} else {
 		return null;
 	}

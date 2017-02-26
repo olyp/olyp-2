@@ -25,9 +25,9 @@ Meteor.startup(function () {
 	}
 
 	// If user exists, but does not have super-admin, assign super-admin role
-	if (!Roles.userIsInRole(initialUserExists._id, 'super-admin', Roles.GLOBAL_GROUP)) {
-		Roles.addUsersToRoles( initialUserExists._id, 'super-admin', Roles.GLOBAL_GROUP );
-	}
+	// if (!Roles.userIsInRole(initialUserExists._id, 'super-admin', Roles.GLOBAL_GROUP)) {
+	// 	Roles.addUsersToRoles( initialUserExists._id, 'super-admin', Roles.GLOBAL_GROUP );
+	// }
 
 	// Set mail settings
 	process.env.MAIL_URL = Meteor.settings.private.smtp;

@@ -8,10 +8,22 @@ class Users extends Component {
 		return (
 			<div className="container">
 				<h3>Users</h3>
-				{this.props.users.map((user) => {
+
+				<hr />
+
+				{this.props.users.map((user, i) => {
+
+					const isOdd = i % 2 === 0;
+					const style = isOdd ? 'user-row-background' : '';
 
 					if (user._id !== Meteor.userId()) {
-						return <UserRow key={user._id} user={user}/>
+
+						return (
+							<div className={style} key={user._id}>
+								<UserRow user={user}/>
+								<hr />
+							</div>
+						);
 					}
 					
 				})}

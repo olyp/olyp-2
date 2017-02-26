@@ -27,6 +27,7 @@ accounts-ui
 accounts-facebook
 accounts-google
 service-configuration
+mizzao:user-status
 
 froatsnook:valid-email
 

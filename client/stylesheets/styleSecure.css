@@ -6,3 +6,16 @@
 	color: white;
 	text-transform: uppercase;
 }
+
+.user-row {
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+
+.user-row .checkbox {
+	margin: 0;
+}
+
+/*.user-row-background .user-row {
+	background-color: grey;
+}*/
