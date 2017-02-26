@@ -30,46 +30,24 @@ Meteor.methods({
 			throw new Meteor.Error( 'bad-match', 'User aleady exists' );
 		}
 	},
-	deleteUser (user) {
+	
+	deleteUser (userId) {
 
 		// Validation
-		check(user, Object);
+		check(userId, String);
 
-		if (user._id == Meteor.userId()) {
+		if (userId == Meteor.userId()) {
 
 			// Allow user to delete it self
-			Meteor.users.remove(user._id);
+			Meteor.users.remove(userId);
 		} else {
 
 			// Only allow deleting other users if has role admin or manage-users
-			if ( Roles.userIsInRole(Meteor.userId(), ['super-admin', 'admin'], 'booking')) {
+			if ( Roles.userIsInRole(Meteor.userId(), ['super-admin', 'admin'], 'manage-users')) {
 
-				Meteor.users.remove(user._id);
+				Meteor.users.remove(userId);
 			}
 		}	
-	},
-
-	deleteUserFiles (user) {
-		// Validation
-		check(user, Object);
-
-		if (user._id == Meteor.userId()) {
-
-			// Allow user to delete it self
-			UserFiles.remove({'meta.userId': user._id});
-		} else {
-
-			// Only allow deleting other users if has role admin or manage-users
-			if ( Roles.userIsInRole(Meteor.userId(), ['super-admin', 'admin'], 'booking')) {
-
-				UserFiles.remove({'meta.userId': user._id});
-			}
-		}
-	},
-
-
-	resetUserPassword () {
-		Accounts.sendResetPasswordEmail(Meteor.userId());
 	},
 
 	toggleManageUsers (user) {

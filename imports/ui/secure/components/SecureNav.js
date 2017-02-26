@@ -25,6 +25,7 @@ export default class SecureNav extends Component {
 
 						<ul className="nav navbar-nav navbar-right">
 							<li><Link to="/secure">Dashboard</Link></li>
+							<li><Link to="/secure/users">Users</Link></li>
 							<li><Link to="/secure/booking">Booking</Link></li>
 							<li><Link to="/secure/codes">Codes</Link></li>
 							<li><Link to="/secure/profile">Profile</Link></li>

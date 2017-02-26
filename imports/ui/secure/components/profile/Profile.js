@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
+import { browserHistory } from 'react-router';
 import { createContainer } from 'meteor/react-meteor-data';
+import swal from 'sweetalert2';
 
 class Profile extends Component {
 
@@ -53,6 +55,28 @@ class Profile extends Component {
 		});
 	}
 
+	deleteUser () {
+
+		swal({
+			title: 'Are you sure?',
+			text: "You will not be able to recover this!",
+			type: 'warning',
+			showCancelButton: true,
+			confirmButtonColor: '#3085d6',
+			cancelButtonColor: '#d33',
+			confirmButtonText: 'Yes, delete my user!'
+		}).then(() => {
+			Meteor.call('deleteUser', Meteor.userId(), (err, res) => {
+				if (err) {
+					console.log(err);
+				} else {
+					browserHistory.push('/login');
+				}
+			});
+		// Since this is a promise, we have to catch "cancel" and say it is ok
+		}).catch(swal.noop);
+	}
+
 
 	render () {
 
@@ -94,6 +118,12 @@ class Profile extends Component {
 				/>
 
 				<button onClick={this.changePassword.bind(this)}>Change</button>
+
+				<hr />
+
+				<div className="deleteFieldBig" onClick={this.deleteUser.bind(this)}>
+					<h4>Delete my user</h4>
+				</div>
 
 			</div>
 		);

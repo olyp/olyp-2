@@ -2,25 +2,26 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {Router, Route, IndexRoute, browserHistory} from 'react-router';
 
-
+// LAYOUTS
 import FrontLayout from '../imports/ui/front/components/FrontLayout.js';
 import SecureLayout from '../imports/ui/secure/components/SecureLayout.js';
 
-// ADMIN
+// SECURE
 import Dashboard from '../imports/ui/secure/components/Dashboard.js';
 import CodesAll from '../imports/ui/secure/components/codes/CodesAll.js';
 import Profile from '../imports/ui/secure/components/profile/Profile.js';
-import Booking from '../imports/ui/secure/components/booking/Booking'
+import Booking from '../imports/ui/secure/components/booking/Booking.js';
+import Users from '../imports/ui/secure/components/users/Users.js';
 
 // FRONT
 import Home from '../imports/ui/front/components/pages/Home.js';
 
 // ACCOUNT
-
 import Login from '../imports/ui/front/components/users/Login.js';
 import InviteSignUp from '../imports/ui/front/components/users/InviteSignUp.js';
 import Forgot from '../imports/ui/front/components/users/Forgot.js';
 import SignUp from '../imports/ui/front/components/users/SignUp.js';
+
 // ACCOUNT ROUTES
 
 // Redirect to '/' on logout, uses gwendall:accounts-helpers
@@ -71,6 +72,7 @@ const routes = (
 			<Route path="booking" component={Booking} />		
 			<Route path="codes" component={CodesAll} />
 			<Route path="profile" component={Profile} />
+			<Route path="users" component={Users} />
 		</Route>
 
 	</Router>

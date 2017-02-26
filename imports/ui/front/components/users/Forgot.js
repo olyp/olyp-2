@@ -3,10 +3,6 @@ import { browserHistory, Link } from 'react-router';
 
 export default class Forgot extends Component {
 
-	componentDidMount() {
-		
-	}
-
 	handleSubmit (event) {
 
 		// Prevent reload

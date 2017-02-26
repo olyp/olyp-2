@@ -27,3 +27,16 @@ Meteor.publish('reservations', function () {
 Meteor.publish('allProfiles', function () {
     return Meteor.users.find({}, {fields: {"profile": 1}});
 });
+
+Meteor.publish('allUsers', function () {
+
+	const canManageUsers = Roles.userIsInRole(this.userId, ['admin', 'super-admin'], 'manage-users');
+
+	if (canManageUsers) {
+		return Meteor.users.find({}, {fields: {"profile": 1, "emails": 1, "createdAt": 1}});
+	} else {
+		return null;
+	}
+
+    
+});
