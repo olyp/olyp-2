@@ -109,6 +109,7 @@ export default class CalendarGridWeek extends Component {
                                     props.currentUserId === userId && React.DOM.span(
                                         {className: "calendar-grid-week-reservation-buttons"},
                                         React.DOM.a({
+                                        	style: {cursor: "pointer"},
                                             onClick: function () { props.deleteReservation(reservation["_id"]) }
                                         }, React.DOM.span({className: "glyphicon glyphicon-trash"})))
                                 );
