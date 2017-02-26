@@ -1,6 +1,8 @@
 import DoorCodeAttempts from '../imports/api/collections/doorCodeAttempts.js';
 import DoorCodes from '../imports/api/collections/doorCodes.js';
 import Reservations from '../imports/api/collections/reservations.js';
+import Rooms from '../imports/api/collections/rooms.js';
+import Customers from '../imports/api/collections/customers.js';
 
 Meteor.publish('allDoorCodes', function () {
 
@@ -52,3 +54,11 @@ Meteor.publish('allUsers', function () {
     
 });
 
+Meteor.publish('rooms', function () {
+	return Rooms.find();
+});
+
+Meteor.publish('userCustomers', function () {
+	const user = Meteor.users.findOne({_id: this.userId});
+	return Customers.find({"_id": {"$in": user.customers.map((it) => it.id)}});
+});

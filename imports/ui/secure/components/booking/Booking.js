@@ -5,6 +5,8 @@ import Calendar from "./Calendar"
 import BookingForm from "./BookingForm"
 
 import Reservations from '../../../../api/collections/reservations.js';
+import Rooms from '../../../../api/collections/rooms'
+import Customers from '../../../../api/collections/customers'
 
 function getDaysForBaseDay(baseDay) {
     return [
@@ -56,8 +58,10 @@ export default class Booking extends TrackerReact(React.Component) {
         this.state = {
             subscription: {
                 reservations: Meteor.subscribe('reservations'),
-                allProfiles: Meteor.subscribe("allProfiles")
-            },
+                allProfiles: Meteor.subscribe("allProfiles"),
+				rooms: Meteor.subscribe("rooms"),
+				userCustomers: Meteor.subscribe("userCustomers")
+			},
             baseDay: getToday(),
 			bookingForm: createBookingForm()
         }
@@ -66,8 +70,10 @@ export default class Booking extends TrackerReact(React.Component) {
     componentWillUnmount() {
         this.state.subscription.reservations.stop();
         this.state.subscription.allProfiles.stop();
+		this.state.subscription.rooms.stop();
+		this.state.subscription.userCustomers.stop();
 
-    }
+	}
 
     getReservations() {
         const start = this.state.baseDay;
@@ -75,10 +81,40 @@ export default class Booking extends TrackerReact(React.Component) {
         return Reservations.find({from: {$gt: start.toDate()}, to: {$lt: end.toDate()}}).fetch();
     }
 
+    getRoom() {
+    	return Rooms.find({name: {"$regex": "5$"}}).fetch()[0];
+	}
+
+	getUserCustomer() {
+    	return Customers.find().fetch()[0];
+	}
+
     getProfileNameById(id) {
         const res = Meteor.users.find({"_id": id}).fetch()[0];
         return res && res.profile && `${res.profile.firstName} ${res.profile.lastName}`;
     }
+
+    submitBooking() {
+		this.setState({bookingForm: Object.assign({}, this.state.bookingForm, {isSubmitting: true})});
+		// TODO: Perform booking
+		const payload = {
+			bookingForm: this.state.bookingForm,
+			roomId: this.getRoom()["_id"],
+			customerId: this.getUserCustomer()["_id"],
+			userId: Meteor.userId()
+		};
+		Meteor.call("booking.add", payload, (err, res) => {
+
+			if (err) {
+				console.error(err);
+				Bert.alert(err.reason, 'danger', 'growl-top-right', 'fa-warning');
+				this.setState({bookingForm: Object.assign({}, this.state.bookingForm, {isSubmitting: false})});
+			} else {
+				Bert.alert('Booking confirmed', 'success', 'growl-top-right', 'fa-smile-o');
+				this.setState({bookingForm: createBookingForm()})
+			}
+		});
+	}
 
     render() {
         return React.DOM.div(null,
@@ -91,10 +127,7 @@ export default class Booking extends TrackerReact(React.Component) {
 						onFromChange: function (val) { this.setState({bookingForm: updateBookingFormFrom(this.state.bookingForm, val)}); }.bind(this),
 						onToChange: function (val) { this.setState({bookingForm: updateBookingFormTo(this.state.bookingForm, val)})}.bind(this),
 						onCommentChange: function (val) { this.setState({bookingForm: Object.assign({}, this.state.bookingForm, {comment: val})}) }.bind(this),
-						onSubmit: function () {
-							this.setState({bookingForm: Object.assign({}, this.state.bookingForm, {isSubmitting: true})});
-							// TODO: Perform booking
-						}.bind(this),
+						onSubmit: function () { this.submitBooking() }.bind(this),
 						isSubmitting: this.state.bookingForm.isSubmitting
 					})),
 				React.DOM.hr({className: "booking-form-calendar-grid-separator"}),
