@@ -108,6 +108,9 @@ Meteor.methods({
 		}
 	},
 	changeUserName (name) {
-		Meteor.users.update({_id: Meteor.userId}, {$set: {'profile.name': name}});
+		Meteor.users.update({_id: Meteor.userId()}, {$set: {'profile.name': name}});
+	},
+	sendVerificationEmail () {
+		Accounts.sendVerificationEmail(Meteor.userId());
 	}
 });
