@@ -9,7 +9,7 @@ export default class CodeList extends TrackerReact(React.Component) {
 		super();
 		this.state = {
 			subscription: {
-				doorCodes: Meteor.subscribe('doorCodes')
+				doorCodes: Meteor.subscribe('allDoorCodes')
 			}
 		}
 	}

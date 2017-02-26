@@ -5,15 +5,21 @@ import { check } from 'meteor/check';
 import DoorCodes from '../collections/doorCodes.js';
 
 Meteor.methods({
-	'doorCode.add': function (code) {
+	'doorCode.add': function (userId) {
 
-		var codeToAdd = {
-			code: code,
+		const randomCode = Math.floor(Math.random() * (999999 - 100000 + 1)) + 100000;
+
+		var newCode = {
+			code: randomCode,
+			userId: userId,
 			dateCreated: new Date,
 			addedBy: Meteor.userId()
 		}
 
-		DoorCodes.insert(codeToAdd);
+		// Remove users old code
+		DoorCodes.remove({userId: userId});
+
+		DoorCodes.insert(newCode);
 		
 	},
 	'doorCode.delete': function (code) {

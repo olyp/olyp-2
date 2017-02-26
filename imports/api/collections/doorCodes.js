@@ -18,6 +18,9 @@ const DoorCodesSchema = new SimpleSchema({
 	"code": {
 		type: String
 	},
+	"userId": {
+		type: String
+	},
 	"dateCreated": {
 		type: Date
 	},

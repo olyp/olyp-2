@@ -3,6 +3,8 @@ import { browserHistory } from 'react-router';
 import { createContainer } from 'meteor/react-meteor-data';
 import swal from 'sweetalert2';
 
+import DoorCodes from '../../../../api/collections/doorCodes.js';
+
 class Profile extends Component {
 
 	constructor(props) {
@@ -77,10 +79,23 @@ class Profile extends Component {
 		}).catch(swal.noop);
 	}
 
+	generateDoorCode () {
+
+		Meteor.call('doorCode.add', Meteor.userId(), (err, res) => {
+			if (err) {
+				console.log(err);
+			} else {
+				Bert.alert('Code added', 'success', 'growl-bottom-right', 'fa-smile-o');
+			}
+		});
+
+	}
+
 
 	render () {
 
 		const user = this.props.user[0];
+		const doorCode = (this.props.doorCode && this.props.doorCode.code) ? this.props.doorCode.code : '';
 
 		const email = (user && user.emails[0]) ? user.emails[0].address : null;
 		const verifiedEmail = (user && user.emails[0] && user.emails[0].verified) ? <p>Verified</p> : <p onClick={this.sendVerificationEmail}>click to send verification email</p>;
@@ -97,6 +112,12 @@ class Profile extends Component {
 				/>
 
 				<button onClick={this.save.bind(this)}>Save</button>
+
+				<hr />
+
+				<button onClick={this.generateDoorCode.bind(this)}>Generate new door code</button>
+
+				{doorCode}
 
 				<hr />
 
@@ -132,8 +153,10 @@ class Profile extends Component {
 
 export default createContainer(() => {
 	Meteor.subscribe('profile');
+	Meteor.subscribe('doorCode');
 
 	return {
+		doorCode: DoorCodes.find().fetch()[0],
 		user: Meteor.users.find().fetch(),
 	};
 }, Profile);

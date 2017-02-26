@@ -2,8 +2,19 @@ import DoorCodeAttempts from '../imports/api/collections/doorCodeAttempts.js';
 import DoorCodes from '../imports/api/collections/doorCodes.js';
 import Reservations from '../imports/api/collections/reservations.js';
 
-Meteor.publish('doorCodes', function () {
-	return DoorCodes.find();
+Meteor.publish('allDoorCodes', function () {
+
+	const isAdmin = Roles.userIsInRole(this.userId, ['admin', 'super-admin'], 'booking');
+
+	if (isAdmin) {
+		return DoorCodes.find();
+	} else {
+		return null;
+	}
+});
+
+Meteor.publish('doorCode', function () {
+	return DoorCodes.find({userId: this.userId});
 });
 
 Meteor.publish('profile', function () {
@@ -40,3 +51,4 @@ Meteor.publish('allUsers', function () {
 
     
 });
+
