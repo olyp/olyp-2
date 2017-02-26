@@ -10,7 +10,9 @@ class CodeList extends Component {
 	}
 
 	deleteCode(code) {
-		Meteor.call('doorCode.delete', code);
+		const codeId = code._id;
+
+		Meteor.call('doorCode.delete', codeId);
 	}
 
 	render() {

@@ -28,8 +28,11 @@ Meteor.methods({
 		DoorCodes.insert(newCode);
 		
 	},
-	'doorCode.delete': function (code) {
-		DoorCodes.remove(code);
+	'doorCode.deleteById': function (codeId) {
+		DoorCodes.remove(codeId);
+	},
+	'doorCode.deleteByUserId': function (userId) {
+		DoorCodes.remove({userId: userId});
 	},
 	'doorCode.open': function () {
 		var getUrl = 'http://maindoor.olyp.no/enu/trigger/' + Meteor.settings.private.doorToken;

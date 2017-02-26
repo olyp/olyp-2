@@ -41,13 +41,23 @@ Meteor.methods({
 
 		if (userId == Meteor.userId()) {
 
+			// Delete user door code
+			Meteor.call('doorCode.deleteByUserId', userId);
+
 			// Allow user to delete it self
 			Meteor.users.remove(userId);
+
+
+
 		} else {
 
 			// Only allow deleting other users if has role admin or manage-users
 			if ( Roles.userIsInRole(Meteor.userId(), ['super-admin', 'admin'], 'manage-users')) {
 
+				// Delete user door codes
+				Meteor.call('doorCode.deleteByUserId', userId);
+
+				// Delete user
 				Meteor.users.remove(userId);
 			}
 		}	
