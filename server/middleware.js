@@ -13,15 +13,32 @@ var getUrl = 'http://maindoor.olyp.no/enu/trigger/' + Meteor.settings.private.do
 function onRoute (req, res, next) {
 
 	const numberCode = req.params.code;
-
 	var existingCode = DoorCodes.findOne({code: numberCode});
 
-	if (existingCode) {
+	const openDoor = function () {
 
 		HTTP.get(getUrl);
 
 		res.writeHead(200);
 		res.end();
+	};
+
+	if (existingCode) {
+
+		if (existingCode.validFrom || existingCode.validTo) {
+
+			if (new Date () < existingCode.validFrom || new Date () >  existingCode.validTo) {
+
+				// Code expired
+				const attempt = {
+					date: new Date,
+					requestHeaders: req.headers,
+					expiredCode: existingCode
+				}
+
+				DoorCodeAttempts.insert(attempt);
+			}
+		}
 
 		// TODO: add photo
 

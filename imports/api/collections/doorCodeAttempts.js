@@ -18,6 +18,11 @@ const DoorCodeAttemptsSchema = new SimpleSchema({
 	"date": {
 		type: Date
 	},
+	"expiredCode": {
+		type: Object,
+		optional: true,
+		blackbox: true
+	},
 	"requestHeaders": {
 		type: Object,
 		blackbox: true
