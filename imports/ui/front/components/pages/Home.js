@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import { Link } from 'react-router';
+import { browserHistory, Link } from 'react-router';
 
 // import AccountsUI from '../../../AccountsUI.js';
 
@@ -56,7 +56,7 @@ export default class Home extends Component {
 				<div id="custom-nav">		
 					<div className="row">
 						<div className="col-xs-4">
-							<img src="/images/menu-burger.png" />
+							<img onClick={() => {browserHistory.push('/mobileMenu')}} src="/images/menu-burger.png" />
 						</div>
 						<div className="col-xs-4 text-center">
 							<img src="/images/logo/logo4.png" />
@@ -187,6 +187,8 @@ export default class Home extends Component {
 				<div id="home-footer" className="container-fluid">
 					<img className="arrow" src="/images/arrow-up.png" />
 				</div>
+				<div className="spacer-50"></div>
+				<div className="spacer-10"></div>
 			</div>
 		);
 	};

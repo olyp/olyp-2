@@ -20,15 +20,21 @@ h1, h2, h3, h4, h5, p, a {
 	
 }*/
 
+#custom-nav,
+#mobile-menu {
+	padding: 20px;
+	width: 100%;
+}
+
 #custom-nav {
 /*	height: 100px;*/
 	/*background: yellow;*/
-	padding: 20px;
+	
 	position: fixed;
 	top: 0;
 	left: 0;
-	width: 100%;
 	background-color: white;
+	z-index: 2;
 
 }
 
@@ -41,8 +47,17 @@ h1, h2, h3, h4, h5, p, a {
 	font-size: 18px;
 }*/
 
-#custom-nav img {
+#custom-nav img,
+#mobile-menu img {
 	max-height: 30px;
+}
+
+#mobile-menu {
+	background-color: #e6e6e6;
+}
+
+#mobile-menu h1 {
+	font-size: 4em;
 }
 
 #book-room-fixed {
@@ -64,12 +79,15 @@ h1, h2, h3, h4, h5, p, a {
 	margin: 17px 0 0 15px;
 }
 
-#home-container {
+#home-container,
+#mobile-menu-content {
 	margin-top: 100px;
 }
 
 #home-container a,
-#home-container h1 {
+#home-container h1,
+#mobile-menu-content a,
+#mobile-menu-content h1 {
 	color: rgb(38, 84, 249);
 }
 
