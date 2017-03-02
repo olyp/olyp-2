@@ -1,260 +1,191 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import {Link} from 'react-router';
+import { Link } from 'react-router';
 
 // import AccountsUI from '../../../AccountsUI.js';
 
 export default class Home extends Component {
+
 	constructor(props) {
 		super(props);
-
 		this.state = {
-			innerHeight: window.innerHeight,
-			logoO: {top: 297, left: (window.innerWidth / 2) - 200},
-			logoL: {top: 188, left: (window.innerWidth / 2) - 19},
-			logoY: {top: 297, left: (window.innerWidth / 2) + 126},
-			logoP: {top: 407, left: (window.innerWidth / 2) - 20},
-			arrow: {top: 550, left: (window.innerWidth / 2) - 20}
+			window: {
+				height: 0,
+				width: 0,
+				scroll: 0
+			}
 		}
 	}
 
-	componentDidMount() {
-
-		// Scrolling Logo
-		$(window).scroll( (event) => {
-
-			var scroll = $(window).scrollTop();
-			var width = window.innerWidth;
-
-			if (scroll >= 560) {
-				$('#custom-nav').fadeIn();
-			}
-
-			if (scroll < 560) {
-				$('#custom-nav').fadeOut();
-			}
-
-			if (scroll < 285) {
-
-				this.setState({
-					logoO: {left: (scroll * -1.2) + ((width / 2) - 200)},
-					logoL: {top: (scroll * -0.74) + 188},
-					logoY: {left: (scroll * 1.2) + ((width / 2) + 126)},
-   					logoP: {top: (scroll * 1.3) + 407},
-   					arrow: {top: scroll + 550},
-				})
-			}
-
-			// Leave P at footer
-
-			if (scroll > 3480) {
-
-				this.setState({
-   					logoP: {top: (284 * 1.3) + 407 - (scroll - 3480)}
-				});
-			}
-
-			// if (scroll < 3190) {
-
-			// 	$('#overlay-container').css({position: 'absolute'});
-			// }
-
-		});
-
-		$(window).resize( (event) => {
-
-			var width = window.innerWidth;
-			
-			this.setState({
-				innerHeight: window.innerHeight,
-				logoO: {left: (width / 2) - 200},
-				logoL: {left: (width / 2) - 19},
-				logoY: {left: (width / 2) + 126},
-				logoP: {left: (width / 2) - 20},
-				arrow: {left: (width / 2) - 20}
-			})
-		})
+	componentWillMount () {
+		this.updateDimensions();
 	}
+    componentDidMount () {
+        window.addEventListener("resize", this.updateDimensions.bind(this));
+        window.addEventListener("scroll", this.updateDimensions.bind(this));
+    }
+    componentWillUnmount () {
+        window.removeEventListener("resize", this.updateDimensions.bind(this));
+        window.removeEventListener("scroll", this.updateDimensions.bind(this));
+    }
+
+	updateDimensions () {
+        this.setState({
+        	window: {
+        		width: $(window).width(), 
+        		height: $(window).height(),
+        		scroll: $(window).scrollTop()
+        	}
+        });
+    }
 
 	render() {
+
+		const bookRoomFixed = (this.state.window.scroll > 320) ? 
+			<Link to='/secure'>
+				<div id="book-room-fixed">
+					<div className="text-center">
+						Book Rom
+					</div>
+				</div>
+			</Link> : '';
 
 		return (
 			<div>
 
-				<div id="custom-nav">
-					<nav className="navbar navbar-default navbar-fixed-top">
+				<div id="custom-nav">		
+					<div className="row">
+						<div className="col-xs-4">
+							<img src="/images/menu-burger.png" />
+						</div>
+						<div className="col-xs-4 text-center">
+							<img src="/images/logo/logo4.png" />
+						</div>
+						<div className="col-xs-4 text-right">
+							<img src="/images/logo/logo3.png" />
+						</div>
+					</div>						    
+				</div>
+
+				{bookRoomFixed}
+
+				<div id="home-container">
+
+					<div style={{height: this.state.window.height}} id="home-screen">
+
 						<div className="container">
-							<div className="navbar-header">
-								<a className="navbar-brand" href="#">
-									<img alt="Brand" src="/images/logo/logo.png" />
-						 		</a>
-						    </div>
-
-						    <div className="navbar-right">
-								<Link className="navbar-text" to="#home-footer">Kontakt</Link>
-							    <Link className="navbar-text" to="https://me.olyp.no">Book Rom</Link>
-							    <Link className="navbar-text" to="/login">Login</Link>
-						    </div>
-						    
-							
-						</div>
-					</nav>
-				</div>
-
-				<div id="overlay-container">
-						
-					<div className="logo-fragment-container" style={{top: this.state.logoL.top + 'px', left: this.state.logoL.left + 'px'}}>
-						<img src="/images/logo/logo-l.png" />
-					</div>
-			
-				
-					<div className="logo-fragment-container" style={{top: this.state.logoO.top + 'px', left: this.state.logoO.left + 'px'}}>
-						<img src="/images/logo/logo-o.png" style={{zIndex: 1}}/>
-					</div>
-
-					<div className="logo-fragment-container" style={{top: this.state.logoY.top + 'px', left: this.state.logoY.left + 'px'}}>
-						<img src="/images/logo/logo-y.png" style={{zIndex: 3}}/>
-					</div>
-				
-				
-					<div className="logo-fragment-container" style={{top: this.state.logoP.top + 'px', left: this.state.logoP.left + 'px'}}>
-						<img src="/images/logo/logo-p.png" />
-					</div>
-				
-
-					<div id="arrow-container" className="logo-fragment-container" style={{top: this.state.arrow.top + 'px', left: this.state.arrow.left + 'px'}}>
-						<img className="arrow-down" src="/images/arrow-down.png" />
-					</div>
-						
-				</div>
-
-
-				<div id="splash-screen" style={{height: this.state.innerHeight + 'px'}}>
-					<img id="splash-screen-logo" src="/images/logo/logo.png" />
-					<div id="splash-screen-logo-desktop">
-						<img src="/images/logo/logo-oslo.png" />
-						<div className="clearfix"></div>
-						<img src="/images/logo/logo-lydproduksjon.png" />
-					</div>
-				</div>
-
-
-				<div id="home-container" className="container">
-
-					<div className="jumbotron">
-						<h1>Her kan du leie <br /> preprodrom på timesbasis, <br />eller leie deg inn i et av våre <br />9 lydkontor / øvingsrom.</h1>
-					</div>
-
-					<div className="row">
-
-						<div className="col-md-8 col-md-offset-2">
-
-							<div className="home-features">
-								<div className="row">
-									<div className="col-md-6">
-										<p><u>6 rom</u><br />For solister og små ensembler <br /> (1-3 pers) 12-18 kvm</p>
-									</div>
-									<div className="col-md-6">
-										<p><u>1 rom</u><br />For større ensembler på <br /> (5-7 pers) 34 kvm</p>
-									</div>
-								</div>
-								<div className="row">
-									<div className="col-md-6">
-										<p><u>3 rom</u><br />For mellomstore ensembler <br /> (3-5 pers) ca 21 kvm</p>
-									</div>
-									<div className="col-md-6">
-										<p><u>Drive-in-lager</u><br />(direkte tilgang via garasje) <br /> 34 kvm Fellesarealer</p>
-									</div>
-								</div>
-							</div>
-
-						</div>
-
-					</div>
-
-					<div className="spacer-50"></div>
-
-					<div className="jumbotron">
-						<h1><u>Book rom</u></h1>
-					</div>
-
-					<div className="spacer-50"></div>
-					<div className="spacer-50"></div>
-					<div className="spacer-10"></div>
-
-					<div id="promo-images">
-						<div className="col-md-12">
-							<img src="/images/promo1.jpg" className="img-responsive"/>
-						</div>
-
-						<div className="col-md-12">
-							<img src="/images/promo2.jpg" className="img-responsive"/>
-						</div>
-					</div>
-
-					<div className="clearfix"> </div>
-
-					<div className="spacer-50"></div>
-					<div className="spacer-10"></div>
-					<div className="spacer-10"></div>
-
-					<div className="jumbotron">
-						<h1>
-							Vi holder til på
-							<br />
-							Rosenhoff, mellom
-							<br />
-							Carl Berner og Sinsen.
-							<br />
-							&mdash;
-						</h1>
-						<div className="home-features">
-							<p>Vi er et godt øvingslokale, <br /> arbeidssted og knutepunkt <br /> for yrkesmusikere og band i Oslo.</p> 
-						</div>
-					</div>
-
-					<div className="row">
-						<div className="col-md-6">
-							<img src="/images/map.jpg" className="img-responsive" />
-						</div>
-
-						<div className="col-md-6 home-features">
-							<div className="row ">
-								<div className="col-md-6">
-									<p><u>Booking og leie</u><br />Jonas Barsten<br />jonas@olyp.no</p>
-								</div>
-								<div className="col-md-6">
-									<p><u>Bygg og utstyr</u><br />Haakon Mathisen<br />haakon@olyp.no</p>
-								</div>
-							</div>
 							<div className="row">
-								<div className="col-md-6">
-									<p><u>Økonomi og faktura</u><br />Alf Godbolt<br />alf@olyp.no</p>
-								</div>
-								<div className="col-md-6">
-									<p><u>Andre henvendelser</u><br />Simen Schøien<br />simen@olyp.no</p>
+								<div className="col-xs-8">
+									<h1>Olyp tilbyr gode øvingslokaler, et arbeidssted og knutepunkt for yrkesmusikere og band i Oslo.</h1>
 								</div>
 							</div>
 						</div>
+
+						<div className="container">
+							<Link to="/secure">
+								<h1 style={{'textDecoration': 'underline'}}>Book Rom</h1>
+							</Link>
+						</div>
+
+						<div className="container">
+							<img className="arrow" src="/images/arrow-down.png" />
+						</div>
+
 					</div>
-				</div>
 
-				<div className="spacer-50"></div>
-				<div className="spacer-50"></div>
-				<div className="spacer-50"></div>
+					<div className="grey-container">
 
-				<div id="home-footer" className="container-fluid home-features">
+						<div className="container">
+							<div className="row">
+								<div className="col-xs-4">
+									<img className="img-responsive" src="/images/rooms-6.png" />
+								</div>
+							</div>
+							<h1 style={{'textDecoration': 'underline'}}>6 Rom</h1>
+							<h1>For solister og små ensembler</h1>
+						</div>
+
+
+						<div className="container">
+							<div className="row">
+								<div className="col-xs-4">
+									<img className="img-responsive" src="/images/rooms-3.png" />
+								</div>
+							</div>
+							<h1 style={{'textDecoration': 'underline'}}>3 Rom</h1>
+							<h1>For mellomstore ensembler</h1>
+						</div>
+
+
+						<div className="container">
+							<div className="row">
+								<div className="col-xs-4">
+									<img className="img-responsive" src="/images/rooms-1.png" />
+								</div>
+							</div>
+							<h1 style={{'textDecoration': 'underline'}}>1 Rom</h1>
+							<h1>For større ensembler</h1>
+						</div>
+
+						<div className="container">
+							<h1 style={{'textDecoration': 'underline'}}>Drive-in-lager</h1>
+							<h1>Direkte tilgang via garasje</h1>
+						</div>
+
+						<div className="container">
+							<h1 style={{'textDecoration': 'underline'}}>Fellerarealer</h1>
+							<h1>80 kvm</h1>
+						</div>
+
+						<div className="container">
+							<img src="http://eastroom.ca/wp-content/uploads/2016/04/Photos-Desktop-2.jpg" className="img-responsive"/>
+						</div>
+
+						<div className="container">
+							<img src="http://eastroom.ca/wp-content/uploads/2016/04/Photos-Desktop-1.jpg" className="img-responsive"/>
+						</div>
+
+					</div>
+
+					
 					<div className="container">
 						<div className="row">
-							<div className="col-md-4">
-								<p><u>Olyp</u><br />Olaf Schous vei 6 C<br />0572 Oslo</p>
-							</div>
-							<div className="text-center col-md-4">
-								<img className="arrow-up" src="/images/arrow-up.png" />
+							<div className="col-xs-8">
+								<h1>Vi holder til på Rosenhoff, mellom Carl Berner og Sinsen.</h1>
 							</div>
 						</div>
 					</div>
-					
+
+					<div className="container">		
+						<Link to="https://goo.gl/maps/6v3eMub7sTS2" target="blank">
+							<img src="/images/map.jpg" className="img-responsive" />
+						</Link>	
+					</div>
+
+					<div className="container">
+						<h1 style={{'textDecoration': 'underline'}}>Booking og leie</h1>
+						<h1>Jonas Barsten<br />jonas@olyp.no</h1>
+					</div>
+
+					<div className="container">
+						<h1 style={{'textDecoration': 'underline'}}>Bygg og utstyr</h1>
+						<h1>Haakon Mathisen<br />haakon@olyp.no</h1>
+					</div>
+
+					<div className="container">
+						<h1 style={{'textDecoration': 'underline'}}>Kundeforhold</h1>
+						<h1>Simen Solli Schøien<br />simen@olyp.no</h1>
+					</div>
+
+					<div className="container">
+						<h1 style={{'textDecoration': 'underline'}}>Økonomi</h1>
+						<h1>Alf Lund Godbolt<br />alf@olyp.no</h1>
+					</div>
+
+				</div>
+
+				<div id="home-footer" className="container-fluid">
+					<img className="arrow" src="/images/arrow-up.png" />
 				</div>
 			</div>
 		);

@@ -15,40 +15,90 @@ h1, h2, h3, h4, h5, p, a {
 	height: 10px;
 }
 
-#custom-nav {
+/*#custom-nav {
 	display: none;
 	
+}*/
+
+#custom-nav {
+/*	height: 100px;*/
+	/*background: yellow;*/
+	padding: 20px;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	background-color: white;
+
 }
 
-#custom-nav nav {
-	height: 100px;
-	background: none;
-	border: none;
-}
-
-#custom-nav .container {
+/*#custom-nav .container {
 	padding: 0 100px 0 100px;
-}
+}*/
 
-#custom-nav p, #custom-nav a {
+/*#custom-nav p, #custom-nav a {
 	color: rgb(38, 84, 249);
 	font-size: 18px;
-}
+}*/
 
 #custom-nav img {
-	margin-top: 15px;
-	max-height: 40px;
+	max-height: 30px;
 }
 
-#custom-nav .navbar-right {
-	margin-top: 23px;
+#book-room-fixed {
+	background-color: black;
+	color: white;
+	padding: 20px;
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	z-index: 2;
 }
+
+/*#custom-nav .navbar-right {
+	margin-top: 23px;
+}*/
 
 #login-buttons {
 	margin: 17px 0 0 15px;
 }
 
-.jumbotron {
+#home-container {
+	margin-top: 100px;
+}
+
+#home-container a,
+#home-container h1 {
+	color: rgb(38, 84, 249);
+}
+
+#home-container .container {
+	margin-top: 35px;
+/*	padding: 15px 20px 15px 20px;*/
+	padding-left: 20px;
+}
+
+#home-container h1 {
+	font-size: 2.3em;
+}
+
+.grey-container {
+	padding-top: 25px;
+
+	background: #e6e6e6;
+	background: -moz-linear-gradient(top, #e6e6e6 80%, #ffffff 80%); /* FF3.6-15 */
+	background: -webkit-linear-gradient(top, #e6e6e6 80%, #ffffff 80%); /* Chrome10-25,Safari5.1-6 */
+	background: linear-gradient(to bottom, #e6e6e6 80%, #ffffff 80%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e6e6e6', endColorstr='#ffffff',GradientType=0 ); /* IE6-9 */
+
+}
+
+.arrow {
+	max-height: 40px;
+}
+
+/*.jumbotron {
 	background: none;
 	border: none;
 	text-align: center;
@@ -64,9 +114,16 @@ h1, h2, h3, h4, h5, p, a {
 	display: none;
 }
 
-#overlay-container .logo-fragment-container img {
-	max-height: 70px;
+#overlay-grey {
+	background-color: #e6e6e6;
+	height: 800px;
+	padding: 0;
+	margin: 0 -111px 0 -111px;
 }
+
+#overlay-container .logo-fragment-container img {
+	max-height: 90px;
+}*/
 
 #arrow-container {
 	margin: 35px 0 0 0;
@@ -96,6 +153,20 @@ h1, h2, h3, h4, h5, p, a {
 	display: none;
 }
 
+.page-container {
+/*	padding: 1px 20px 10px 20px;
+	position: relative;
+	z-index: 10;
+	background-color: white;*/
+	/*min-width: 100%;*/
+/*	max-width: 700px;
+	margin: 0 auto;
+	min-height: 50px;*/
+/*	box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);*/
+/*	border: 20px solid #86b3ce;*/
+
+}
+
 /*#splash-screen-logo-desktop img {
 	max-height: 47px;
 	margin-bottom: 10px;
@@ -115,18 +186,20 @@ h1, h2, h3, h4, h5, p, a {
 }
 
 #promo-images img {
-	max-width: 85%;
+	max-width: 75%;
 	margin: 0 auto;
-	filter: grayscale(100%);
+/*	filter: grayscale(100%);*/
 	margin-bottom: 33px;
 }
 
 #home-footer {
-	background-color: rgb(242, 242, 242);
+	background-color: #e6e6e6;
 	z-index: -1;
 	text-align: left;
-	padding-top: 70px;
-	padding-bottom: 50px;
+	padding-top: 50px;
+	padding-bottom: 20px;
+	padding-left: 25px;
+	margin-top: 80px;
 }
 
 /*==========  Mobile First Method  ==========*/
