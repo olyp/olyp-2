@@ -5,7 +5,6 @@ import {Router, Route, IndexRoute, browserHistory} from 'react-router';
 // LAYOUTS
 import FrontLayout from '../imports/ui/front/components/FrontLayout.js';
 import SecureLayout from '../imports/ui/secure/components/SecureLayout.js';
-import MobileMenu from '../imports/ui/front/components/MobileMenu.js';
 
 // SECURE
 import Dashboard from '../imports/ui/secure/components/Dashboard.js';

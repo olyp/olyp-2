@@ -4,42 +4,11 @@ import { browserHistory, Link } from 'react-router';
 
 export default class Home extends Component {
 
-	constructor(props) {
-		super(props);
-		this.state = {
-			window: {
-				height: 0,
-				width: 0,
-				scroll: 0
-			}
-		}
-	}
 
-	componentWillMount () {
-		this.updateDimensions();
-	}
-    componentDidMount () {
-        window.addEventListener("resize", this.updateDimensions.bind(this));
-        window.addEventListener("scroll", this.updateDimensions.bind(this));
-    }
-    componentWillUnmount () {
-        window.removeEventListener("resize", this.updateDimensions.bind(this));
-        window.removeEventListener("scroll", this.updateDimensions.bind(this));
-    }
-
-	updateDimensions () {
-        this.setState({
-        	window: {
-        		width: $(window).width(), 
-        		height: $(window).height(),
-        		scroll: $(window).scrollTop()
-        	}
-        });
-    }
 
 	render() {
 
-		const bookRoomFixed = (this.state.window.scroll > 320) ? 
+		const bookRoomFixed = (this.props.window.scroll > 320) ? 
 			<Link to='/secure'>
 				<div id="book-room-fixed">
 					<div className="text-center">
@@ -55,7 +24,7 @@ export default class Home extends Component {
 
 				<div id="home-container">
 
-					<div style={{height: this.state.window.height}} id="home-screen">
+					<div style={{height: this.props.window.height}} id="home-screen">
 
 						<div className="container">
 							<div className="row">
