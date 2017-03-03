@@ -1,38 +1,53 @@
-import React, {Component} from 'react';
-import {Link} from 'react-router';
+import React, { Component } from 'react';
+import { browserHistory, Link } from 'react-router';
+
+import MobileMenu from './MobileMenu.js';
 
 export default class NavBar extends Component {
-	render() {
-		return (
-			<nav className="navbar navbar-default">
-				<div className="container-fluid">
 
-					<div className="navbar-header">
-						<button type="button" className="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-							<span className="sr-only">Toggle navigation</span>
-							<span className="icon-bar"></span>
-							<span className="icon-bar"></span>
-							<span className="icon-bar"></span>
-						</button>
-						<Link className="navbar-brand" to="/">
-							<img alt="Brand" src="/images/logo-horizontal.png" />
-						</Link>
-					</div>
-
-					<div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-
-
-						<ul className="nav navbar-nav navbar-right">
-							<li><Link to="/artists">Artists</Link></li>
-							<li><Link to="/releases">Releases</Link></li>
-							<li><a href="#">Upcoming</a></li>
-							<li><a href="#">About</a></li>
-							<li><a href="#">Store</a></li>
-						</ul>
-					</div>
-				</div>
-			</nav>
-		);
+	constructor(props) {
+		super(props);
+		this.state = {
+			menuOpen: false
+		}
 	}
 
+	toggleOpen () {
+
+		this.setState({
+			menuOpen: !this.state.menuOpen
+		});
+	}
+
+	redirect (destination) {
+		this.toggleOpen();
+		browserHistory.push(destination);
+	}
+
+	render () {
+
+		const menuIcon = this.state.menuOpen ? "/images/menu-square.png" : "/images/menu-burger.png";
+		const menu = this.state.menuOpen ? <MobileMenu onLinkClick={(destination) => {this.redirect(destination)}}/> : <span></span>;
+
+		return (
+			<div>
+				<div  id="custom-nav">
+					<div className="row">
+						<div className="col-xs-4">
+							<img onClick={this.toggleOpen.bind(this)} src={menuIcon} />
+						</div>
+						<div className="col-xs-4 text-center">
+							<img src="/images/logo/logo4.png" />
+						</div>
+						<div className="col-xs-4 text-right">
+							<img src="/images/logo/logo3.png" />
+						</div>
+					</div>
+				</div>
+
+				{menu}
+
+			</div>
+		);
+	}
 }

@@ -61,14 +61,13 @@ const isLoggedIn = (nextState, replace, callback) => {
 const routes = (
 	<Router history={browserHistory}>
 
-		<Route path="/" component={Home}></Route>
-
-		<Route path="/login" component={Login} onEnter={isLoggedIn}></Route>
-		<Route path="/invite/:token" component={InviteSignUp}></Route>
-		<Route path="/forgot" component={Forgot}></Route>
-		<Route path="/signup" component={SignUp}></Route>
-
-		<Route path="/mobileMenu" component={MobileMenu}></Route>
+		<Route path="/" component={FrontLayout}>
+			<IndexRoute component={Home} />
+			<Route path="login" component={Login} onEnter={isLoggedIn}></Route>
+			<Route path="invite/:token" component={InviteSignUp}></Route>
+			<Route path="forgot" component={Forgot}></Route>
+			<Route path="signup" component={SignUp}></Route>
+		</Route>
 
 		<Route path="/secure" component={SecureLayout} onEnter={authenticateSecure}>
 			<IndexRoute component={Dashboard} />

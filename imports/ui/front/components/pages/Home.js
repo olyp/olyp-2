@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import { browserHistory, Link } from 'react-router';
 
-// import AccountsUI from '../../../AccountsUI.js';
-
 export default class Home extends Component {
 
 	constructor(props) {
@@ -52,20 +50,6 @@ export default class Home extends Component {
 
 		return (
 			<div>
-
-				<div id="custom-nav">		
-					<div className="row">
-						<div className="col-xs-4">
-							<img onClick={() => {browserHistory.push('/mobileMenu')}} src="/images/menu-burger.png" />
-						</div>
-						<div className="col-xs-4 text-center">
-							<img src="/images/logo/logo4.png" />
-						</div>
-						<div className="col-xs-4 text-right">
-							<img src="/images/logo/logo3.png" />
-						</div>
-					</div>						    
-				</div>
 
 				{bookRoomFixed}
 
@@ -138,11 +122,11 @@ export default class Home extends Component {
 						</div>
 
 						<div className="container">
-							<img src="http://eastroom.ca/wp-content/uploads/2016/04/Photos-Desktop-2.jpg" className="img-responsive"/>
+							<img src="/images/promo1.jpg" className="img-responsive"/>
 						</div>
 
 						<div className="container">
-							<img src="http://eastroom.ca/wp-content/uploads/2016/04/Photos-Desktop-1.jpg" className="img-responsive"/>
+							<img src="/images/promo2.jpg" className="img-responsive"/>
 						</div>
 
 					</div>

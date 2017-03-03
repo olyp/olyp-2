@@ -20,22 +20,25 @@ h1, h2, h3, h4, h5, p, a {
 	
 }*/
 
-#custom-nav,
-#mobile-menu {
+#custom-nav {
 	padding: 20px;
-	width: 100%;
+	z-index: 3;
 }
 
-#custom-nav {
-/*	height: 100px;*/
-	/*background: yellow;*/
-	
+#custom-nav,
+#mobile-menu-content {
 	position: fixed;
 	top: 0;
 	left: 0;
-	background-color: white;
-	z-index: 2;
+	width: 100%;
+}
 
+#mobile-menu-content {
+	z-index: 2;
+}
+
+#mobile-menu-content .container {
+	margin-top: 35px;
 }
 
 /*#custom-nav .container {
@@ -79,9 +82,13 @@ h1, h2, h3, h4, h5, p, a {
 	margin: 17px 0 0 15px;
 }
 
+#mobile-menu-content {
+	background-color: #e6e6e6;
+}
+
 #home-container,
 #mobile-menu-content {
-	margin-top: 100px;
+	padding-top: 70px;
 }
 
 #home-container a,
