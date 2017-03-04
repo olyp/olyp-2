@@ -1,10 +1,17 @@
 import React, {Component} from 'react';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
+import { lazyload } from 'react-lazyload';
 
 import NavBar from './navigation/NavBar.js';
 import Footer from './navigation/Footer.js';
 
-export default class FrontLayout extends Component {
+@lazyload({
+	height: 200,
+	// once: true,
+	// offset: -500
+})
+
+class FrontLayout extends Component {
 
 	constructor(props) {
 		super(props);
@@ -81,3 +88,5 @@ export default class FrontLayout extends Component {
 		);
 	}
 }
+
+export default FrontLayout;
