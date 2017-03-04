@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { browserHistory, Link } from 'react-router';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
 import MobileMenu from './MobileMenu.js';
 
@@ -27,10 +28,11 @@ export default class NavBar extends Component {
 	render () {
 
 		const menuIcon = this.state.menuOpen ? "/images/menu-square.png" : "/images/menu-burger.png";
-		const menu = this.state.menuOpen ? <MobileMenu onLinkClick={(destination) => {this.redirect(destination)}}/> : <span></span>;
+		const menu = this.state.menuOpen ? <MobileMenu onLinkClick={(destination) => {this.redirect(destination)}}/> : '';
 
 		return (
 			<div>
+
 				<div  id="custom-nav">
 					<div className="row">
 						<div className="col-xs-4">
@@ -45,7 +47,13 @@ export default class NavBar extends Component {
 					</div>
 				</div>
 
+				<ReactCSSTransitionGroup
+					transitionName='mobile-menu'
+					transitionEnterTimeout={300}
+					transitionLeaveTimeout={300}
+				>
 				{menu}
+				</ReactCSSTransitionGroup>
 
 			</div>
 		);

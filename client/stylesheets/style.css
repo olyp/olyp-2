@@ -15,14 +15,25 @@ h1, h2, h3, h4, h5, p, a {
 	height: 10px;
 }
 
-/*#custom-nav {
-	display: none;
-	
-}*/
-
 #custom-nav {
 	padding: 20px;
 	z-index: 3;
+}
+
+#mobile-menu-content {
+	z-index: 2;
+	background-color: #e6e6e6;
+}
+
+#mobile-menu-content h1 {
+	font-size: 4em;
+	text-decoration: underline;
+	display: inline;
+}
+
+#mobile-menu-content .container {
+	margin-top: 35px;
+	padding-left: 20px;
 }
 
 #custom-nav,
@@ -33,34 +44,9 @@ h1, h2, h3, h4, h5, p, a {
 	width: 100%;
 }
 
-#mobile-menu-content {
-	z-index: 2;
-}
-
-#mobile-menu-content .container {
-	margin-top: 35px;
-}
-
-/*#custom-nav .container {
-	padding: 0 100px 0 100px;
-}*/
-
-/*#custom-nav p, #custom-nav a {
-	color: rgb(38, 84, 249);
-	font-size: 18px;
-}*/
-
 #custom-nav img,
 #mobile-menu img {
 	max-height: 30px;
-}
-
-#mobile-menu {
-	background-color: #e6e6e6;
-}
-
-#mobile-menu h1 {
-	font-size: 4em;
 }
 
 #book-room-fixed {
@@ -74,17 +60,10 @@ h1, h2, h3, h4, h5, p, a {
 	z-index: 2;
 }
 
-/*#custom-nav .navbar-right {
-	margin-top: 23px;
-}*/
-
 #login-buttons {
 	margin: 17px 0 0 15px;
 }
 
-#mobile-menu-content {
-	background-color: #e6e6e6;
-}
 
 #home-container,
 #mobile-menu-content {
@@ -225,6 +204,42 @@ h1, h2, h3, h4, h5, p, a {
 	padding-bottom: 20px;
 	padding-left: 25px;
 	margin-top: 80px;
+}
+
+/*==========  Animations  ==========*/
+
+.mobile-menu-enter {
+  transform: translate3d(-100%, 0, 0);
+}
+
+.mobile-menu-enter-active {
+  transform: translate3d(0, 0, 0);
+
+  transition: all 300ms cubic-bezier(0.77, 0, 0.175, 1);
+}
+
+.mobile-menu-leave {
+  transform: translate3d(0, 0, 0);
+}
+
+.mobile-menu-leave-active {
+  transform: translate3d(-100%, 0, 0);
+
+  transition: all 300ms cubic-bezier(0.77, 0, 0.175, 1);
+}
+
+
+
+.page-content-appear {
+	opacity: 0;
+  /*transform: translate3d(0, -100%, 0);*/
+}
+
+.page-content-appear-active {
+  /*transform: translate3d(0, 0, 0);*/
+  opacity: 1;
+
+  transition: all 600ms cubic-bezier(0.77, 0, 0.175, 1);
 }
 
 /*==========  Mobile First Method  ==========*/

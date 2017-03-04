@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
 import NavBar from './navigation/NavBar.js';
 
@@ -32,15 +33,13 @@ export default class FrontLayout extends Component {
 
 		const scroll = $(window).scrollTop();
 
-		if (scroll > 100) {
-			this.setState({
-				navBarVisible: false
-			});
-		}
-
 		if (scroll < this.state.window.scroll) {
 			this.setState({
 				navBarVisible: true
+			});
+		} else if (scroll > 100) {
+			this.setState({
+				navBarVisible: false
 			});
 		}
 
@@ -67,8 +66,15 @@ export default class FrontLayout extends Component {
 		return (
 			<div>
 				{navBar}
-				{childrenWithProps}
-				}
+				<ReactCSSTransitionGroup
+					transitionName='page-content'
+					transitionEnterTimeout={600}
+					transitionLeaveTimeout={600}
+					transitionAppear={true}
+					transitionAppearTimeout={600}
+				>
+					{childrenWithProps}
+				</ReactCSSTransitionGroup>
 			</div>
 		);
 	}
