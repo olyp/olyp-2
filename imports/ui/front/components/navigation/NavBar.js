@@ -14,7 +14,6 @@ export default class NavBar extends Component {
 	}
 
 	toggleOpen () {
-
 		this.setState({
 			menuOpen: !this.state.menuOpen
 		});
@@ -52,7 +51,7 @@ export default class NavBar extends Component {
 					transitionEnterTimeout={300}
 					transitionLeaveTimeout={300}
 				>
-				{menu}
+					{menu}
 				</ReactCSSTransitionGroup>
 
 			</div>

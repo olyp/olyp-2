@@ -47,6 +47,7 @@ h1, h2, h3, h4, h5, p, a {
 #custom-nav img,
 #mobile-menu img {
 	max-height: 30px;
+	max-width: 100%;
 }
 
 #book-room-fixed {
@@ -58,6 +59,13 @@ h1, h2, h3, h4, h5, p, a {
 	left: 0;
 	width: 100%;
 	z-index: 2;
+}
+
+#book-room-button {
+	border: 2px solid #EA2427;
+	margin: 0 40px 0 40px;
+	padding-bottom: 10px;
+	/*box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);*/
 }
 
 #login-buttons {
@@ -81,13 +89,15 @@ h1, h2, h3, h4, h5, p, a {
 	margin-top: 35px;
 /*	padding: 15px 20px 15px 20px;*/
 	padding-left: 20px;
+	padding-right: 20px;
 }
 
 #home-container h1 {
-	font-size: 2.3em;
+	font-size: 2.2em;
+/*	font-size: 8vw;*/
 }
 
-.grey-container {
+#grey-container {
 	padding-top: 25px;
 
 	background: #e6e6e6;

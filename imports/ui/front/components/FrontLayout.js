@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
 import NavBar from './navigation/NavBar.js';
+import Footer from './navigation/Footer.js';
 
 export default class FrontLayout extends Component {
 
@@ -31,17 +32,17 @@ export default class FrontLayout extends Component {
 
 	updateDimensions () {
 
-		const scroll = $(window).scrollTop();
+		// const scroll = $(window).scrollTop();
 
-		if (scroll < this.state.window.scroll) {
-			this.setState({
-				navBarVisible: true
-			});
-		} else if (scroll > 100) {
-			this.setState({
-				navBarVisible: false
-			});
-		}
+		// if (scroll < this.state.window.scroll) {
+		// 	this.setState({
+		// 		navBarVisible: true
+		// 	});
+		// } else if (scroll > 100) {
+		// 	this.setState({
+		// 		navBarVisible: false
+		// 	});
+		// }
 
         this.setState({
         	window: {
@@ -75,6 +76,7 @@ export default class FrontLayout extends Component {
 				>
 					{childrenWithProps}
 				</ReactCSSTransitionGroup>
+				<Footer />
 			</div>
 		);
 	}

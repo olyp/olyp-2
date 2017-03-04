@@ -10,7 +10,7 @@ export default class MobileMenu extends Component {
 				<div className="container">
 					<h1 onClick={() => {this.props.onLinkClick('/secure')}}>Book Rom</h1>
 					<br />
-					<h1 onClick={() => {this.props.onLinkClick('/')}}>Contact</h1>
+					<h1 onClick={() => {scroller.scrollTo('contact-container', {'duration': 300, 'smooth': true})}}>Contact</h1>
 					<br />
 					<h1 onClick={() => {this.props.onLinkClick('/')}}>About</h1>
 					<br />
