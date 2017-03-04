@@ -1,21 +1,24 @@
 import React, {Component} from 'react';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
-import { lazyload } from 'react-lazyload';
+// import { lazyload } from 'react-lazyload';
+
+import Preloader from '../../shared/preloader/Preloader.js';
 
 import NavBar from './navigation/NavBar.js';
 import Footer from './navigation/Footer.js';
 
-@lazyload({
-	height: 200,
-	// once: true,
-	// offset: -500
-})
+// @lazyload({
+// 	height: 200,
+// 	// once: true,
+// 	// offset: -500
+// })
 
 class FrontLayout extends Component {
 
 	constructor(props) {
 		super(props);
 		this.state = {
+			loading: false,
 			window: {
 				height: 0,
 				width: 0,
@@ -63,6 +66,10 @@ class FrontLayout extends Component {
 
 	render() {
 
+		if (this.state.loading) {
+			return <Preloader />
+		}
+
 		const navBar = this.state.navBarVisible ? <NavBar window={this.state.window}/> : '';
 
 		const childrenWithProps = React.Children.map(this.props.children,
@@ -76,10 +83,10 @@ class FrontLayout extends Component {
 				{navBar}
 				<ReactCSSTransitionGroup
 					transitionName='page-content'
-					transitionEnterTimeout={600}
-					transitionLeaveTimeout={600}
+					transitionEnterTimeout={300}
+					transitionLeaveTimeout={300}
 					transitionAppear={true}
-					transitionAppearTimeout={600}
+					transitionAppearTimeout={300}
 				>
 					{childrenWithProps}
 				</ReactCSSTransitionGroup>

@@ -3,8 +3,9 @@ import { browserHistory, Link } from 'react-router';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
 import MobileMenu from './MobileMenu.js';
+import Room4 from '../../../shared/floorplan/rooms/Room4.js';
 
-export default class NavBar extends Component {
+class NavBar extends Component {
 
 	constructor(props) {
 		super(props);
@@ -35,7 +36,7 @@ export default class NavBar extends Component {
 				<div  id="custom-nav">
 					<div className="row">
 						<div className="col-xs-4">
-							<img onClick={this.toggleOpen.bind(this)} src={menuIcon} />
+							<img onClick={this.toggleOpen.bind(this)} src={menuIcon} className="shadow"/>
 						</div>
 						<div className="col-xs-4 text-center">
 							<img src="/images/logo/logo4.png" />
@@ -58,3 +59,5 @@ export default class NavBar extends Component {
 		);
 	}
 }
+
+export default NavBar;
