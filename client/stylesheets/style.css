@@ -65,6 +65,32 @@ h1, h2, h3, h4, h5, p, a {
 	box-shadow: rgba(0, 0, 0, 0.2) 0px 2px 4px 0px;
 }
 
+.shadow-top {
+	box-shadow: rgba(0, 0, 0, 0.2) 0px -2px 4px 0px;
+}
+
+.shadow-right {
+	box-shadow: rgba(0, 0, 0, 0.2) 5px 0px 4px -4px;
+}
+
+.shadow-bottom {
+	box-shadow: rgba(0, 0, 0, 0.2) 5px 0px 4px -4px;
+}
+
+.shadow-left {
+	box-shadow: rgba(0, 0, 0, 0.2) -4px 0px 4px -3px;
+}
+
+.shadow-bottom-right {
+	box-shadow: rgba(0, 0, 0, 0.2) 3px 3px 4px -1px;
+}
+
+.shadow-bottom-left {
+	box-shadow: rgba(0, 0, 0, 0.2) -2px 2px 4px -1px;
+}
+
+
+
 #book-room-button {
 	border: 2px solid #EA2427;
 	margin: 0 40px 0 40px;
@@ -248,8 +274,6 @@ h1, h2, h3, h4, h5, p, a {
 
   transition: all 300ms cubic-bezier(0.77, 0, 0.175, 1);
 }
-
-
 
 .page-content-appear {
 	opacity: 0;

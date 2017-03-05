@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
 import Storage from './rooms/Storage.js';
 import Toilet from './rooms/Toilet.js';
@@ -33,7 +34,15 @@ class FloorPlan extends Component {
 					</div>
 
 					<div id="fp-room-1-position" className="fp-room-position">
-						<Room1 />
+						<ReactCSSTransitionGroup
+							transitionName='fp-animate'
+							transitionEnterTimeout={300}
+							transitionLeaveTimeout={300}
+							transitionAppear={true}
+							transitionAppearTimeout={500}
+						>
+							<Room1 />
+						</ReactCSSTransitionGroup>
 					</div>
 
 					<div id="fp-room-toilet-position" className="fp-room-position">

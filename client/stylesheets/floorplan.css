@@ -33,7 +33,20 @@
 .fp-room,
 .fp-sub-room {
 	border-color: #EA2427 !important;
-	border-width: 1px !important;
+	border-width: 2px !important;
+/*	position: relative;*/
+  	vertical-align: middle;
+}
+
+.fp-room:before,
+.fp-sub-room:before,
+.fp-room:after,
+.fp-sub-room:after {
+/*	box-sizing: border-box;*/
+    content: '';
+    position: absolute;
+/*    width: 100%;
+    height: 100%;*/
 }
 
 .fp-sub-room,
@@ -41,8 +54,9 @@
 	position: absolute;
 }
 
-
-/*ROOM DESIGN*/
+/* ==========================================================================
+   Room design
+   ========================================================================== */
 
 #fp-room-storage {
 	height: 100%;
@@ -59,7 +73,7 @@
 #fp-room-1 {
 	height: 100%;
 	width: 86%;
-	border: solid;
+/*	border: solid;*/
 }
 
 #fp-room-2 {
@@ -83,7 +97,7 @@
 
 #fp-room-4-sub-1 {
 	height: 72%;
-	width: 83%;
+	width: 83.3%;
 	border-bottom: solid;
 	border-left: solid;
 }
@@ -113,8 +127,8 @@
 }
 
 #fp-room-5-sub-2 {
-	top: 81.5%;
-	height: 18.3%;
+	top: 81%;
+	height: 19%;
 	width: 71%;
 	border-bottom: solid;
 	border-right: solid;
@@ -174,7 +188,10 @@
 	border-top: solid;
 	border-right: solid;
 }
-/*ROOM POSITION IN FLOOR PLAN*/
+
+/* ==========================================================================
+   Room position in floor plan
+   ========================================================================== */
 
 #fp-room-storage-position {
 	left: 79.7%;
@@ -264,4 +281,74 @@
 	top: 7%;
 	left: 95%;
 	width: 13.1%;
+}
+
+/* ==========================================================================
+   Animations
+   ========================================================================== */
+
+.fp-room-border-top-right, 
+.fp-room-border-bottom-left {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+}
+.fp-room-border-top-right {
+	top: 0;
+	left: 0;
+	border-right: 2px solid #EA2427;
+	border-top: 2px solid #EA2427;
+}
+.fp-room-border-bottom-left {
+	bottom: 0;
+	right: 0;
+	border-bottom: 2px solid #EA2427;
+	border-left: 2px solid #EA2427;
+}
+
+.draw:hover::before {
+	width: 100%;
+	height: 100%;
+	border-top-color: #EA2427;
+	border-right-color: #EA2427;
+/*	-webkit-transition: width 0.25s ease-out, height 0.25s ease-out 0.25s;*/
+	transition: width 0.25s ease-out, height 0.25s ease-out 0.25s;
+}
+.draw:hover::after {
+	width: 100%;
+	height: 100%;
+	border-bottom-color: #EA2427;
+	border-left-color: #EA2427;
+/*	-webkit-transition: border-color 0s ease-out 0.5s, width 0.25s ease-out 0.5s, height 0.25s ease-out 0.75s;*/
+	transition: border-color 0s ease-out 0.5s, width 0.25s ease-out 0.5s, height 0.25s ease-out 0.75s;
+}
+
+.fp-animate-appear {
+	border-color: transparent;
+	width: 0;
+	height: 0;
+}
+
+.fp-animate-appear-active {
+
+  	width: 100%;
+	height: 100%;
+	border-color: #EA2427;
+/*	-webkit-transition: width 0.25s ease-out, height 0.25s ease-out 0.25s;*/
+	transition: border 0s ease-out 0.5s, width 0.25s ease-out 0.5s, height 0.25s ease-out 0.75s;
+}
+
+.fp-animate-2-appear {
+	border-color: transparent;
+	width: 0;
+	height: 0;
+}
+
+.fp-animate-2-appear-active {
+
+  	width: 100%;
+	height: 100%;
+	border-color: #EA2427;
+/*	-webkit-transition: width 0.25s ease-out, height 0.25s ease-out 0.25s;*/
+	transition: border 0s ease-out 1s, width 0.25s ease-out 1s, height 0.25s ease-out 1.25s;
 }
