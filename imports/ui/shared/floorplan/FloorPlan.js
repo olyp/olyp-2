@@ -34,15 +34,7 @@ class FloorPlan extends Component {
 					</div>
 
 					<div id="fp-room-1-position" className="fp-room-position">
-						<ReactCSSTransitionGroup
-							transitionName='fp-animate'
-							transitionEnterTimeout={300}
-							transitionLeaveTimeout={300}
-							transitionAppear={true}
-							transitionAppearTimeout={500}
-						>
-							<Room1 />
-						</ReactCSSTransitionGroup>
+						<Room1 />	
 					</div>
 
 					<div id="fp-room-toilet-position" className="fp-room-position">
