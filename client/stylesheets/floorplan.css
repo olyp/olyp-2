@@ -21,8 +21,7 @@
 	padding-top: 100%;
 }
 
-#floor-plan,
-.fp-room {
+#floor-plan {
 	position: absolute;
 	top: 0;
 	bottom: 0;
@@ -30,170 +29,15 @@
 	left: 0;
 }
 
-.fp-room,
-.fp-sub-room {
-/*	border-color: #EA2427 !important;
-	border-width: 2px !important;*/
-/*	position: relative;*/
-  	vertical-align: middle;
-}
-
-.fp-room:before,
-.fp-sub-room:before,
-.fp-room:after,
-.fp-sub-room:after {
-/*	box-sizing: border-box;*/
-    content: '';
-    position: absolute;
-/*    width: 100%;
-    height: 100%;*/
-}
-
-.fp-sub-room,
 .fp-room-position {
 	position: absolute;
 }
 
 /* ==========================================================================
-   Room design
+   Room position in floor plan --- Now done with SVG path
    ========================================================================== */
 
-/*#fp-room-storage {
-	height: 100%;
-	width: 95%;
-	border: solid;
-}*/
-
-/*#fp-room-toilet {
-	height: 100%;
-	width: 83%;
-	border: solid;
-}*/
-
-/*#fp-room-1 {
-	height: 100%;
-	width: 86%;
-	border: solid;
-}*/
-
-/*#fp-room-2 {
-	height: 100%;
-	width: 90%;
-	border: solid;
-}*/
-
-#fp-room-3 {
-	height: 100%;
-	width: 76%;
-	border: solid;
-}
-
-#fp-room-4 {
-	height: 60%;
-	width: 100%;
-	border-right: solid;
-	border-top: solid;
-}
-
-#fp-room-4-sub-1 {
-	height: 72%;
-	width: 83.3%;
-	border-bottom: solid;
-	border-left: solid;
-}
-
-#fp-room-4-sub-2 {
-	top: 72%;
-	left: 82.6%;
-	height: 28%;
-	width: 17.5%;
-	border-bottom: solid;
-	border-left: solid;
-}
-
-#fp-room-5 {
-	height: 100%;
-	width: 62%;
-	border-left: solid;
-	border-top: solid;
-}
-
-#fp-room-5-sub-1 {
-	left: 71%;
-	height: 81.6%;
-	width: 29%;
-	border-bottom: solid;
-	border-right: solid;
-}
-
-#fp-room-5-sub-2 {
-	top: 81%;
-	height: 19%;
-	width: 71%;
-	border-bottom: solid;
-	border-right: solid;
-}
-
-#fp-room-6 {
-	height: 86%;
-	width: 100%;
-	border: solid;
-}
-
-#fp-room-7 {
-	height: 87.5%;
-	width: 100%;
-	border: solid;
-}
-
-#fp-room-8 {
-	height: 100%;
-	width: 69%;
-	border: solid;
-}
-
-#fp-room-9 {
-	height: 100%;
-	width: 99.5%;
-	border: solid;
-}
-
-#fp-room-10 {
-	height: 100%;
-	width: 99.5%;
-	border: solid;
-}
-
-#fp-wall-1 {
-	height: 100%;
-	width: 100%;
-	border-bottom: solid;
-}
-
-#fp-wall-2 {
-	height: 100%;
-	width: 100%;
-	border-bottom: solid;
-}
-
-#fp-wall-3 {
-	height: 100%;
-	width: 100%;
-	border-right: solid;
-}
-
-#fp-wall-4 {
-	height: 100%;
-	width: 12%;
-	border-top: solid;
-	border-right: solid;
-}
-
-/* ==========================================================================
-   Room position in floor plan
-   ========================================================================== */
-
-#fp-room-storage-position {
+/*#fp-room-storage-position {
 	left: 79.7%;
 	width: 13.2%;
 }
@@ -215,7 +59,7 @@
 
 #fp-room-3-position {
 	left: 25.6%;
-	width: 14.1%;
+	width: 10.7%;
 }
 
 #fp-room-4-position {
@@ -224,7 +68,7 @@
 
 #fp-room-5-position {
 	top: 21.9%;
-	width: 27.8%;
+	width: 17.4%;
 }
 
 #fp-room-6-position {
@@ -233,15 +77,15 @@
 }
 
 #fp-room-7-position {
-	top: 73.5%;
+	top: 72.8%;
 	left: 19.3%;
 	width: 17%;
 }
 
 #fp-room-8-position {
-	top: 73.5%;
+	top: 72.7%;
 	left: 38.1%;
-	width: 14.8%;
+	width: 10.3%;
 }
 
 #fp-room-9-position {
@@ -257,98 +101,13 @@
 }
 
 #fp-wall-1-position {
-	top: 45.8%;
-	left: 52.8%;
-	width: 30.4%;
+	top: 54.5%;
+	left: 52.1%;
+	width: 44.5%;
 }
 
 #fp-wall-2-position {
-	top: 63.5%;
-	left: 76.4%;
-	width: 17%;
-	-ms-transform: rotate(-37deg); /* IE 9 */
-    -webkit-transform: rotate(-37deg); /* Safari */
-    transform: rotate(-37deg);
-}
-
-#fp-wall-3-position {
-	top: 55%;
-	left: 81.5%;
-	width: 15.1%;
-}
-
-#fp-wall-4-position {
 	top: 7%;
 	left: 95%;
-	width: 13.1%;
-}
-
-/* ==========================================================================
-   Animations
-   ========================================================================== */
-
-/*.fp-room-border-top-right, 
-.fp-room-border-bottom-left {
-	position: absolute;
-	width: 100%;
-	height: 100%;
-}
-.fp-room-border-top-right {
-	top: 0;
-	left: 0;
-	border-right: 2px solid #EA2427;
-	border-top: 2px solid #EA2427;
-}
-.fp-room-border-bottom-left {
-	bottom: 0;
-	right: 0;
-	border-bottom: 2px solid #EA2427;
-	border-left: 2px solid #EA2427;
-}
-
-.draw:hover::before {
-	width: 100%;
-	height: 100%;
-	border-top-color: #EA2427;
-	border-right-color: #EA2427;
-	-webkit-transition: width 0.25s ease-out, height 0.25s ease-out 0.25s;
-	transition: width 0.25s ease-out, height 0.25s ease-out 0.25s;
-}
-.draw:hover::after {
-	width: 100%;
-	height: 100%;
-	border-bottom-color: #EA2427;
-	border-left-color: #EA2427;
-	-webkit-transition: border-color 0s ease-out 0.5s, width 0.25s ease-out 0.5s, height 0.25s ease-out 0.75s;
-	transition: border-color 0s ease-out 0.5s, width 0.25s ease-out 0.5s, height 0.25s ease-out 0.75s;
-}
-
-.fp-animate-appear {
-	border-color: transparent;
-	width: 0;
-	height: 0;
-}
-
-.fp-animate-appear-active {
-
-  	width: 100%;
-	height: 100%;
-	border-color: #EA2427;
-	-webkit-transition: width 0.25s ease-out, height 0.25s ease-out 0.25s;
-	transition: border 0s ease-out 0.5s, width 0.25s ease-out 0.5s, height 0.25s ease-out 0.75s;
-}
-
-.fp-animate-2-appear {
-	border-color: transparent;
-	width: 0;
-	height: 0;
-}
-
-.fp-animate-2-appear-active {
-
-  	width: 100%;
-	height: 100%;
-	border-color: #EA2427;
-	-webkit-transition: width 0.25s ease-out, height 0.25s ease-out 0.25s;
-	transition: border 0s ease-out 1s, width 0.25s ease-out 1s, height 0.25s ease-out 1.25s;
+	width: 1.55%;
 }*/

@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
+
 // import { lazyload } from 'react-lazyload';
 
 import Preloader from '../../shared/preloader/Preloader.js';
@@ -33,11 +33,11 @@ class FrontLayout extends Component {
 	}
     componentDidMount () {
         window.addEventListener("resize", this.updateDimensions.bind(this));
-        window.addEventListener("scroll", this.updateDimensions.bind(this));
+        // window.addEventListener("scroll", this.updateDimensions.bind(this));
     }
     componentWillUnmount () {
         window.removeEventListener("resize", this.updateDimensions.bind(this));
-        window.removeEventListener("scroll", this.updateDimensions.bind(this));
+        // window.removeEventListener("scroll", this.updateDimensions.bind(this));
     }
 
 	updateDimensions () {
@@ -81,15 +81,7 @@ class FrontLayout extends Component {
 		return (
 			<div>
 				{navBar}
-				<ReactCSSTransitionGroup
-					transitionName='page-content'
-					transitionEnterTimeout={300}
-					transitionLeaveTimeout={300}
-					transitionAppear={true}
-					transitionAppearTimeout={300}
-				>
-					{childrenWithProps}
-				</ReactCSSTransitionGroup>
+				{childrenWithProps}
 				<Footer />
 			</div>
 		);

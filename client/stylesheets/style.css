@@ -18,11 +18,19 @@ h1, h2, h3, h4, h5, p, a {
 #custom-nav {
 	padding: 20px;
 	z-index: 3;
+	display: none;
 }
 
 #mobile-menu-content {
 	z-index: 2;
 	background-color: #e6e6e6;
+}
+
+#custom-burger-menu img {
+	width: 48px;
+	height: 8px;
+	display: block;
+	margin-bottom: 3px;
 }
 
 #mobile-menu-content h1 {

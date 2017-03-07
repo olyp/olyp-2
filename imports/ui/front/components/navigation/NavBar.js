@@ -3,7 +3,6 @@ import { browserHistory, Link } from 'react-router';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
 import MobileMenu from './MobileMenu.js';
-import Room4 from '../../../shared/floorplan/rooms/Room4.js';
 
 class NavBar extends Component {
 
@@ -27,7 +26,14 @@ class NavBar extends Component {
 
 	render () {
 
-		const menuIcon = this.state.menuOpen ? "/images/menu-square.png" : "/images/menu-burger.png";
+		const menuIcon = this.state.menuOpen ?  
+			<img src="/images/menu-square.png" className="shadow"/> : 
+			<div id="custom-burger-menu">
+				<img src="/images/menu-burger-segment.png" className="shadow" />
+				<img src="/images/menu-burger-segment.png" className="shadow" />
+				<img src="/images/menu-burger-segment.png" className="shadow" />
+			</div>
+			
 		const menu = this.state.menuOpen ? <MobileMenu onLinkClick={(destination) => {this.redirect(destination)}}/> : '';
 
 		return (
@@ -36,7 +42,10 @@ class NavBar extends Component {
 				<div  id="custom-nav">
 					<div className="row">
 						<div className="col-xs-4">
-							<img onClick={this.toggleOpen.bind(this)} src={menuIcon} className="shadow"/>
+							<div onClick={this.toggleOpen.bind(this)}>
+								{menuIcon}
+							</div>
+							
 						</div>
 						<div className="col-xs-4 text-center">
 							<img src="/images/logo/logo4.png" />
