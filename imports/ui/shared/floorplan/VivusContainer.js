@@ -10,7 +10,8 @@ class VivusContainer extends Component {
 		new Vivus(svgElement, {
 			// Duration in frames
 			duration: this.props.duration,
-			type: this.props.type
+			type: this.props.type,
+			start: this.props.start
 		});
 	}
 

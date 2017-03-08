@@ -44,18 +44,16 @@ class Home extends Component {
 
 								<div style={{minHeight: this.props.window.height - 250}}>
 
-									<div className="container">
-										<div className="row">
-											<div className="col-xs-12 text-center">
-												<h1>Olyp tilbyr gode øvingslokaler, et arbeidssted og knutepunkt for yrkesmusikere og band i Oslo.</h1>
-											</div>
-										</div>
+									<div className="banner-text-container text-center">
+										<h1>Olyp tilbyr gode<br />lydkontor, et<br />arbeidssted og <br />knutepunkt for <br />yrkesmusikere<br />og band i Oslo.</h1>
 									</div>
 
-									<div id="book-room-button" className="container text-center shadow">
-										<Link to="/secure">
-											<h1>Book Rom</h1>
-										</Link>
+									<div className="container">
+										<div id="book-room-button" className="text-center">
+											<Link to="/secure">
+												<h1>Book Rom</h1>
+											</Link>
+										</div>
 									</div>
 
 								</div>
@@ -76,7 +74,7 @@ class Home extends Component {
 									<div className="row">
 										<div className="col-xs-4 col-xs-offset-4">
 
-											<VivusContainer>
+											<VivusContainer duration={300}>
 												<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 106.1 26.2">
 													<path 
 														d="M.5,25.7V.5H13.6V25.7Zm18.4,0V.5H32V25.7Zm18.4,0V.5H50.4V25.7Zm18.4,0V.5H68.8V25.7Zm18.4,0V.5H87.2V25.7Zm18.4,0V.5h13.1V25.7Z" 
@@ -89,8 +87,8 @@ class Home extends Component {
 											
 										</div>
 									</div>
-									<h1><u>6 Rom</u></h1>
-									<h1>For solister og små ensembler</h1>
+									<h1><u>6 Lydkontor</u></h1>
+									<h1>Fast leie<br />1 til 3 pers</h1>
 								</div>
 
 
@@ -98,7 +96,7 @@ class Home extends Component {
 									<div className="row">
 										<div className="col-xs-4 col-xs-offset-4">
 											
-											<VivusContainer>
+											<VivusContainer duration={200}>
 												<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 104.8 46.1">
 												    <path 
 												    	d="M.5,45.6V.5H30.2V45.6Zm66.4,0V.5H37.2V45.6Zm37.3,0V.5H74.5V45.6Z" 
@@ -111,8 +109,8 @@ class Home extends Component {
 
 										</div>
 									</div>
-									<h1><u>3 Rom</u></h1>
-									<h1>For mellomstore ensembler</h1>
+									<h1><u>3 Lydkontor</u></h1>
+									<h1>Fast leie<br />1 til 5 pers</h1>
 								</div>
 
 
@@ -133,8 +131,8 @@ class Home extends Component {
 
 										</div>
 									</div>
-									<h1><u>1 Rom</u></h1>
-									<h1>For større ensembler</h1>
+									<h1><u>1 Preprodrom</u></h1>
+									<h1>Timesleie<br />1 til 7 pers</h1>
 								</div>
 
 								<div className="container text-center">
