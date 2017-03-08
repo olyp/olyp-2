@@ -70,7 +70,7 @@ class FrontLayout extends Component {
 			return <Preloader />
 		}
 
-		const navBar = this.state.navBarVisible ? <NavBar window={this.state.window}/> : '';
+		// const navBar = this.state.navBarVisible ? <NavBar /> : '';
 
 		const childrenWithProps = React.Children.map(this.props.children,
 			(child) => React.cloneElement(child, {
@@ -80,7 +80,7 @@ class FrontLayout extends Component {
 
 		return (
 			<div>
-				{navBar}
+				<NavBar />
 				{childrenWithProps}
 				<Footer />
 			</div>

@@ -124,16 +124,18 @@ class RoomGenerator extends Component {
 		if (this.props.animate) {
 
 			return (
-				<VivusContainer svgId={randomId} duration={this.props.duration}>
-					{svgElement}
-				</VivusContainer>
+				<div className="fp-room-wrapper">
+					<VivusContainer svgId={randomId} duration={this.props.duration}>
+						{svgElement}
+					</VivusContainer>
+				</div>
 
 			);
 
 		}
 
 		return (
-			<div>
+			<div className="fp-room-wrapper">
 				{svgElement}
 			</div>
 		);
