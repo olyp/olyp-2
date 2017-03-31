@@ -4,6 +4,7 @@ import {Router, Route, IndexRoute, browserHistory} from 'react-router';
 
 // LAYOUTS
 import FrontLayout from '../imports/ui/front/components/FrontLayout.js';
+import LoginLayout from '../imports/ui/front/components/LoginLayout.js';
 import SecureLayout from '../imports/ui/secure/components/SecureLayout.js';
 
 // SECURE
@@ -61,11 +62,7 @@ const routes = (
 	<Router history={browserHistory}>
 
 		<Route path="/" component={FrontLayout}>
-			<IndexRoute component={Home} />
-			<Route path="login" component={Login} onEnter={isLoggedIn}></Route>
-			<Route path="invite/:token" component={InviteSignUp}></Route>
-			<Route path="forgot" component={Forgot}></Route>
-			<Route path="signup" component={SignUp}></Route>
+			<IndexRoute component={Home} />	
 		</Route>
 
 		<Route path="/secure" component={SecureLayout} onEnter={authenticateSecure}>
@@ -74,6 +71,13 @@ const routes = (
 			<Route path="codes" component={DoorCodes} />
 			<Route path="profile" component={Profile} />
 			<Route path="users" component={Users} />
+		</Route>
+
+		<Route component={LoginLayout}>
+			<Route path="/login" component={Login} onEnter={isLoggedIn}></Route>
+			<Route path="/forgot" component={Forgot}></Route>
+			<Route path="/signup" component={SignUp}></Route>
+			<Route path="/invite/:token" component={InviteSignUp}></Route>
 		</Route>
 
 	</Router>

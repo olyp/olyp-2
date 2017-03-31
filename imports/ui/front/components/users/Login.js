@@ -7,10 +7,10 @@ export default class Login extends Component {
 
 	}
 
-	handleSubmit (event) {
+	login () {
 
 		// Prevent reload
-		event.preventDefault();
+		// event.preventDefault();
 
 		// Fetch data from form
 		const email = this.refs.emailAddress.value;
@@ -77,38 +77,54 @@ export default class Login extends Component {
 
 	render () {
 		return (
-			<div className="login container">
-				<h4>Login</h4>
-				<div className="divider"></div>
-				<div className="row">
-					<div className="col-xs-12 col-sm-6 col-md-4">
-						<form onSubmit={ this.handleSubmit.bind(this) }>
-								
-							<div className="row">
-						        <div className="input-field col s12 m6">
-						        	<input ref="emailAddress" id="email" type="email" className="validate" />
-						        	<label htmlFor="email">Email</label>
-						        </div>
-						    </div>
-						    <div className="row">
-								<div className="input-field col s12 m6">
-									<input ref="password" id="password" type="password" className="validate" />
-									<label htmlFor="password">Password</label>
-								</div>
-							</div>
-							
-							<button className="btn grey waves-effect waves-light" type="submit">Login</button>
+			<div id="login" className="container text-center">
+
+				<h1>Log in</h1>
 			
-						</form>
+				<h4>Email</h4>
 
-						<button className="btn-primary" onClick={this.loginWithFacebook.bind(this)}>Login with Facebook</button>
-						<button className="btn-warning" onClick={this.loginWithGoogle.bind(this)}>Login with Google</button>
-
+				<div className="row">
+					<div className="col-xs-8 col-xs-offset-2">
+						<input ref="emailAddress" type="email" />
 					</div>
-					<br />
-					<p>Don't have an account? <Link to="/signup">Signup</Link></p>
-					<p>Forgot your password? <Link to="/forgot">Reset password</Link></p>
 				</div>
+
+			
+					<h4>Password</h4>
+				
+
+				<div className="row">
+					<div className="col-xs-8 col-xs-offset-2">
+						<input ref="password" type="password" />
+					</div>
+				</div>
+
+				<div className="row">
+					<div className="col-xs-8 col-xs-offset-2">
+						<h4 id="login-button" onClick={this.login.bind(this)}>Login</h4>
+					</div>
+				</div>
+				
+				
+				<div className="row">
+					<div className="col-xs-10 col-xs-offset-1">
+						<div className="col-xs-6 text-left">
+							<h4 onClick={this.loginWithFacebook.bind(this)}>Facebook</h4>
+						</div>
+						<div className="col-xs-6 text-right">
+							<h4 onClick={this.loginWithGoogle.bind(this)}>Google</h4>
+						</div>
+					</div>
+				</div>
+
+				<div className="spacer-50"></div>
+
+				<Link to="/forgot">Reset password</Link>
+
+				<div className="spacer-10"></div>
+
+				<Link to="/signup">Signup</Link>
+		
 			</div>
 		);
 	}

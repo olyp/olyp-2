@@ -17,15 +17,6 @@ class HomeMobile extends Component {
 
 	render() {
 
-		// const bookRoomFixed = (this.props.window.scroll > 320) ? 
-		// 	<Link to='/secure'>
-		// 		<div id="book-room-fixed">
-		// 			<div className="text-center">
-		// 				Book Rom
-		// 			</div>
-		// 		</div>
-		// 	</Link> : '';
-
 		return (
 			<div>	
 				<ReactCSSTransitionGroup
@@ -39,7 +30,7 @@ class HomeMobile extends Component {
 					<div style={{minHeight: this.props.window.height - 250}}>
 
 						<div className="banner-text-container text-center">
-							<h1>Olyp tilbyr gode<br />lydkontor, et<br />arbeidssted og <br />knutepunkt for <br />yrkesmusikere<br />og band i Oslo.</h1>
+							<h1>Olyp tilbyr gode<br />øvingsrom, et<br />arbeidssted og <br />knutepunkt for <br />yrkesmusikere<br />og band i Oslo.</h1>
 						</div>
 
 						<div className="container">
