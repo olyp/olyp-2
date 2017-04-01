@@ -1,30 +1,27 @@
 import React, {Component} from 'react';
+import { Link, browserHistory } from 'react-router';
 
-export default class ResetPassword extends Component {
+class ResetPassword extends Component {
 
-	componentDidMount() {
-		Materialize.updateTextFields();
+	handleKeyPress (event) {
+		if(event.key == 'Enter'){
+			this.handleSubmit();
+		}
 	}
 
-	handleSubmit (event) {
+	handleSubmit () {
 
-		// Prevent reload
-		event.preventDefault();
-
-		// Fetch data from form
 		const newPassword = this.refs.password.value;
+		const token = this.props.params.token;
 
-		// Validate
-		check(password, String);
+		check(newPassword, String);
+		check(token, String);
 
-		// Reset Password
-
-		//TODO: get token from accountRoutes.js
-		Accounts.resetPassword(token, newPassword, (err) => {
+		Accounts.resetPassword(token, newPassword, (err, res) => {
 			if (err) {
-				alert (err.reason);
+				Bert.alert(err.reason, 'danger', 'growl-bottom-right', 'fa-frown-o');
 			} else {
-				//TODO: Get done function from accountRoutes.js
+				browserHistory.push('/secure');
 			}
 		})
 
@@ -32,29 +29,33 @@ export default class ResetPassword extends Component {
 
 	render () {
 		return (
-			<div className="login container">
-				<h4>Reset password</h4>
-				<div className="divider"></div>
-				<div className="row">
-					<div className="col-xs-12 col-sm-6 col-md-4">
-						<form onSubmit={ this.handleSubmit.bind(this) }>
-								
-						    <div className="row">
-								<div className="input-field col s12 m6">
-									<input ref="password" id="password" type="password" className="validate" />
-									<label htmlFor="password">Password</label>
-								</div>
-							</div>
-							
-							<button className="btn grey waves-effect waves-light" type="submit">Reset</button>
+			<div className="login-layout container text-center" onKeyPress={this.handleKeyPress.bind(this)}>
+
+				<h1>New Password</h1>
 			
-						</form>
+				<h4>Password</h4>
+				
+				<div className="row">
+					<div className="col-xs-8 col-xs-offset-2">
+						<input ref="password" type="password" />
 					</div>
-					<br />
-					<p>Did you suddenly remember? <a href="/login">Login</a></p>
-					<p>Don't have an account? <a href="/signup">Signup</a></p>
 				</div>
+
+				<div className="row">
+					<div className="col-xs-8 col-xs-offset-2">
+						<h4 id="login-button" className="hover" onClick={this.handleSubmit.bind(this)}>Save</h4>
+					</div>
+				</div>
+
+				<Link to="/login">Login</Link>
+
+				<div className="spacer-10"></div>
+
+				<Link to="/signup">Signup</Link>
+		
 			</div>
 		);
 	}
 }
+
+export default ResetPassword;

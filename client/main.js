@@ -19,9 +19,9 @@ import Home from '../imports/ui/front/components/pages/Home.js';
 
 // ACCOUNT
 import Login from '../imports/ui/front/components/users/Login.js';
-import InviteSignUp from '../imports/ui/front/components/users/InviteSignUp.js';
-import Forgot from '../imports/ui/front/components/users/Forgot.js';
 import SignUp from '../imports/ui/front/components/users/SignUp.js';
+import Forgot from '../imports/ui/front/components/users/Forgot.js';
+import ResetPassword from '../imports/ui/front/components/users/ResetPassword.js';
 
 // ACCOUNT ROUTES
 
@@ -77,7 +77,7 @@ const routes = (
 			<Route path="/login" component={Login} onEnter={isLoggedIn}></Route>
 			<Route path="/forgot" component={Forgot}></Route>
 			<Route path="/signup" component={SignUp}></Route>
-			<Route path="/invite/:token" component={InviteSignUp}></Route>
+			<Route path="/resetPassword/:token" component={ResetPassword}></Route>
 		</Route>
 
 	</Router>

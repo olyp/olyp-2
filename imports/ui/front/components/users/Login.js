@@ -3,16 +3,14 @@ import {browserHistory, Link} from 'react-router';
 
 export default class Login extends Component {
 
-	componentDidMount() {
-
+	handleKeyPress (event) {
+		if(event.key == 'Enter'){
+			this.handleSubmit();
+		}
 	}
 
-	login () {
+	handleSubmit () {
 
-		// Prevent reload
-		// event.preventDefault();
-
-		// Fetch data from form
 		const email = this.refs.emailAddress.value;
 		const password = this.refs.password.value;
 
@@ -21,11 +19,10 @@ export default class Login extends Component {
 		check(password, String);
 
 		// Login
-		Meteor.loginWithPassword(email, password, function(error) {
-			if (error) {
-				alert( error.reason );
+		Meteor.loginWithPassword(email, password, function(err) {
+			if (err) {
+				Bert.alert(err.reason, 'danger', 'growl-bottom-right', 'fa-frown-o');
 			} else {
-				// send to /secure, then, if admin, they will be sent to /admin (see routes)
 				browserHistory.push('/secure');
 			}
 		});
@@ -77,7 +74,7 @@ export default class Login extends Component {
 
 	render () {
 		return (
-			<div id="login" className="container text-center">
+			<div className="login-layout container text-center" onKeyPress={this.handleKeyPress.bind(this)}>
 
 				<h1>Log in</h1>
 			
@@ -89,10 +86,8 @@ export default class Login extends Component {
 					</div>
 				</div>
 
-			
-					<h4>Password</h4>
+				<h4>Password</h4>
 				
-
 				<div className="row">
 					<div className="col-xs-8 col-xs-offset-2">
 						<input ref="password" type="password" />
@@ -101,23 +96,20 @@ export default class Login extends Component {
 
 				<div className="row">
 					<div className="col-xs-8 col-xs-offset-2">
-						<h4 id="login-button" onClick={this.login.bind(this)}>Login</h4>
+						<h4 id="login-button" className="hover" onClick={this.handleSubmit.bind(this)}>Login</h4>
 					</div>
 				</div>
 				
-				
-				<div className="row">
+				<div id="social-login" className="row">
 					<div className="col-xs-10 col-xs-offset-1">
 						<div className="col-xs-6 text-left">
-							<h4 onClick={this.loginWithFacebook.bind(this)}>Facebook</h4>
+							<h4 className="hover" onClick={this.loginWithFacebook.bind(this)}>Facebook</h4>
 						</div>
 						<div className="col-xs-6 text-right">
-							<h4 onClick={this.loginWithGoogle.bind(this)}>Google</h4>
+							<h4 className="hover" onClick={this.loginWithGoogle.bind(this)}>Google</h4>
 						</div>
 					</div>
 				</div>
-
-				<div className="spacer-50"></div>
 
 				<Link to="/forgot">Reset password</Link>
 

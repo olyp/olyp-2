@@ -3,22 +3,14 @@ import {browserHistory, Link} from 'react-router';
 
 export default class SignUp extends Component {
 
-	componentDidMount() {
-
-		if(Meteor.userId()) {
-
-			// If user is already logged in, send to secure
-			browserHistory.push('/secure');
+	handleKeyPress (event) {
+		if(event.key == 'Enter'){
+			this.handleSubmit();
 		}
-			
 	}
 
-	handleSubmit (event) {
+	handleSubmit () {
 
-		// Prevent reload
-		event.preventDefault();
-
-		// Fetch data from form
 		const email = this.refs.emailAddress.value;
 		const firstName = this.refs.firstName.value;
 		const lastName = this.refs.lastName.value;
@@ -43,13 +35,13 @@ export default class SignUp extends Component {
 
 		// Check token (creating user and giving role 'invited' in method if token matches)
 
-		Meteor.call('createStandardUser', user, function(error) {
-			if (error) {
-				alert(error.reason);
+		Meteor.call('createStandardUser', user, function(err) {
+			if (err) {
+				Bert.alert(err.reason, 'danger', 'growl-bottom-right', 'fa-frown-o');
 			} else {
-				Meteor.loginWithPassword(user.email, password, function(error) {
-					if (error) {
-						alert( error.reason );
+				Meteor.loginWithPassword(user.email, password, function(err) {
+					if (err) {
+						Bert.alert(err.reason, 'danger', 'growl-bottom-right', 'fa-frown-o');
 					} else {
 						browserHistory.push('/secure');
 					}
@@ -60,41 +52,54 @@ export default class SignUp extends Component {
 
 	render () {
 		return (
-			<div className="signup container">
-				<h4>Sign up</h4>
-				<div className="divider"></div>
+			<div className="login-layout container text-center" onKeyPress={this.handleKeyPress.bind(this)}>
+
+				<h1>Sign Up</h1>
+
+				<h4>First Name</h4>
+
 				<div className="row">
-					<form className="col s12" onSubmit={ this.handleSubmit.bind(this) }>
-						<div className="row">
-							<div className="input-field col s6">
-								<input ref="firstName" id="first_name" type="text" className="validate" />
-								<label htmlFor="first_name">First Name</label>
-							</div>
-							<div className="input-field col s6">
-								<input ref="lastName" id="last_name" type="text" className="validate" />
-								<label htmlFor="last_name">Last Name</label>
-							</div>
-						</div>
-
-						<div className="row">
-							<div className="input-field col s12">
-								<input ref="emailAddress" id="email" type="email" className="validate" />
-								<label htmlFor="email">Email</label>
-							</div>
-						</div>
-						<div className="row">
-							<div className="input-field col s12">
-								<input ref="password" id="password" type="password" className="validate" />
-								<label htmlFor="password">Password</label>
-							</div>
-						</div>
-						<button className="btn grey waves-effect waves-light" type="submit">Sign up</button>
-					</form>
-
+					<div className="col-xs-8 col-xs-offset-2">
+						<input ref="firstName" type="text" />
+					</div>
 				</div>
 
-				<p>Already have an account? <Link to="/login">Log In</Link></p>
+				<h4>Last Name</h4>
 
+				<div className="row">
+					<div className="col-xs-8 col-xs-offset-2">
+						<input ref="lastName" type="text" />
+					</div>
+				</div>
+			
+				<h4>Email</h4>
+
+				<div className="row">
+					<div className="col-xs-8 col-xs-offset-2">
+						<input ref="emailAddress" type="email" />
+					</div>
+				</div>
+
+				<h4>Password</h4>
+				
+				<div className="row">
+					<div className="col-xs-8 col-xs-offset-2">
+						<input ref="password" type="password" />
+					</div>
+				</div>
+
+				<div className="row">
+					<div className="col-xs-8 col-xs-offset-2">
+						<h4 id="login-button" className="hover" onClick={this.handleSubmit.bind(this)}>Sign Up</h4>
+					</div>
+				</div>
+
+				<Link to="/forgot">Reset password</Link>
+
+				<div className="spacer-10"></div>
+
+				<Link to="/login">Login</Link>
+		
 			</div>
 		);
 	}
