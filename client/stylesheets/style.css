@@ -9,6 +9,10 @@ h1, h2, h3, h4, h5, p, a, input {
 	font-family: Fugue;
 }
 
+a {
+	color: inherit;
+}
+
 input:-webkit-autofill {
     -webkit-box-shadow: 0 0 0px 1000px white inset;
 }
@@ -112,6 +116,19 @@ input {
 	margin-top: 7px;
 	color: white;
 	background-color: rgb(38, 84, 249);
+}
+
+.room-selector {
+	text-align: center;
+	display: inline-block;
+	padding: 10px;
+	color: white;
+	background-color: rgb(38, 84, 249);
+	opacity: 0.3;
+}
+
+.room-selector-active {
+	opacity: 1;
 }
 
 /*==========  SECURE LAYOUT END ==========*/

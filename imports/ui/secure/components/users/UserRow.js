@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import { Link } from 'react-router';
 import swal from 'sweetalert2';
 
 export default class UserRow extends Component {
@@ -46,19 +47,23 @@ export default class UserRow extends Component {
 		const profile = user.profile;
 		const email = (user && user.emails && user.emails[0]) ? user.emails[0].address : '';
 		const online = (user && user.status && user.status.online) ? <span>Online</span> : '';
+		const url = '/secure/users/' + user._id;
 
 		return (
-			<div className="row">
-				<div className="col-xs-4">
-					<img src="http://eng.icrconference.org/wp-content/uploads/2016/04/blank.gif" />
+			<Link to={url}>
+				<div className="row">
+					<div className="col-xs-4">
+						<img src="http://eng.icrconference.org/wp-content/uploads/2016/04/blank.gif" />
+					</div>
+					<div className="col-xs-8">
+						<h4>{profile.name}</h4>
+						<p>{email}</p>
+					</div>
 				</div>
-				<div className="col-xs-8">
-					<h4>{profile.name}</h4>
-					<p>{email}</p>
-				</div>
-
-			</div>
+			</Link>
 		);
+
+		// Old
 
 		return (
 			<div className="row user-row">
@@ -98,7 +103,7 @@ export default class UserRow extends Component {
 								</label>
 							</div>
 						</div>
-						
+
 					</div>
 				</div>
 				<div className="col-xs-2 text-right">

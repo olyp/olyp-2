@@ -13,6 +13,7 @@ import DoorCodes from '../imports/ui/secure/components/codes/DoorCodes.js';
 import Profile from '../imports/ui/secure/components/profile/Profile.js';
 import Booking from '../imports/ui/secure/components/booking/Booking.js';
 import Users from '../imports/ui/secure/components/users/Users.js';
+import UserSingle from '../imports/ui/secure/components/users/UserSingle.js';
 
 // FRONT
 import Home from '../imports/ui/front/components/pages/Home.js';
@@ -71,6 +72,7 @@ const routes = (
 			<Route path="codes" component={DoorCodes} />
 			<Route path="profile" component={Profile} />
 			<Route path="users" component={Users} />
+			<Route path="users/:userId" component={UserSingle} />
 		</Route>
 
 		<Route component={LoginLayout}>

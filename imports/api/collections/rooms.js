@@ -18,6 +18,19 @@ Rooms.deny({
 const RoomsSchema = new SimpleSchema({
 	"name": {
 		type: String
+	},
+	"access": {
+		type: [Object],
+		optional: true
+	},
+	"access.$.userId": {
+		type: String
+	},
+	"access.$.canBook": {
+		type: Boolean
+	},
+	"access.$.canAccess": {
+		type: Boolean
 	}
 });
 

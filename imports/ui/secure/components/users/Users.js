@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import { createContainer } from 'meteor/react-meteor-data';
 
+import Preloader from '../../../shared/preloader/Preloader.js';
+
 import UserRow from './UserRow.js';
 
 class Users extends Component {
@@ -37,6 +39,14 @@ class Users extends Component {
 			}
 		);
 
+		if (this.props.users.length == 0) {
+			return (
+				<div>
+					<Preloader />
+				</div>
+			);
+		}
+
 		return (
 			<div className="container">
 
@@ -51,7 +61,7 @@ class Users extends Component {
 						/>
 					</div>
 					<div className="col-xs-2">
-						<div className="search-counter"> {filteredUsers.length} </div>
+						<div className="search-counter pull-right"> {filteredUsers.length} </div>
 					</div>
 				</div>
 

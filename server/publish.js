@@ -55,7 +55,16 @@ Meteor.publish('allUsers', function () {
 });
 
 Meteor.publish('rooms', function () {
-	return Rooms.find();
+
+	const canManageUsers = Roles.userIsInRole(this.userId, ['admin', 'super-admin'], 'manage-users');
+
+	if (canManageUsers) {
+		return Rooms.find();
+	} else {
+		return Rooms.find({}, {fields: {"access": 0}});
+	}
+
+	
 });
 
 Meteor.publish('userCustomers', function () {
