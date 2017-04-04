@@ -4,22 +4,65 @@ import { createContainer } from 'meteor/react-meteor-data';
 import UserRow from './UserRow.js';
 
 class Users extends Component {
+
+	constructor(props) {
+		super(props);
+		this.state = {
+			query: '',
+			result: []
+		}
+	}
+
+	search () {
+		this.setState({
+			query: this.refs.searchInput.value
+		});
+	}
+
 	render () {
+
+		var filteredUsers = this.props.users.filter(
+			(user) => {
+
+				const query = this.state.query.toLowerCase();
+				const userName = (user.profile && user.profile.name) ? user.profile.name.toLowerCase() : '';
+				const email = (user.emails && user.emails[0] && user.emails[0].address) ? user.emails[0].address : '';
+
+				const userNameMatch = userName.indexOf(query) !== -1;
+				const emailMatch = email.indexOf(query) !== -1;
+
+				if (userNameMatch || emailMatch) {
+					return true
+				}
+			}
+		);
+
 		return (
 			<div className="container">
-				<h3>Users</h3>
+
+				<div className="row">
+					<div className="col-xs-10">
+						<input 
+							type="text" 
+							ref="searchInput" 
+							placeholder="Search ..." 
+							className="search-bar"
+							onChange={this.search.bind(this)}
+						/>
+					</div>
+					<div className="col-xs-2">
+						<div className="search-counter"> {filteredUsers.length} </div>
+					</div>
+				</div>
 
 				<hr />
 
-				{this.props.users.map((user, i) => {
-
-					const isOdd = i % 2 === 0;
-					const style = isOdd ? 'user-row-background' : '';
+				{filteredUsers.map((user, i) => {
 
 					if (user._id !== Meteor.userId()) {
 
 						return (
-							<div className={style} key={user._id}>
+							<div className="user-list" key={user._id}>
 								<UserRow user={user}/>
 								<hr />
 							</div>

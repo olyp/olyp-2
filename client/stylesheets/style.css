@@ -1,3 +1,5 @@
+/*==========  GLOBAL  ==========*/
+
 @font-face {
     font-family: Fugue;
     src: url(/fonts/Fugue-Regular.otf);
@@ -7,16 +9,20 @@ h1, h2, h3, h4, h5, p, a, input {
 	font-family: Fugue;
 }
 
+input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0px 1000px white inset;
+}
+
 input {
 	width: 100%;
-	border: 2px solid #EA2427;
-	text-align: center;
+	border: 1px solid black;
 	border-radius: 0px;
 	-webkit-appearance: none
 }
 
-input:-webkit-autofill {
-    -webkit-box-shadow: 0 0 0px 1000px white inset;
+.search-bar {
+	padding: 10px 5px;
+	border: none;
 }
 
 .hover:hover {
@@ -31,6 +37,85 @@ input:-webkit-autofill {
 .spacer-10 {
 	height: 10px;
 }
+
+.shadow {
+	/*box-shadow: rgba(0, 0, 0, 0.2) 0px 2px 4px 0px;*/
+	box-shadow: rgba(0, 0, 0, 0.2) 0px 1px 2px 0px;
+}
+
+.shadow-top {
+	box-shadow: rgba(0, 0, 0, 0.2) 0px -2px 4px 0px;
+}
+
+.shadow-right {
+	box-shadow: rgba(0, 0, 0, 0.2) 5px 0px 4px -4px;
+}
+
+.shadow-bottom {
+	box-shadow: rgba(0, 0, 0, 0.2) 5px 0px 4px -4px;
+}
+
+.shadow-left {
+	box-shadow: rgba(0, 0, 0, 0.2) -4px 0px 4px -3px;
+}
+
+.shadow-bottom-right {
+	box-shadow: rgba(0, 0, 0, 0.2) 3px 3px 4px -1px;
+}
+
+.shadow-bottom-left {
+	box-shadow: rgba(0, 0, 0, 0.2) -2px 2px 4px -1px;
+}
+
+/*==========  GLOBAL END ==========*/
+
+/*==========  LOGIN LAYOUT  ==========*/
+
+.login-layout {
+	margin-top: 90px;
+	margin-bottom: 50px;
+}
+
+.login-layout h1 {
+/*	text-decoration: underline;*/
+	margin-bottom: 40px;
+}
+
+.login-layout h4 {
+	margin-bottom: 10px;
+}
+.login-layout input {
+	margin-bottom: 5px;
+}
+
+.login-layout input {
+	border: 2px solid #EA2427;
+	text-align: center;
+}
+
+/*==========  LOGIN LAYOUT END ==========*/
+
+/*==========  FRONT LAYOUT  ==========*/
+
+/*==========  FRONT LAYOUT END ==========*/
+
+/*==========  SECURE LAYOUT  ==========*/
+
+.user-list img {
+	height: 75px;
+	width: 75px;
+}
+
+.search-counter {
+	display: inline-block;
+	padding: 2px 10px 2px 10px;
+	margin-top: 7px;
+	color: white;
+	background-color: rgb(38, 84, 249);
+}
+
+/*==========  SECURE LAYOUT END ==========*/
+
 
 #custom-nav {
 	padding: 20px;
@@ -99,37 +184,6 @@ input:-webkit-autofill {
 	z-index: 2;
 }
 
-.shadow {
-	/*box-shadow: rgba(0, 0, 0, 0.2) 0px 2px 4px 0px;*/
-	box-shadow: rgba(0, 0, 0, 0.2) 0px 1px 2px 0px;
-}
-
-.shadow-top {
-	box-shadow: rgba(0, 0, 0, 0.2) 0px -2px 4px 0px;
-}
-
-.shadow-right {
-	box-shadow: rgba(0, 0, 0, 0.2) 5px 0px 4px -4px;
-}
-
-.shadow-bottom {
-	box-shadow: rgba(0, 0, 0, 0.2) 5px 0px 4px -4px;
-}
-
-.shadow-left {
-	box-shadow: rgba(0, 0, 0, 0.2) -4px 0px 4px -3px;
-}
-
-.shadow-bottom-right {
-	box-shadow: rgba(0, 0, 0, 0.2) 3px 3px 4px -1px;
-}
-
-.shadow-bottom-left {
-	box-shadow: rgba(0, 0, 0, 0.2) -2px 2px 4px -1px;
-}
-
-
-
 #book-room-button {
 	border: 2px solid #EA2427;
 	margin: 0 25px 0 25px;
@@ -145,22 +199,7 @@ input:-webkit-autofill {
 /*	text-decoration: underline;*/
 }
 
-.login-layout {
-	margin-top: 90px;
-	margin-bottom: 50px;
-}
 
-.login-layout h1 {
-	text-decoration: underline;
-	margin-bottom: 40px;
-}
-
-.login-layout h4 {
-	margin-bottom: 10px;
-}
-.login-layout input {
-	margin-bottom: 5px;
-}
 
 #social-login {
 	margin-bottom: 15px;

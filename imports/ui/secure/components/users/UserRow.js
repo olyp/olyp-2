@@ -48,6 +48,19 @@ export default class UserRow extends Component {
 		const online = (user && user.status && user.status.online) ? <span>Online</span> : '';
 
 		return (
+			<div className="row">
+				<div className="col-xs-4">
+					<img src="http://eng.icrconference.org/wp-content/uploads/2016/04/blank.gif" />
+				</div>
+				<div className="col-xs-8">
+					<h4>{profile.name}</h4>
+					<p>{email}</p>
+				</div>
+
+			</div>
+		);
+
+		return (
 			<div className="row user-row">
 				<div className="col-xs-3">
 					{profile.name}
@@ -84,8 +97,8 @@ export default class UserRow extends Component {
 						            Admin
 								</label>
 							</div>
-
 						</div>
+						
 					</div>
 				</div>
 				<div className="col-xs-2 text-right">

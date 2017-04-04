@@ -32,11 +32,11 @@ class FrontLayout extends Component {
 		this.updateDimensions();
 	}
     componentDidMount () {
-        window.addEventListener("resize", this.updateDimensions.bind(this));
+        // window.addEventListener("resize", this.updateDimensions.bind(this));
         // window.addEventListener("scroll", this.updateDimensions.bind(this));
     }
     componentWillUnmount () {
-        window.removeEventListener("resize", this.updateDimensions.bind(this));
+        // window.removeEventListener("resize", this.updateDimensions.bind(this));
         // window.removeEventListener("scroll", this.updateDimensions.bind(this));
     }
 
