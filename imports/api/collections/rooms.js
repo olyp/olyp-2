@@ -23,14 +23,13 @@ const RoomsSchema = new SimpleSchema({
 		type: [Object],
 		optional: true
 	},
-	"access.$.userId": {
-		type: String
+	"canBook": {
+		type: [String],
+		optional: true
 	},
-	"access.$.canBook": {
-		type: Boolean
-	},
-	"access.$.canAccess": {
-		type: Boolean
+	"canAccess": {
+		type: [String],
+		optional: true
 	}
 });
 

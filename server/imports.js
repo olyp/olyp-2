@@ -10,3 +10,4 @@ import '../imports/api/collections/doorCodeLog.js';
 import '../imports/api/methods/doorCodeMethods.js';
 import '../imports/api/methods/userMethods.js';
 import '../imports/api/methods/bookingMethods.js';
+import '../imports/api/methods/roomMethods.js';
