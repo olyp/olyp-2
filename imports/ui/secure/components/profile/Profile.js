@@ -142,9 +142,15 @@ class Profile extends Component {
 
 				<hr />
 
-				<div className="deleteFieldBig" onClick={this.deleteUser.bind(this)}>
-					<h4>Delete my user</h4>
+				<div className="row">
+					<div className="col-xs-12">
+						<div className="delete-large" onClick={this.deleteUser.bind(this)}>
+      						Delete User
+    					</div>
+					</div>
 				</div>
+
+				<hr />
 
 			</div>
 		);

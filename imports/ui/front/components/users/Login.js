@@ -1,7 +1,15 @@
 import React, {Component} from 'react';
 import {browserHistory, Link} from 'react-router';
 
+import Preloader from '../../../shared/preloader/Preloader.js';
+
 export default class Login extends Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			loading: false
+		}
+	}
 
 	handleKeyPress (event) {
 		if(event.key == 'Enter'){
@@ -11,6 +19,10 @@ export default class Login extends Component {
 
 	handleSubmit () {
 
+		this.setState({
+			loading: true
+		});
+
 		const email = this.refs.emailAddress.value;
 		const password = this.refs.password.value;
 
@@ -19,21 +31,34 @@ export default class Login extends Component {
 		check(password, String);
 
 		// Login
-		Meteor.loginWithPassword(email, password, function(err) {
+		Meteor.loginWithPassword(email, password, (err) => {
 			if (err) {
+				this.setState({
+					loading: false
+				});
 				Bert.alert(err.reason, 'danger', 'growl-bottom-right', 'fa-frown-o');
 			} else {
+				this.setState({
+					loading: false
+				});
 				browserHistory.push('/secure');
 			}
 		});
 	}
 
 	loginWithFacebook () {
+
+		this.setState({
+			loading: true
+		});
+
 		Meteor.loginWithFacebook({
 			requestPermissions: ['public_profile', 'email']
 			}, (err) => {
 				if (err) {
-					
+					this.setState({
+						loading: false
+					});
 					// if (err.error == 200) {
 					// 	// Email already existed and integration has been given to that user
 					// 	console.log('facebook-integration given to user');
@@ -46,18 +71,27 @@ export default class Login extends Component {
 					// }
 			} else {
 				// successful login!
+				this.setState({
+					loading: false
+				});
+
 				browserHistory.push('/secure');
 			}
 		});
 	}
 
 	loginWithGoogle () {
+		this.setState({
+			loading: true
+		});
 		Meteor.loginWithGoogle({
 			requestPermissions: ['email']
 			}, (err) => {
 				if (err) {
 
-					
+					this.setState({
+						loading: false
+					});
 					// if (err.error == 200) {
 					// 	// Email already existed and integration has been given to that user
 					// 	console.log('google-integration given to user');
@@ -67,12 +101,22 @@ export default class Login extends Component {
 					// }
 			} else {
 				// successful login!
+				this.setState({
+					loading: false
+				});
 				browserHistory.push('/secure');
 			}
 		});
 	}
 
 	render () {
+
+		if (this.state.loading) {
+			return (
+				<Preloader />
+			);
+		}
+
 		return (
 			<div className="login-layout container text-center" onKeyPress={this.handleKeyPress.bind(this)}>
 
