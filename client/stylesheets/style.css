@@ -38,6 +38,10 @@ input {
 	height: 50px;
 }
 
+.spacer-30 {
+	height: 30px;
+}
+
 .spacer-10 {
 	height: 10px;
 }
@@ -129,6 +133,14 @@ input {
 
 .room-selector-active {
 	opacity: 1;
+}
+
+.delete-large {
+	background-color: red;
+	text-align: center;
+	color: white;
+	text-transform: uppercase;
+	padding: 20px 0px;
 }
 
 /*==========  SECURE LAYOUT END ==========*/

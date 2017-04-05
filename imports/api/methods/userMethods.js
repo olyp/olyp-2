@@ -34,33 +34,30 @@ Meteor.methods({
 		}
 	},
 	
-	deleteUser (userId) {
+	'user.delete' (userId) {
 
 		// Validation
 		check(userId, String);
 
-		if (userId == Meteor.userId()) {
+		if (userId == Meteor.userId() || Roles.userIsInRole(Meteor.userId(), ['super-admin', 'admin'], 'manage-users')) {
 
 			// Delete user door code
-			Meteor.call('doorCode.deleteByUserId', userId);
-
-			// Allow user to delete it self
-			Meteor.users.remove(userId);
-
-
-
-		} else {
-
-			// Only allow deleting other users if has role admin or manage-users
-			if ( Roles.userIsInRole(Meteor.userId(), ['super-admin', 'admin'], 'manage-users')) {
-
-				// Delete user door codes
-				Meteor.call('doorCode.deleteByUserId', userId);
-
-				// Delete user
-				Meteor.users.remove(userId);
-			}
-		}	
+			Meteor.call('doorCode.deleteByUserId', userId, (err, res) => {
+				if (err) {
+					console.log(err);
+				} else {
+					// Add to deleted users
+					Meteor.call('deletedUsers.add', userId, (err, res) => {
+						if (err) {
+							console.log(err);
+						} else {
+							// Delete user
+							Meteor.users.remove(userId);
+						}
+					});
+				}
+			});
+		} 	
 	},
 
 	toggleManageUsers (userId) {

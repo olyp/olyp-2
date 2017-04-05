@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { createContainer } from 'meteor/react-meteor-data';
+import { browserHistory } from 'react-router';
+import swal from 'sweetalert2';
 
 import Rooms from '../../../../api/collections/rooms.js'
 
@@ -7,6 +9,30 @@ import Preloader from '../../../shared/preloader/Preloader.js';
 
 class UserSingle extends Component {
 
+	deleteUser () {
+
+		swal({
+			title: 'Are you sure?',
+			text: "You will not be able to recover this user!",
+			type: 'warning',
+			showCancelButton: true,
+			confirmButtonColor: '#3085d6',
+			cancelButtonColor: '#d33',
+			confirmButtonText: 'Yes, delete it!'
+		}).then(() => {
+			Meteor.call('user.delete', this.props.user._id, (err, res) => {
+				if (err) {
+					console.log(err);
+					swal("Failed", "The user cound not be deleted.", "warning");
+				} else {
+					browserHistory.goBack();
+					Bert.alert('User deleted', 'success', 'growl-bottom-right', 'fa-smile-o');
+				}
+			});
+		// Since this is a promise, we have to catch "cancel" and say it is ok
+		}).catch(swal.noop);
+
+	}
 
 	toggleBookingAccessToRoom(roomId) {
 		Meteor.call('room.toggleUserBookingAccess', roomId, this.props.user._id, (err, res) => {
@@ -94,6 +120,16 @@ class UserSingle extends Component {
 						);
 					})}
 			
+				</div>
+
+				<hr />
+
+				<div className="row">
+					<div className="col-xs-12">
+						<div className="delete-large" onClick={this.deleteUser.bind(this)}>
+      						Delete User
+    					</div>
+					</div>
 				</div>
 
 				<hr />
