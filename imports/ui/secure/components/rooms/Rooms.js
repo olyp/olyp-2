@@ -45,7 +45,7 @@ class Rooms extends Component {
 						<span onClick={this.addRoom.bind(this)} className="glyphicon glyphicon-plus hover"></span>
 					</div>
 				</div>
-				
+				<hr />
 				{this.props.rooms.map((room) => {
 					const url = '/secure/rooms/' + room._id;
 
@@ -54,7 +54,7 @@ class Rooms extends Component {
 							<Link to={url}>
 								<div className="row">
 									<div className="col-xs-12">
-										{room.name}
+										<h4>{room.name}</h4>
 									</div>
 								</div>
 							</Link>

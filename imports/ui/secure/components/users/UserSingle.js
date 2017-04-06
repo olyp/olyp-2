@@ -97,7 +97,7 @@ class UserSingle extends Component {
 						return (
 							<div 
 								key={room._id} 
-								className={`room-selector col-xs-4 ${activeClass}`}
+								className={`room-selector col-xs-4 hover ${activeClass}`}
 								onClick={() => {this.toggleBookingAccessToRoom(room._id)}}
 							>
 								{room.name}
@@ -121,7 +121,7 @@ class UserSingle extends Component {
 						return (
 							<div 
 								key={room._id} 
-								className={`room-selector col-xs-4 ${activeClass}`}
+								className={`room-selector col-xs-4 hover ${activeClass}`}
 								onClick={() => {this.toggleAccessToRoom(room._id)}}
 							>
 								{room.name}
@@ -137,7 +137,7 @@ class UserSingle extends Component {
 
 				<div className="row">
 					<div 
-						className={`room-selector col-xs-4 ${isAdminClass}`}
+						className={`room-selector col-xs-4 hover ${isAdminClass}`}
 						onClick={() => {this.toggleIsAdmin(user._id)}}
 					>
 						Admin

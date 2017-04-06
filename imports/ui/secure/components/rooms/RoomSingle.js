@@ -6,6 +6,7 @@ import swal from 'sweetalert2';
 import Rooms from '../../../../api/collections/rooms.js'
 
 import Preloader from '../../../shared/preloader/Preloader.js';
+import UserRow from '../users/UserRow.js';
 
 class RoomSingle extends Component {
 
@@ -59,10 +60,17 @@ class RoomSingle extends Component {
 		}).catch(swal.noop);
 	}
 
+	getUserById (userId) {
+		const user = Meteor.users.find({_id: userId}).fetch();
+		return user[0];
+	}
+
 	render () {
 
 		const room = (this.props.room);
 		const name = (room && room.name);
+		const usersWhoCanBook = (room && room.canBook);
+		const usersWhoCanAccess = (room && room.canAccess);
 
 		return (
 			<div className="container">
@@ -70,6 +78,40 @@ class RoomSingle extends Component {
 					<h4 onClick={this.renameRoom.bind(this)}>{name}</h4>
 				</div>
 				<hr />
+				<h4>Can Book:</h4>
+
+				{usersWhoCanBook.map((userId) => {
+
+					const user = this.getUserById(userId);
+
+					if (user) {
+						return (
+							<div className="user-list" key={user._id}>
+								<UserRow user={user}/>
+								<hr />
+							</div>
+						);
+					}
+	
+				})}
+
+				<h4>Can Access:</h4>
+
+				{usersWhoCanAccess.map((userId) => {
+
+					const user = this.getUserById(userId);
+
+					if (user) {
+						return (
+							<div className="user-list" key={user._id}>
+								<UserRow user={user}/>
+								<hr />
+							</div>
+						);
+					}
+	
+				})}
+				
 				<div className="row">
 					<div className="col-xs-12">
 						<div className="delete-large" onClick={this.deleteRoom.bind(this)}>
@@ -84,10 +126,12 @@ class RoomSingle extends Component {
 
 export default createContainer((props) => {
 	Meteor.subscribe('rooms');
+	Meteor.subscribe('allUsers');
 
 	const room = Rooms.find({_id: props.params.roomId}).fetch();
 
 	return {
-		room: room[0]
+		room: room[0],
+		users: Meteor.users.find().fetch()
 	};
 }, RoomSingle);
