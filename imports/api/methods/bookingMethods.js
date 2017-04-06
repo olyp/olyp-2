@@ -7,6 +7,9 @@ const fmt = "HH:mm, DD.MM.YYYY";
 
 Meteor.methods({
 	"booking.add": function (payload) {
+
+		check(payload, Object);
+
 		const bookingForm = payload.bookingForm;
 		const roomId = payload.roomId;
 		const userId = Meteor.userId();
@@ -44,6 +47,9 @@ Meteor.methods({
 	},
 
 	"booking.delete": function (payload) {
+
+		check(payload, Object);
+
 		const reservationId = payload.id;
 		Reservations.remove({"_id": reservationId, "booking.userId": Meteor.userId()})
 	}

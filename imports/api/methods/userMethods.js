@@ -83,6 +83,8 @@ Meteor.methods({
 	},
 
 	changeUserName (name) {
+		check(name, String);
+
 		Meteor.users.update({_id: Meteor.userId()}, {$set: {'profile.name': name}});
 	},
 	sendVerificationEmail () {

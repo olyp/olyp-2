@@ -7,6 +7,10 @@ import DoorCodes from '../collections/doorCodes.js';
 Meteor.methods({
 	'doorCode.add': function (userId, validFrom, validTo) {
 
+		check(userId, String);
+		check(validFrom, String);
+		check(validTo, String);
+
 		const randomCode = Math.floor(Math.random() * (999999 - 100000 + 1)) + 100000;
 		const addedBy = Meteor.userId() ? Meteor.userId() : userId;
 
@@ -29,13 +33,17 @@ Meteor.methods({
 		
 	},
 	'doorCode.deleteById': function (codeId) {
+		check(codeId, String);
+
 		DoorCodes.remove(codeId);
 	},
 	'doorCode.deleteByUserId': function (userId) {
+		check(userId, String);
+
 		DoorCodes.remove({userId: userId});
-	},
-	'doorCode.open': function () {
-		var getUrl = 'http://maindoor.olyp.no/enu/trigger/' + Meteor.settings.private.doorToken;
-		HTTP.get(getUrl);
 	}
+	// 'doorCode.open': function () {
+	// 	var getUrl = 'http://maindoor.olyp.no/enu/trigger/' + Meteor.settings.private.doorToken;
+	// 	HTTP.get(getUrl);
+	// }
 });

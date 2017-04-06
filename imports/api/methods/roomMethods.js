@@ -4,15 +4,24 @@ import Rooms from '../collections/rooms.js';
 
 Meteor.methods({
 	'room.add': function (name) {
+		check(name, String);
+
 		Rooms.insert({name: name});
 	},
 	'room.delete': function (roomId) {
+		check(roomId, String);
+
 		Rooms.remove({_id: roomId});
 	},
 	'room.rename': function (roomId, name) {
+		check(roomId, String);
+		check(name, String);
+
 		Rooms.update({_id: roomId}, {$set: {name: name}});
 	},
 	'room.toggleUserBookingAccess': function (roomId, userId) {
+		check(roomId, String);
+		check(userId, String);
 
 		const hasAccess = Rooms.findOne({_id: roomId, "canBook": userId});
 
@@ -24,6 +33,8 @@ Meteor.methods({
 
 	},
 	'room.toggleUserAccess': function (roomId, userId) {
+		check(roomId, String);
+		check(userId, String);
 
 		const hasAccess = Rooms.findOne({_id: roomId, "canAccess": userId});
 
