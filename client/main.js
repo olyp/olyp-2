@@ -14,6 +14,8 @@ import Profile from '../imports/ui/secure/components/profile/Profile.js';
 import Booking from '../imports/ui/secure/components/booking/Booking.js';
 import Users from '../imports/ui/secure/components/users/Users.js';
 import UserSingle from '../imports/ui/secure/components/users/UserSingle.js';
+import Rooms from '../imports/ui/secure/components/rooms/Rooms.js';
+import RoomSingle from '../imports/ui/secure/components/rooms/RoomSingle.js';
 
 // FRONT
 import Home from '../imports/ui/front/components/pages/Home.js';
@@ -87,6 +89,8 @@ const routes = (
 
 			<Route path="users" component={Users} onEnter={authenticateAdmin} />
 			<Route path="users/:userId" component={UserSingle} onEnter={authenticateAdmin} />
+			<Route path="rooms" component={Rooms} onEnter={authenticateAdmin} />
+			<Route path="rooms/:roomId" component={RoomSingle} onEnter={authenticateAdmin} />
 		</Route>
 
 		<Route component={LoginLayout}>

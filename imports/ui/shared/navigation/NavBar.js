@@ -36,7 +36,7 @@ class NavBar extends Component {
 
 		const navClass = Meteor.userId() ? 'shadow' : '';
 
-		// const link = Meteor.userId() ? '/secure' : '/';
+		const link = Meteor.userId() ? '/secure' : '/';
 
 
 		return (
@@ -56,7 +56,7 @@ class NavBar extends Component {
 							</Link>
 						</div>
 						<div className="col-xs-4 text-right hover">
-							<Link to='/'>
+							<Link to={link}>
 								{layout}
 							</Link>
 						</div>

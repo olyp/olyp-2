@@ -292,7 +292,7 @@ input {
 .login-layout h4,
 .login-layout h5,
 #custom-nav h4,
-#custom-nav .nav-lock,
+.glyphicon,
 a:hover {
 	color: rgb(38, 84, 249);
 }

@@ -43,9 +43,9 @@ Meteor.publish('allProfiles', function () {
 
 Meteor.publish('allUsers', function () {
 
-	const canManageUsers = Roles.userIsInRole(this.userId, ['admin', 'super-admin'], 'olyp');
+	const isAdmin = Roles.userIsInRole(this.userId, ['admin', 'super-admin'], 'olyp');
 
-	if (canManageUsers) {
+	if (isAdmin) {
 		return Meteor.users.find({}, {fields: {"profile": 1, "emails": 1, "createdAt": 1, "roles": 1, "status": 1}});
 	} else {
 		return null;
@@ -56,9 +56,9 @@ Meteor.publish('allUsers', function () {
 
 Meteor.publish('rooms', function () {
 
-	const canManageUsers = Roles.userIsInRole(this.userId, ['admin', 'super-admin'], 'olyp');
+	const isAdmin = Roles.userIsInRole(this.userId, ['admin', 'super-admin'], 'olyp');
 
-	if (canManageUsers) {
+	if (isAdmin) {
 		return Rooms.find();
 	} else {
 		return Rooms.find({}, {fields: {"access": 0}});
