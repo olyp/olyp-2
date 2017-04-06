@@ -139,6 +139,10 @@ input {
 	background-color: rgb(38, 84, 249);
 }
 
+.add-room-button {
+	margin-top: 7px;
+}
+
 .room-selector {
 	text-align: center;
 	display: inline-block;

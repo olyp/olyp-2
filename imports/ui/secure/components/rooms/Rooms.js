@@ -9,6 +9,20 @@ import RoomsCollection from '../../../../api/collections/rooms.js';
 
 class Rooms extends Component {
 
+	constructor(props) {
+		super(props);
+		this.state = {
+			query: '',
+			result: []
+		}
+	}
+
+	search () {
+		this.setState({
+			query: this.refs.searchInput.value
+		});
+	}
+
 	addRoom () {
 
 		swal({
@@ -38,15 +52,38 @@ class Rooms extends Component {
 
 	render () {
 
+		var filteredRooms = this.props.rooms.filter(
+			(room) => {
+
+				const query = this.state.query.toLowerCase();
+				const roomName = (room && room.name) ? room.name.toLowerCase() : '';
+
+				const roomNameMatch = roomName.indexOf(query) !== -1;
+
+				if (roomNameMatch) {
+					return true
+				}
+			}
+		);
+
 		return (
 			<div className="container">
 				<div className="row">
-					<div className="text-right">
-						<span onClick={this.addRoom.bind(this)} className="glyphicon glyphicon-plus hover"></span>
+					<div className="col-xs-10">
+						<input 
+							type="text" 
+							ref="searchInput" 
+							placeholder="Search ..." 
+							className="search-bar"
+							onChange={this.search.bind(this)}
+						/>
+					</div>
+					<div className="col-xs-2 text-right">
+						<span onClick={this.addRoom.bind(this)} className="glyphicon glyphicon-plus hover add-room-button"></span>
 					</div>
 				</div>
 				<hr />
-				{this.props.rooms.map((room) => {
+				{filteredRooms.map((room) => {
 					const url = '/secure/rooms/' + room._id;
 
 					return (
