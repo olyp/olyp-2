@@ -151,7 +151,11 @@ class HomeMobile extends Component {
 					<div className="spacer-30"></div>
 
 					<div className="container">
-						<img src="/images/art-dereck.png" className="img-responsive"/>
+						<div className="row">
+							<div className="col-xs-10 col-xs-offset-1">
+								<img src="/images/art-dereck.png" className="img-responsive"/>
+							</div>
+						</div>
 					</div>
 
 				
