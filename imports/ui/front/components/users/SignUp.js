@@ -90,15 +90,15 @@ export default class SignUp extends Component {
 
 				<div className="row">
 					<div className="col-xs-8 col-xs-offset-2">
-						<h4 id="login-button" className="hover" onClick={this.handleSubmit.bind(this)}>Sign Up</h4>
+						<h4 id="login-button" className="hover" onClick={this.handleSubmit.bind(this)}><u>Sign Up</u></h4>
 					</div>
 				</div>
 
-				<Link to="/forgot">Reset password</Link>
+				<Link to="/forgot"><u>Reset password</u></Link>
 
 				<div className="spacer-10"></div>
 
-				<Link to="/login">Login</Link>
+				<Link to="/login"><u>Login</u></Link>
 		
 			</div>
 		);

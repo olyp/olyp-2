@@ -148,12 +148,10 @@ class HomeMobile extends Component {
 						<h1>70 m2 Fellesarealer</h1>
 					</div>
 
+					<div className="spacer-30"></div>
+
 					<div className="container">
-						<div className="row">
-							<div className="col-xs-8 col-xs-offset-2">
-								<img src="/images/art-dereck.png" className="img-responsive"/>
-							</div>
-						</div>
+						<img src="/images/art-dereck.png" className="img-responsive"/>
 					</div>
 
 				
@@ -172,23 +170,17 @@ class HomeMobile extends Component {
 					</div>
 
 					<div className="container text-center">
-						<h1><u>Booking og leie</u></h1>
-						<h1>Jonas Barsten<br />jonas@olyp.no</h1>
-					</div>
-
-					<div className="container text-center">
-						<h1><u>Bygg og utstyr</u></h1>
-						<h1>Haakon Mathisen<br />haakon@olyp.no</h1>
-					</div>
-
-					<div className="container text-center">
-						<h1><u>Kundeforhold</u></h1>
-						<h1>Simen Solli Schøien<br />simen@olyp.no</h1>
-					</div>
-
-					<div className="container text-center">
-						<h1><u>Økonomi</u></h1>
-						<h1>Alf Lund Godbolt<br />alf@olyp.no</h1>
+						<h4><u>Booking og leie</u></h4>
+						<h4>Jonas Barsten<br />jonas@olyp.no</h4>
+						<br />
+						<h4><u>Bygg og utstyr</u></h4>
+						<h4>Haakon Mathisen<br />haakon@olyp.no</h4>
+						<br />
+						<h4><u>Kundeforhold</u></h4>
+						<h4>Simen Solli Schøien<br />simen@olyp.no</h4>
+						<br />
+						<h4><u>Økonomi</u></h4>
+						<h4>Alf Lund Godbolt<br />alf@olyp.no</h4>
 					</div>
 				</div>
 			</div>

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { browserHistory } from 'react-router';
+import { Link, browserHistory } from 'react-router';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
 import MobileMenu from './MobileMenu.js';
@@ -44,10 +44,14 @@ class NavBar extends Component {
 							
 						</div>
 						<div className="col-xs-4 text-center">
-							<img src="/images/logo/logo4.png" />
+							<Link to="/">
+								<img src="/images/logo/logo4.png" />
+							</Link>
 						</div>
 						<div className="col-xs-4 text-right">
-							<img src="/images/logo/logo3.png" />
+							<Link to="/">
+								<img src="/images/logo/logo3.png" />
+							</Link>
 						</div>
 					</div>
 				</div>

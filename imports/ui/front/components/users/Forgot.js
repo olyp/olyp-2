@@ -47,15 +47,15 @@ export default class Forgot extends Component {
 
 				<div className="row">
 					<div className="col-xs-8 col-xs-offset-2">
-						<h4 id="login-button" className="hover" onClick={this.handleSubmit.bind(this)}>Send reset email</h4>
+						<h4 id="login-button" className="hover" onClick={this.handleSubmit.bind(this)}><u>Send reset email</u></h4>
 					</div>
 				</div>
 
-				<Link to="/login">Login</Link>
+				<Link to="/login"><u>Login</u></Link>
 
 				<div className="spacer-10"></div>
 
-				<Link to="/signup">Signup</Link>
+				<Link to="/signup"><u>Signup</u></Link>
 		
 			</div>
 		);

@@ -140,26 +140,28 @@ export default class Login extends Component {
 
 				<div className="row">
 					<div className="col-xs-8 col-xs-offset-2">
-						<h4 id="login-button" className="hover" onClick={this.handleSubmit.bind(this)}>Login</h4>
+						<h4 id="login-button" className="hover" onClick={this.handleSubmit.bind(this)}><u>Login</u></h4>
 					</div>
 				</div>
 				
 				<div id="social-login" className="row">
-					<div className="col-xs-10 col-xs-offset-1">
-						<div className="col-xs-6 text-left">
-							<h4 className="hover" onClick={this.loginWithFacebook.bind(this)}>Facebook</h4>
-						</div>
-						<div className="col-xs-6 text-right">
-							<h4 className="hover" onClick={this.loginWithGoogle.bind(this)}>Google</h4>
+					<div className="col-xs-8 col-xs-offset-2">
+						<div className="row">
+							<div className="col-xs-6 text-left">
+								<h4 className="hover" onClick={this.loginWithFacebook.bind(this)}><u>Facebook</u></h4>
+							</div>
+							<div className="col-xs-6 text-right">
+								<h4 className="hover" onClick={this.loginWithGoogle.bind(this)}><u>Google</u></h4>
+							</div>
 						</div>
 					</div>
 				</div>
 
-				<Link to="/forgot">Reset password</Link>
+				<Link to="/forgot"><u>Reset password</u></Link>
 
 				<div className="spacer-10"></div>
 
-				<Link to="/signup">Signup</Link>
+				<Link to="/signup"><u>Signup</u></Link>
 		
 			</div>
 		);
