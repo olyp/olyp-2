@@ -50,11 +50,20 @@ class UserSingle extends Component {
 		});
 	}
 
+	toggleIsAdmin() {
+		Meteor.call('user.toggleIsAdmin', this.props.user._id, (err, res) => {
+			if (err) {
+				console.log(err);
+			} 
+		});
+	}
+
 	render () {
 
 		const user = (this.props.user) ? this.props.user : null;
 		const name = (user && user.profile && user.profile.name);
 		const email = (user && user.emails && user.emails[0] && user.emails[0].address);
+		const isAdminClass = (user && Roles.userIsInRole(user._id, ['super-admin', 'admin'], 'olyp')) ? 'room-selector-active': '';
 
 		if (!user) {
 			return (
@@ -120,6 +129,19 @@ class UserSingle extends Component {
 						);
 					})}
 			
+				</div>
+
+				<hr />
+
+				<h4>Roles:</h4>
+
+				<div className="row">
+					<div 
+						className={`room-selector col-xs-4 ${isAdminClass}`}
+						onClick={() => {this.toggleIsAdmin(user._id)}}
+					>
+						Admin
+					</div>
 				</div>
 
 				<hr />

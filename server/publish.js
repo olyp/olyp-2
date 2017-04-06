@@ -6,7 +6,7 @@ import Customers from '../imports/api/collections/customers.js';
 
 Meteor.publish('allDoorCodes', function () {
 
-	const isAdmin = Roles.userIsInRole(this.userId, ['admin', 'super-admin'], 'booking');
+	const isAdmin = Roles.userIsInRole(this.userId, ['admin', 'super-admin'], 'olyp');
 
 	if (isAdmin) {
 		return DoorCodes.find();
@@ -43,7 +43,7 @@ Meteor.publish('allProfiles', function () {
 
 Meteor.publish('allUsers', function () {
 
-	const canManageUsers = Roles.userIsInRole(this.userId, ['admin', 'super-admin'], 'manage-users');
+	const canManageUsers = Roles.userIsInRole(this.userId, ['admin', 'super-admin'], 'olyp');
 
 	if (canManageUsers) {
 		return Meteor.users.find({}, {fields: {"profile": 1, "emails": 1, "createdAt": 1, "roles": 1, "status": 1}});
@@ -56,7 +56,7 @@ Meteor.publish('allUsers', function () {
 
 Meteor.publish('rooms', function () {
 
-	const canManageUsers = Roles.userIsInRole(this.userId, ['admin', 'super-admin'], 'manage-users');
+	const canManageUsers = Roles.userIsInRole(this.userId, ['admin', 'super-admin'], 'olyp');
 
 	if (canManageUsers) {
 		return Rooms.find();

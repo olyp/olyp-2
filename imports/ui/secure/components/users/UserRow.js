@@ -46,8 +46,10 @@ export default class UserRow extends Component {
 		const user = this.props.user;
 		const profile = user.profile;
 		const email = (user && user.emails && user.emails[0]) ? user.emails[0].address : '';
-		const online = (user && user.status && user.status.online) ? <span>Online</span> : '';
 		const url = '/secure/users/' + user._id;
+
+		const isOnline = (user && user.status && user.status.online) ? <p>online</p> : null;
+		const isAdmin = (user && Roles.userIsInRole(user._id, ['super-admin', 'admin'], 'olyp')) ? <p>admin</p> : null;
 
 		return (
 			<Link to={url}>
@@ -58,67 +60,14 @@ export default class UserRow extends Component {
 					<div className="col-xs-8">
 						<h4>{profile.name}</h4>
 						<p>{email}</p>
+						<div className="user-status">
+							{isOnline}
+							{isAdmin}
+						</div>
 					</div>
+					
 				</div>
 			</Link>
-		);
-
-		// Old
-
-		return (
-			<div className="row user-row">
-				<div className="col-xs-3">
-					{profile.name}
-				</div>
-				<div className="col-xs-3">
-					{email}
-				</div>
-				<div className="col-xs-4">
-					<div className="row">
-
-						<div className="col-xs-7">
-							<div className="checkbox">
-								<label>
-									<input
-						            	type="checkbox"
-						            	readOnly
-						            	checked={Roles.userIsInRole(user._id, ['admin', 'super-admin'], 'manage-users')}
-						             	onClick={this.toggleManageUsers.bind(this)}
-						            />
-						            Manage users
-						        </label>
-						    </div>
-						</div>
-
-						<div className="col-xs-5">
-							<div className="checkbox">
-								<label>
-									<input
-						            	type="checkbox"
-						            	readOnly
-						            	checked={Roles.userIsInRole(user._id, ['admin', 'super-admin'], 'booking')}
-						             	onClick={this.toggleBookingAdmin.bind(this)}
-						            />
-						            Admin
-								</label>
-							</div>
-						</div>
-
-					</div>
-				</div>
-				<div className="col-xs-2 text-right">
-					<div className="row">
-						<div className="col-xs-6">
-							{online}
-						</div>
-						<div className="col-xs-6">
-							<button className="delete" onClick={this.deleteUser.bind(this)}>
-          						X
-        					</button>
-						</div>
-					</div>
-				</div>
-			</div>
 		);
 	}
 }

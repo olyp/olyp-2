@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { browserHistory, Link } from 'react-router';
 
-export default class MobileMenu extends Component {
+class MobileMenu extends Component {
 
 	render () {
 
@@ -48,3 +48,5 @@ export default class MobileMenu extends Component {
 		);
 	}
 }
+
+export default MobileMenu;

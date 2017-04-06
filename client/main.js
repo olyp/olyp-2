@@ -45,6 +45,19 @@ const authenticateSecure = (nextState, replace, callback) => {
 	
 };
 
+const authenticateAdmin = (nextState, replace, callback) => {
+
+	// If no user, send to login
+	if (!Roles.userIsInRole(Meteor.userId(), ['super-admin', 'admin'], 'olyp')) {
+		replace({
+			pathname: '/secure',
+			state: { nextPathname: nextState.location.pathname },
+		});
+	}
+	callback();
+	
+};
+
 const isLoggedIn = (nextState, replace, callback) => {
 	
 	// If user is logged in, send to /secure
@@ -71,8 +84,9 @@ const routes = (
 			<Route path="booking" component={Booking} />		
 			<Route path="codes" component={DoorCodes} />
 			<Route path="profile" component={Profile} />
-			<Route path="users" component={Users} />
-			<Route path="users/:userId" component={UserSingle} />
+
+			<Route path="users" component={Users} onEnter={authenticateAdmin} />
+			<Route path="users/:userId" component={UserSingle} onEnter={authenticateAdmin} />
 		</Route>
 
 		<Route component={LoginLayout}>

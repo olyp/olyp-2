@@ -39,7 +39,7 @@ Meteor.methods({
 		// Validation
 		check(userId, String);
 
-		if (userId == Meteor.userId() || Roles.userIsInRole(Meteor.userId(), ['super-admin', 'admin'], 'manage-users')) {
+		if (userId == Meteor.userId() || Roles.userIsInRole(Meteor.userId(), ['super-admin', 'admin'], 'olyp')) {
 
 			// Delete user door code
 			Meteor.call('doorCode.deleteByUserId', userId, (err, res) => {
@@ -60,45 +60,23 @@ Meteor.methods({
 		} 	
 	},
 
-	toggleManageUsers (userId) {
+	'user.toggleIsAdmin' (userId) {
 
 		// Validation
 		check(userId, String);
 
 		// Check if logged in user has priveliges to manage users
-		if ( Roles.userIsInRole(Meteor.userId(), ['super-admin', 'admin'], 'manage-users')) {
+		if ( Roles.userIsInRole(Meteor.userId(), ['super-admin', 'admin'], 'olyp')) {
 
 			// Check if user already is in Role
-			if (Roles.userIsInRole(userId, ['admin', 'super-admin'], 'manage-users')) {
+			if (Roles.userIsInRole(userId, ['admin', 'super-admin'], 'olyp')) {
 
 				// If in role, remove from role
-				Roles.removeUsersFromRoles(userId, ['admin'], 'manage-users');
+				Roles.removeUsersFromRoles(userId, ['admin'], 'olyp');
   			} else {
 
   				// Else add to role
-  				Roles.addUsersToRoles(userId, ['admin'], 'manage-users');
-  			}
-		}
-
-	},
-
-	toggleBookingAdmin (userId) {
-
-		// Validation
-		check(userId, String);
-
-		// Check if logged in user has priveliges to manage users
-		if ( Roles.userIsInRole(Meteor.userId(), ['super-admin', 'admin'], 'manage-users')) {
-
-			// Check if user already is in Role
-			if (Roles.userIsInRole(userId, ['admin', 'super-admin'], 'booking')) {
-
-				// If in role, remove from role
-				Roles.removeUsersFromRoles(userId, ['admin'], 'booking');
-  			} else {
-
-  				// Else add to role
-  				Roles.addUsersToRoles(userId, ['admin'], 'booking');
+  				Roles.addUsersToRoles(userId, ['admin'], 'olyp');
   			}
 		}
 
