@@ -69,8 +69,8 @@ class RoomSingle extends Component {
 
 		const room = (this.props.room);
 		const name = (room && room.name);
-		const usersWhoCanBook = (room && room.canBook);
-		const usersWhoCanAccess = (room && room.canAccess);
+		const usersWhoCanBook = (room && room.canBook) ? room.canBook : [];
+		const usersWhoCanAccess = (room && room.canAccess) ? room.canAccess : [];
 
 		return (
 			<div className="container">
