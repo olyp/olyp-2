@@ -69,7 +69,7 @@ class Users extends Component {
 
 				{filteredUsers.map((user, i) => {
 
-					if (user._id !== Meteor.userId()) {
+					// if (user._id !== Meteor.userId()) {
 
 						return (
 							<div className="user-list" key={user._id}>
@@ -77,7 +77,7 @@ class Users extends Component {
 								<hr />
 							</div>
 						);
-					}
+					// }
 					
 				})}
 			</div>
