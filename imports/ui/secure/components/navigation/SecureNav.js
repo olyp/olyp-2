@@ -2,15 +2,19 @@ import React, {Component} from 'react';
 import {Link} from 'react-router';
 import { createContainer } from 'meteor/react-meteor-data';
 
-import AccountsUI from '../../AccountsUI.js';
+import AccountsUI from '../../../AccountsUI.js';
 
 class SecureNav extends Component {
 	render() {
 
 		const userId = (this.props.user) ? this.props.user._id : '';
 
-		const canManageUsers = Roles.userIsInRole(userId, ['super-admin', 'admin'], 'manage-users') ? <li><Link to="/secure/users">Users</Link></li> : '';
-		const canEditDoorCodes = Roles.userIsInRole(userId, ['super-admin', 'admin'], 'booking') ? <li><Link to="/secure/codes">Door Codes</Link></li> : '';
+		const isOlypAdmin = Roles.userIsInRole(userId, ['super-admin', 'admin'], 'olyp') ? 
+			<div>
+				<li><Link to="/secure/users">Users</Link></li>
+				<li><Link to="/secure/rooms">Rooms</Link></li>
+				<li><Link to="/secure/codes">Door Codes</Link></li> 
+			</div> : null;
 
 		return (
 			<nav className="navbar navbar-default">
@@ -31,10 +35,9 @@ class SecureNav extends Component {
 					<div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 						<AccountsUI />
 
-						<ul className="nav navbar-nav navbar-right">
+						<ul className="nav navbar-nav">
 							<li><Link to="/secure">Dashboard</Link></li>
-							{canManageUsers}
-							{canEditDoorCodes}
+							{isOlypAdmin}
 							<li><Link to="/secure/booking">Booking</Link></li>
 							<li><Link to="/secure/profile">Profile</Link></li>
 						</ul>

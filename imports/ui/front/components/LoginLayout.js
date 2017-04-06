@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import NavBar from './navigation/NavBar.js';
+import NavBar from '../../shared/navigation/NavBar.js';
 
 class LoginLayout extends Component {
 	render () {

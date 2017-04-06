@@ -1,14 +1,16 @@
 import React, {Component} from 'react';
 
-import SecureNav from './SecureNav.js';
+import NavBar from '../../shared/navigation/NavBar.js';
 
 export default class SecureLayout extends Component {
 	render() {
 		return (
 			<div>
-				<SecureNav />
+				<NavBar />
+				<div className="spacer-30"></div>
+				<div className="spacer-30"></div>
+				<div className="spacer-30"></div>
 				<div className="container-fluid">
-					
 					{this.props.children}
 				</div>
 			</div>

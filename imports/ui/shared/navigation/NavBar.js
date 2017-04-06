@@ -32,25 +32,32 @@ class NavBar extends Component {
 			
 		const menu = this.state.menuOpen ? <MobileMenu onLinkClick={(destination) => {this.redirect(destination)}}/> : '';
 
+		const layout = Meteor.userId() ? <span className="glyphicon glyphicon-lock nav-lock"></span> : <img src="/images/logo/logo3.png" />;
+
+		const navClass = Meteor.userId() ? 'shadow' : '';
+
+		// const link = Meteor.userId() ? '/secure' : '/';
+
+
 		return (
 			<div>
 
-				<div id="custom-nav">
+				<div id="custom-nav" className={navClass}>
 					<div className="row">
-						<div className="col-xs-4">
+						<div className="col-xs-4 hover">
 							<div onClick={this.toggleOpen.bind(this)}>
 								{menuIcon}
 							</div>
 							
 						</div>
-						<div className="col-xs-4 text-center">
+						<div className="col-xs-4 text-center hover">
 							<Link to="/">
 								<img src="/images/logo/logo4.png" />
 							</Link>
 						</div>
-						<div className="col-xs-4 text-right">
-							<Link to="/">
-								<img src="/images/logo/logo3.png" />
+						<div className="col-xs-4 text-right hover">
+							<Link to='/'>
+								{layout}
 							</Link>
 						</div>
 					</div>

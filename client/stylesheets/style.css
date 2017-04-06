@@ -136,7 +136,7 @@ input {
 }
 
 .delete-large {
-	background-color: red;
+	background-color: #EA2427;
 	text-align: center;
 	color: white;
 	text-transform: uppercase;
@@ -151,6 +151,10 @@ input {
 	z-index: 3;
 }
 
+#custom-nav .nav-lock {
+	margin-top: 4px;
+}
+
 #navToContentBuffer {
 	height: 73px;
 }
@@ -158,6 +162,12 @@ input {
 #mobile-menu-content {
 	z-index: 2;
 	background-color: #F7F7F7;
+}
+
+#mobile-menu-content hr {
+	margin-top: 10px;
+	margin-bottom: 10px;
+	border-top: 1px solid #EA2427;
 }
 
 #custom-burger-menu img {
@@ -168,7 +178,7 @@ input {
 }
 
 #mobile-menu-content h1 {
-	font-size: 4em;
+	font-size: 2em;
 	text-decoration: underline;
 	display: inline;
 }
@@ -263,7 +273,10 @@ input {
 #mobile-menu-content h1,
 .login-layout h1,
 .login-layout h4,
-.login-layout h5 {
+.login-layout h5,
+#custom-nav h4,
+#custom-nav .nav-lock,
+a:hover {
 	color: rgb(38, 84, 249);
 }
 

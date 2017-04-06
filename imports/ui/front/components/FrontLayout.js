@@ -4,7 +4,7 @@ import React, {Component} from 'react';
 
 import Preloader from '../../shared/preloader/Preloader.js';
 
-import NavBar from './navigation/NavBar.js';
+import NavBar from '../../shared/navigation/NavBar.js';
 import Footer from './navigation/Footer.js';
 
 // @lazyload({
