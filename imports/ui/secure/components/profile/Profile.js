@@ -7,22 +7,30 @@ import DoorCodes from '../../../../api/collections/doorCodes.js';
 
 class Profile extends Component {
 
-	constructor(props) {
-		super(props);
-		this.state = {
-			name: ''
-		}
-	}
+	renameUser () {
 
-	save (e) {
-
-		Meteor.call('changeUserName', this.state.name, (err, res) => {
-			if (err) {
-				console.log(err);
-			} else {
-				Bert.alert('Name changed', 'success', 'growl-bottom-right', 'fa-smile-o');
+		swal({
+			title: 'Change name',
+			input: 'text',
+			showCancelButton: true,
+			inputValidator: function (value) {
+				return new Promise(function (resolve, reject) {
+					if (value) {
+						resolve()
+					} else {
+						reject('You need to write something!')
+					}
+				})
 			}
-		});
+		}).then((result) => {
+			Meteor.call('user.changeName', result, (err, res) => {
+				if (err) {
+					console.log(err);
+				} else {
+					Bert.alert('Name changed', 'success', 'growl-bottom-right', 'fa-smile-o');
+				}
+			});
+		}).catch(swal.noop);
 	}
 
 	changePassword () {
@@ -94,7 +102,8 @@ class Profile extends Component {
 
 	render () {
 
-		const user = this.props.user[0];
+		const user = this.props.user;
+		const name = (user && user.profile && user.profile.name);
 		const doorCode = (this.props.doorCode && this.props.doorCode.code) ? this.props.doorCode.code : '';
 
 		const email = (user && user.emails[0]) ? user.emails[0].address : null;
@@ -102,16 +111,15 @@ class Profile extends Component {
 
 		return (
 			<div className="container">
-				<h2>Profile</h2>
-
-				<input
-					type="text"
-					onChange={(e) => {this.setState({name: e.target.value})}}
-					// If this.state.name is empty, then check if any the ones in the () exists, if they do, then return the last value, if not, return '' 
-					value={this.state.name || (user && user.profile && user.profile.name) || ''}
-				/>
-
-				<button onClick={this.save.bind(this)}>Save</button>
+				<div className="row">
+					<div className="col-xs-4">
+						<img className="img-responsive" src="http://eng.icrconference.org/wp-content/uploads/2016/04/blank.gif" />
+					</div>
+					<div className="col-xs-8">
+						<h4 onClick={this.renameUser.bind(this)}><u>{name}</u></h4>
+						<p><u>{email}</u></p>
+					</div>
+				</div>
 
 				<hr />
 
@@ -163,6 +171,6 @@ export default createContainer(() => {
 
 	return {
 		doorCode: DoorCodes.find().fetch()[0],
-		user: Meteor.users.find().fetch(),
+		user: Meteor.users.find().fetch()[0],
 	};
 }, Profile);

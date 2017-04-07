@@ -82,7 +82,7 @@ Meteor.methods({
 
 	},
 
-	changeUserName (name) {
+	'user.changeName' (name) {
 		check(name, String);
 
 		Meteor.users.update({_id: Meteor.userId()}, {$set: {'profile.name': name}});
