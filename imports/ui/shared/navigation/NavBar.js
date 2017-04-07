@@ -26,8 +26,6 @@ class NavBar extends Component {
 
 	render () {
 
-		console.log(this.props);
-
 		const menuIcon = this.state.menuOpen ?  
 			<img src="/images/menu-square.png" /> : 
 			<img src="/images/menu-burger.png" /> ;
