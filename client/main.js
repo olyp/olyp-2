@@ -17,6 +17,8 @@ import UserSingle from '../imports/ui/secure/components/users/UserSingle.js';
 import Rooms from '../imports/ui/secure/components/rooms/Rooms.js';
 import RoomSingle from '../imports/ui/secure/components/rooms/RoomSingle.js';
 
+import awsUpload from '../imports/ui/shared/files/awsUpload.js';
+
 // FRONT
 import Home from '../imports/ui/front/components/pages/Home.js';
 
@@ -91,6 +93,8 @@ const routes = (
 			<Route path="users/:userId" component={UserSingle} onEnter={authenticateAdmin} />
 			<Route path="rooms" component={Rooms} onEnter={authenticateAdmin} />
 			<Route path="rooms/:roomId" component={RoomSingle} onEnter={authenticateAdmin} />
+
+			<Route path="upload" component={awsUpload} />
 		</Route>
 
 		<Route component={LoginLayout}>

@@ -13,3 +13,4 @@ import '../imports/api/methods/userMethods.js';
 import '../imports/api/methods/bookingMethods.js';
 import '../imports/api/methods/roomMethods.js';
 import '../imports/api/methods/deletedUserMethods.js';
+import '../imports/api/methods/fileMethods.js';
