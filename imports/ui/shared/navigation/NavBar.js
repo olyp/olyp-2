@@ -26,6 +26,8 @@ class NavBar extends Component {
 
 	render () {
 
+		console.log(this.props);
+
 		const menuIcon = this.state.menuOpen ?  
 			<img src="/images/menu-square.png" /> : 
 			<img src="/images/menu-burger.png" /> ;
@@ -34,7 +36,9 @@ class NavBar extends Component {
 
 		const layout = Meteor.userId() ? <span className="glyphicon glyphicon-lock nav-lock"></span> : <img src="/images/logo/logo3.png" />;
 
-		const navClass = Meteor.userId() ? 'shadow' : '';
+		const pathArray = window.location.pathname.split( '/' );
+
+		const navClass = (pathArray[1] == 'secure') ? 'shadow' : '';
 
 		const link = Meteor.userId() ? '/secure' : '/';
 
