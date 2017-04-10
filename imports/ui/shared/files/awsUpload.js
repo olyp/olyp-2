@@ -12,25 +12,39 @@ class awsUpload extends Component {
 			paramName: 'file',
 			add: this.s3Add.bind(this),
 			dataType: 'xml',
-			done: this.s3Done.bind(this)
+			done: this.s3Done.bind(this),
+			progressall: function (e, data) {
+            	var progress = parseInt(data.loaded / data.total * 100, 10);
+            	$('#progress .progress-bar').css(
+                	'width',
+                	progress + '%'
+            	);
+        	}
 		});
 
 	}
 
 	s3Add (e, data) {
 
-		var filename = data.files[0].name;
-		var contentType = data.files[0].type;
 		var params = [];
 
-		Meteor.call('file.generateUploadTicket', filename, (err, res) => {
-			if (err) {
-				console.log(err);
-			} else {
-				data.url = res.endpoint_url;
-				data.formData = res.params;
-				data.submit();
-			}
+		data.files.map((file) => {
+
+			const fileName = file.name;
+			const contentType = file.type;
+
+			Meteor.call('file.generateUploadTicket', fileName, (err, res) => {
+				if (err) {
+					console.log(err);
+				} else {
+					data.url = res.endpoint_url;
+					data.formData = res.params;
+
+					// Upload file
+					data.submit();
+				}
+			});
+
 		});
 
 		return params;
@@ -45,8 +59,11 @@ class awsUpload extends Component {
 		return (
 			<div>
 				<form>
-					<input id="fileInput" type="file" name="file" />
+					<input id="fileInput" type="file" name="file" multiple/>
 				</form>
+				<div id="progress" className="progress">
+					<div className="progress-bar progress-bar-success"></div>
+				</div>
 			</div>
 		);
 	}

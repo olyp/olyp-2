@@ -1,12 +1,12 @@
 import crypto from 'crypto';
-// import uuid from 'uuid/v4';
+import uuid from 'uuid/v4';
 
 Meteor.methods({
 	'file.generateUploadTicket': function (filename) {
 
-		// const randomName = uuid();
+		const key = uuid() + '-' + filename;
 		
-		return s3Credentials(filename);
+		return s3Credentials(key);
 
 		function s3Credentials(filename) {
 			return {
