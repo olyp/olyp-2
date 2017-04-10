@@ -8,7 +8,9 @@
     "aws-sdk": "^2.39.0",
     "babel-runtime": "^6.20.0",
     "bcrypt": "^1.0.2",
+    "blueimp-file-upload": "^9.18.0",
     "connect-route": "^0.1.5",
+    "jquery": "2.2.4",
     "meteor-node-stubs": "~0.2.0",
     "moment": "^2.17.1",
     "moment-timezone": "^0.5.11",
@@ -21,6 +23,7 @@
     "react-router": "^3.0.2",
     "react-scroll": "^1.4.7",
     "sweetalert2": "^6.4.2",
+    "uuid": "^3.0.1",
     "vivus": "^0.4.0"
   }
 }

@@ -8,7 +8,7 @@ import DoorCodeAttempts from '../imports/api/collections/doorCodeAttempts.js';
 
 
 var url = '/code/' + Meteor.settings.private.doorToken + '/:code';
-var getUrl = 'http://maindoor.olyp.no/enu/trigger/' + Meteor.settings.private.doorToken;
+var openDoorUrl = 'http://maindoor.olyp.no/enu/trigger/' + Meteor.settings.private.doorToken;
 
 function onRoute (req, res, next) {
 
@@ -17,7 +17,7 @@ function onRoute (req, res, next) {
 
 	const openDoor = function () {
 
-		HTTP.get(getUrl);
+		HTTP.get(openDoorUrl);
 
 		res.writeHead(200);
 		res.end();
