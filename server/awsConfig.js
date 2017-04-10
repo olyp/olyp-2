@@ -1,6 +1,16 @@
+import fs from 'fs';
+import path from 'path';
+import uuid from 'uuid/v4';
+
 import AWS from 'aws-sdk/global';
 import S3 from 'aws-sdk/clients/s3';
 import CloudFront from 'aws-sdk/clients/cloudfront';
+import Lambda from 'aws-sdk/clients/lambda';
+import Iam from 'aws-sdk/clients/iam';
+import APIGateway from 'aws-sdk/clients/apigateway';
+import STS from 'aws-sdk/clients/sts';
+
+const basePath = path.resolve('.').split('.meteor')[0];
 
 var myConfig = new AWS.Config({
 	accessKeyId: Meteor.settings.aws.accessKey,
@@ -8,8 +18,14 @@ var myConfig = new AWS.Config({
 	region: Meteor.settings.aws.region
 });
 
+AWS.config = myConfig;
+
 var s3 = new S3();
-var cloudfront = new AWS.CloudFront();
+var cloudfront = new CloudFront();
+var lambda = new Lambda();
+var iam = new Iam();
+var apigateway = new APIGateway();
+var sts = new STS();
 
 // Check if AWS bucket exists
 s3.listBuckets(function(err, data) {
@@ -31,15 +47,25 @@ s3.listBuckets(function(err, data) {
 
 		if (!bucketExists) {
 			console.log('AWS bucket does not exists')
+
 			createNewBucket();
+
+			checkCloudFront();
+			checkLambda();
+
+			// Just for testing
+			// checkApi();
 		}
 
 		if (bucketExists) {
 			console.log('AWS bucket exists');
-			checkCloudFront();
-		}
 
-		
+			checkCloudFront();
+			checkLambda();
+
+			// Just for testing
+			// checkApi();
+		}
 	}
 });
 
@@ -72,8 +98,57 @@ const createNewBucket = () => {
 		} else {
 			console.log("AWS bucket created");
 			console.log("********** I might take up to 2 hours for DNS to update, uploads will NOT work untill this is done **********");
+
 			configureBucket();
-			checkCloudFront();
+		}
+	});
+};
+
+const configureBucket = () => {
+	console.log("Configuring AWS bucket ...");
+
+	var staticHostParams = {
+		Bucket: Meteor.settings.aws.bucket,
+		WebsiteConfiguration: {
+			ErrorDocument: {
+				Key: 'error.html'
+			},
+			IndexDocument: {
+				Suffix: 'index.html'
+			},
+		}
+	};
+
+	var corsParams = {
+		Bucket: Meteor.settings.aws.bucket,
+		CORSConfiguration: {
+			CORSRules: [
+				{
+					AllowedMethods: [
+						'POST'
+					],
+					AllowedOrigins: [
+						'*'
+					],
+					AllowedHeaders: [
+						'*'
+					]
+				}
+			]
+		}
+	};
+
+	s3.putBucketWebsite(staticHostParams, function(err, data) {
+		if (err) {
+			console.log(err);
+		} else {
+			s3.putBucketCors(corsParams, function(err, data) {
+				if (err) {
+					console.log(err);
+				} else {
+					console.log("AWS bucket configured");
+				}
+			});
 		}
 	});
 };
@@ -128,8 +203,6 @@ const createCloudFront = () => {
 	timestamp = timestamp.toString();
 	const targetOriginId = 'S3-' + Meteor.settings.aws.bucket;
 	const targetDomainName = Meteor.settings.aws.bucket + '.s3.amazonaws.com';
-
-	toString()
 
 	const newCloudFront = {
 		DistributionConfig: {
@@ -263,49 +336,188 @@ const createCloudFront = () => {
 	});
 };
 
-const configureBucket = () => {
-	console.log("Configuring AWS bucket ...");
+const checkLambda = () => {
 
-	var staticHostParams = {
-		Bucket: Meteor.settings.aws.bucket,
-		WebsiteConfiguration: {
-			ErrorDocument: {
-				Key: 'error.html'
-			},
-			IndexDocument: {
-				Suffix: 'index.html'
-			},
-		}
-	};
+	console.log('Checking if lambda function exists ...');
 
-	var corsParams = {
-		Bucket: Meteor.settings.aws.bucket,
-		CORSConfiguration: {
-			CORSRules: [
-				{
-					AllowedMethods: [
-						'POST'
-					],
-					AllowedOrigins: [
-						'*'
-					],
-					AllowedHeaders: [
-						'*'
-					]
-				}
-			]
-		}
-	};
-
-	s3.putBucketWebsite(staticHostParams, function(err, data) {
+	lambda.listFunctions(function(err, data) {
 		if (err) {
 			console.log(err);
 		} else {
-			s3.putBucketCors(corsParams, function(err, data) {
+
+			var functionExists = false;
+			const functionName = 'resize-images-on-' + Meteor.settings.aws.bucket;
+
+			for (var i = 0; i < data.Functions.length; i++) {
+
+				if (data.Functions[i].FunctionName == functionName) {
+						functionExists = true;
+						break;
+				}
+			}
+
+			if (functionExists) {
+				console.log('Lambda function exists');
+			}
+
+			if (!functionExists) {
+				setUpLambda();
+			}
+
+		}
+	});
+}
+
+const setUpLambda = () => {
+
+	console.log('Checking if IAM role exists');
+
+	iam.listRoles(function(err, data) {
+		if (err) {
+			console.log(err);
+		} else {
+
+			var roleExists = false;
+			const roleName = 'resize-images-on-' + Meteor.settings.aws.bucket + '-basic-execution';
+
+			for (var i = 0; i < data.Roles.length; i++) {
+
+				if (data.Roles[i].RoleName == roleName) {
+					roleExists = true;
+					break;
+				}
+			}
+
+			if (roleExists) {
+				console.log('IAM role exists');
+			}
+
+			if (!roleExists) {
+				createIamRole();
+			}
+		}
+	});
+}
+
+const createIamRole = () => {
+	console.log('Creating IAM role ...');
+
+	const roleName = 'resize-images-on-' + Meteor.settings.aws.bucket + '-basic-execution';
+	const policyName = roleName + '-policy';
+	const resource = "arn:aws:s3:::" + Meteor.settings.aws.bucket + "/*";
+
+	var trustPolicyDocument = {
+		"Version": "2012-10-17",
+		"Statement": [
+			{
+				"Effect": "Allow",
+				"Principal": {
+					"Service": "lambda.amazonaws.com"
+				},
+				"Action": "sts:AssumeRole"
+			}
+ 		]
+	};
+
+	var rolePolicyDocument = {
+		"Version": "2012-10-17",
+		"Statement": [
+			{
+				"Effect": "Allow",
+				"Action": [
+					"logs:CreateLogGroup",
+					"logs:CreateLogStream",
+					"logs:PutLogEvents"
+				],
+				"Resource": "arn:aws:logs:*:*:*"
+			},
+			{
+				"Effect": "Allow",
+				"Action": "s3:PutObject",
+				"Resource": resource    
+			}
+		]
+	};
+
+	trustPolicyDocument = JSON.stringify(trustPolicyDocument);
+	rolePolicyDocument = JSON.stringify(rolePolicyDocument);
+
+	const iamParams = {
+		AssumeRolePolicyDocument: trustPolicyDocument,
+		RoleName: roleName
+	};
+
+	iam.createRole(iamParams, function(err, data) {
+		if (err) {
+			console.log(err);
+		} else {
+
+			const iamArn = data.Role.Arn;
+
+			const rolePolicyParams = {
+				PolicyDocument: rolePolicyDocument,
+				PolicyName: policyName,
+				RoleName: roleName
+			};
+
+			iam.putRolePolicy(rolePolicyParams, function(err, data) {
 				if (err) {
 					console.log(err);
 				} else {
-					console.log("AWS bucket configured");
+					console.log('IAM role created');
+
+					// Waiting for the role policy to implement system wide on AWS
+					setTimeout(function(){
+						createLambda(iamArn);
+					}, 6000);
+				}
+			});
+		}
+	});
+}
+
+const createLambda = (arn) => {
+
+	const iamArn = arn;
+
+	console.log('Creating lambda function ...');
+
+	const filePath = basePath + '/server/' + 'lambdaResizeImage.zip';
+
+	fs.readFile(filePath, (err, data) => {
+		if (err) {
+			console.log(err);
+		} else {
+
+			const functionName = 'resize-images-on-' + Meteor.settings.aws.bucket;
+			const bucketWebEndpoint = 'http://' + Meteor.settings.aws.bucket + '.s3-website-' + Meteor.settings.aws.region + '.amazonaws.com';
+
+			const lambdaParams = {
+				Code: {
+					ZipFile: new Buffer(data)
+				},
+				FunctionName: functionName,
+				Handler: 'index.handler',
+				Role: iamArn,
+				Runtime: 'nodejs6.10',
+				Description: 'Resizes images on the fly',
+				Environment: {
+					Variables: {
+						BUCKET: Meteor.settings.aws.bucket,
+						URL: bucketWebEndpoint
+					}
+				},
+				MemorySize: 512,
+				Publish: true,
+				Timeout: 10
+			};
+
+			lambda.createFunction(lambdaParams, function(err, data) {
+				if (err) {
+					console.log(err);
+				} else {
+					console.log('Lambda function created');
+					checkApi();
 				}
 			});
 		}
@@ -313,12 +525,140 @@ const configureBucket = () => {
 };
 
 
+const checkApi = () => {
 
+	console.log('Checking API ...');
 
+	const apiName = 'resize-images-on-' + Meteor.settings.aws.bucket + '-api';
 
+	apigateway.getRestApis(function(err, data) {
+		if (err) {
+			console.log(err);
+		} else {
 
+			var apiExists = false;
 
+			for (var i = 0; i < data.items.length; i++) {
+				if (data.items[i].name == apiName) {
+					apiExists = true;
+					break;
+				}
+			}
 
+			if (apiExists) {
+				console.log('API exists');
+			}
 
+			if (!apiExists) {
+				createApi();
+			}
+
+		}
+	});
+};
+
+const createApi = () => {
+
+	sts.getCallerIdentity(function(err, data) {
+		if (err) {
+			console.log(err);
+		} else {
+
+			const accountId = data.Account;
+			const functionName = 'resize-images-on-' + Meteor.settings.aws.bucket;
+
+			const apiName = 'resize-images-on-' + Meteor.settings.aws.bucket + '-api';
+			const uri = 'arn:aws:apigateway:' + Meteor.settings.aws.region + ':lambda:path/2015-03-31/functions/arn:aws:lambda:' + Meteor.settings.aws.region + ':' + accountId + ':function:' + functionName + '/invocations';
+
+			var apiSwagger = {
+			  "swagger": "2.0",
+			  "info": {
+			    "version": "2017-04-10T12:43:16Z",
+			    "title": apiName
+			  },
+			  "basePath": "/prod",
+			  "schemes": [
+			    "https"
+			  ],
+			  "paths": {
+			    "/resize": {
+			      "x-amazon-apigateway-any-method": {
+			        "responses": {
+			          "200": {
+			            "description": "200 response"
+			          }
+			        },
+			        "x-amazon-apigateway-integration": {
+			          "responses": {
+			            ".*": {
+			              "statusCode": "200"
+			            }
+			          },
+			          "uri": uri,
+			          "passthroughBehavior": "when_no_match",
+			          "httpMethod": "POST",
+			          "type": "aws_proxy"
+			        }
+			      }
+			    }
+			  }
+			}
+
+			apiSwagger = JSON.stringify(apiSwagger);
+
+			const apiParams = {
+				body: apiSwagger,
+			};
+
+			apigateway.importRestApi(apiParams, function(err, data) {
+				if (err) {
+					console.log(err);
+				} else {
+					console.log('API created');
+					configureLambda(data.id, accountId);
+				}
+			});
+		}
+	});
+}
+
+const configureLambda = (apiId, accountId) => {
+
+	console.log('Configuring lambda ...');
+
+	const functionName = 'resize-images-on-' + Meteor.settings.aws.bucket;
+
+	const lambdaPolicies = [
+		{
+			Action: "lambda:InvokeFunction", 
+			FunctionName: functionName, 
+			Principal: "apigateway.amazonaws.com", 
+			StatementId: uuid(),
+			SourceArn: 'arn:aws:execute-api:' + Meteor.settings.aws.region + ':' + accountId + ':' + apiId + '/prod/ANY/resize'
+		},
+		{
+			Action: "lambda:InvokeFunction", 
+			FunctionName: functionName, 
+			Principal: "apigateway.amazonaws.com", 
+			StatementId: uuid(),
+			SourceArn: 'arn:aws:execute-api:' + Meteor.settings.aws.region + ':' + accountId + ':' + apiId + '/*/*/resize'
+		}
+	];
+
+	lambda.addPermission(lambdaPolicies[0], function(err, data) {
+		if (err) {
+			console.log(err);
+		} else {
+			lambda.addPermission(lambdaPolicies[1], function(err, data) {
+				if (err) {
+					console.log(err);
+				} else {
+					console.log('Lambda configured');
+				}
+			});
+
+		}
+	});
+}
 
 
