@@ -5,7 +5,7 @@ import { check } from 'meteor/check';
 import DoorCodes from '../collections/doorCodes.js';
 
 Meteor.methods({
-	'doorCode.add': function (userId, validFrom, validTo) {
+	'doorCode.addTemporary': function (userId, validFrom, validTo) {
 
 		check(userId, String);
 		check(validFrom, String);
@@ -20,7 +20,8 @@ Meteor.methods({
 			dateCreated: new Date,
 			addedBy: addedBy,
 			validFrom: validFrom,
-			validTo: validTo
+			validTo: validTo,
+			temporary: true
 		}
 
 		// Remove users old code
@@ -31,6 +32,22 @@ Meteor.methods({
 		
 		DoorCodes.insert(newCode);
 		
+	},
+	'doorCode.add': function (userId) {
+		check(userId, String);
+
+		const randomCode = Math.floor(Math.random() * (999999 - 100000 + 1)) + 100000;
+		const addedBy = Meteor.userId() ? Meteor.userId() : userId;
+
+		const newCode = {
+			code: randomCode,
+			userId: userId,
+			dateCreated: new Date,
+			addedBy: addedBy,
+			temporary: false
+		}
+
+		DoorCodes.insert(newCode);
 	},
 	'doorCode.deleteById': function (codeId) {
 		check(codeId, String);

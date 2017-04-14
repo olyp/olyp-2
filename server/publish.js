@@ -54,17 +54,19 @@ Meteor.publish('allUsers', function () {
     
 });
 
-Meteor.publish('rooms', function () {
-
+Meteor.publish('allRooms', function () {
 	const isAdmin = Roles.userIsInRole(this.userId, ['admin', 'super-admin'], 'olyp');
 
 	if (isAdmin) {
 		return Rooms.find();
-	} else {
-		return Rooms.find({}, {fields: {"access": 0}});
 	}
+});
 
-	
+Meteor.publish('userRooms', function () {
+
+	const userId = this.userId;
+
+	return Rooms.find({$or: [{'canBook': userId}, {'canAccess': userId}]});
 });
 
 Meteor.publish('userCustomers', function () {

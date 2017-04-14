@@ -4,8 +4,13 @@ import { createContainer } from 'meteor/react-meteor-data';
 import swal from 'sweetalert2';
 
 import DoorCodes from '../../../../api/collections/doorCodes.js';
+import Rooms from '../../../../api/collections/rooms.js';
 
 class Profile extends Component {
+
+	newEmail () {
+		console.log('Implement change email ...');
+	}
 
 	renameUser () {
 
@@ -87,24 +92,44 @@ class Profile extends Component {
 		}).catch(swal.noop);
 	}
 
-	generateDoorCode () {
+	// generateDoorCode () {
 
-		Meteor.call('doorCode.add', Meteor.userId(), (err, res) => {
-			if (err) {
-				console.log(err);
-			} else {
-				Bert.alert('Code added', 'success', 'growl-bottom-right', 'fa-smile-o');
-			}
-		});
+	// 	Meteor.call('doorCode.add', Meteor.userId(), (err, res) => {
+	// 		if (err) {
+	// 			console.log(err);
+	// 		} else {
+	// 			Bert.alert('Code added', 'success', 'growl-bottom-right', 'fa-smile-o');
+	// 		}
+	// 	});
 
-	}
+	// }
 
 
 	render () {
 
 		const user = this.props.user;
 		const name = (user && user.profile && user.profile.name);
-		const doorCode = (this.props.doorCode && this.props.doorCode.code) ? this.props.doorCode.code : '';
+
+		const rooms = (this.props.rooms) ? this.props.rooms : [];
+		var canAccess = this.props.rooms.filter(
+			(room) => {
+				const userArray = (room && room.canAccess) ? room.canAccess : [];
+				if (userArray.indexOf(Meteor.userId()) !== -1) {
+					return true
+				}
+			}
+		);
+
+		var canBook = this.props.rooms.filter(
+			(room) => {
+				const userArray = (room && room.canBook) ? room.canBook : [];
+				if (userArray.indexOf(Meteor.userId()) !== -1) {
+					return true
+				}
+			}
+		);
+
+		const doorCode = (canAccess.length != 0 && this.props.doorCode && this.props.doorCode.code) ? this.props.doorCode.code : '';
 
 		const email = (user && user.emails[0]) ? user.emails[0].address : null;
 		const verifiedEmail = (user && user.emails[0] && user.emails[0].verified) ? <p>Verified</p> : <p onClick={this.sendVerificationEmail}>click to send verification email</p>;
@@ -117,15 +142,51 @@ class Profile extends Component {
 					</div>
 					<div className="col-xs-8">
 						<h4 onClick={this.renameUser.bind(this)}><u>{name}</u></h4>
-						<p><u>{email}</u></p>
+						<p onClick={this.newEmail.bind(this)}><u>{email}</u></p>
 					</div>
 				</div>
 
 				<hr />
 
-				<button onClick={this.generateDoorCode.bind(this)}>Generate new door code</button>
+				<div className="row">
+					{doorCode}
+				</div>
 
-				{doorCode}
+				<hr />
+
+				<h4>Can Book:</h4>
+
+				<div className="row">
+
+					{canBook.map((room) => {
+						return (
+							<div 
+								key={room._id}
+								className="room-selector col-xs-4 room-selector-active"
+							>
+								{room.name}
+							</div>
+						);
+					})}
+				</div>
+
+				<hr />
+
+				<h4>Can Access:</h4>
+
+				<div className="row">
+
+					{canAccess.map((room) => {
+						return (
+							<div 
+								key={room._id}
+								className="room-selector col-xs-4 room-selector-active"
+							>
+								{room.name}
+							</div>
+						);
+					})}
+				</div>
 
 				<hr />
 
@@ -153,7 +214,7 @@ class Profile extends Component {
 				<div className="row">
 					<div className="col-xs-12">
 						<div className="delete-large" onClick={this.deleteUser.bind(this)}>
-      						Delete User
+      						Delete my user
     					</div>
 					</div>
 				</div>
@@ -168,9 +229,11 @@ class Profile extends Component {
 export default createContainer(() => {
 	Meteor.subscribe('profile');
 	Meteor.subscribe('doorCode');
+	Meteor.subscribe('userRooms');
 
 	return {
 		doorCode: DoorCodes.find().fetch()[0],
 		user: Meteor.users.find().fetch()[0],
+		rooms: Rooms.find().fetch()
 	};
 }, Profile);

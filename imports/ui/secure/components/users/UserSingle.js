@@ -4,6 +4,7 @@ import { browserHistory } from 'react-router';
 import swal from 'sweetalert2';
 
 import Rooms from '../../../../api/collections/rooms.js'
+import DoorCodes from '../../../../api/collections/doorCodes.js'
 
 import Preloader from '../../../shared/preloader/Preloader.js';
 
@@ -63,6 +64,7 @@ class UserSingle extends Component {
 		const user = (this.props.user) ? this.props.user : null;
 		const name = (user && user.profile && user.profile.name);
 		const email = (user && user.emails && user.emails[0] && user.emails[0].address);
+		const doorCode = (this.props.doorCode) ? this.props.doorCode.code : 'Generate';
 		const isAdminClass = (user && Roles.userIsInRole(user._id, ['super-admin', 'admin'], 'olyp')) ? 'room-selector-active': '';
 
 		if (!user) {
@@ -81,6 +83,18 @@ class UserSingle extends Component {
 						<h4>{name}</h4>
 						<p>{email}</p>
 					</div>
+				</div>
+
+				<hr />
+
+				<h4>Code:</h4>
+
+				<div className="row">
+
+					<div className="room-selector col-xs-4 hover room-selector-active">
+						{doorCode}
+					</div>
+
 				</div>
 
 				<hr />
@@ -163,12 +177,15 @@ class UserSingle extends Component {
 
 export default createContainer((props) => {
 	Meteor.subscribe('allUsers');
-	Meteor.subscribe('rooms');
+	Meteor.subscribe('allRooms');
+	Meteor.subscribe('allDoorCodes');
 
 	const user = Meteor.users.find({_id: props.params.userId}).fetch();
+	const doorCode = DoorCodes.find({userId: props.params.userId}).fetch()
 
 	return {
 		user: user[0],
-		rooms: Rooms.find().fetch()
+		rooms: Rooms.find().fetch(),
+		doorCode: doorCode[0]
 	};
 }, UserSingle);

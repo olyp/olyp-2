@@ -59,7 +59,7 @@ export default class Booking extends TrackerReact(React.Component) {
             subscription: {
                 reservations: Meteor.subscribe('reservations'),
                 allProfiles: Meteor.subscribe("allProfiles"),
-				rooms: Meteor.subscribe("rooms"),
+				rooms: Meteor.subscribe("allRooms"),
 				userCustomers: Meteor.subscribe("userCustomers")
 			},
             baseDay: getToday(),

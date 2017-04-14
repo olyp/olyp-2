@@ -35,6 +35,9 @@ const DoorCodesSchema = new SimpleSchema({
 	"validTo": {
 		type: Date,
 		optional: true
+	},
+	'temporary': {
+		type: Boolean
 	}
 });
 

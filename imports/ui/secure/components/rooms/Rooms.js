@@ -105,7 +105,7 @@ class Rooms extends Component {
 }
 
 export default createContainer(() => {
-	Meteor.subscribe('rooms');
+	Meteor.subscribe('allRooms');
 
 	return {
 		rooms: RoomsCollection.find().fetch()

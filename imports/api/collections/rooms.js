@@ -19,10 +19,6 @@ const RoomsSchema = new SimpleSchema({
 	"name": {
 		type: String
 	},
-	"access": {
-		type: [Object],
-		optional: true
-	},
 	"canBook": {
 		type: [String],
 		optional: true

@@ -21,13 +21,13 @@ Meteor.methods({
 			let userId = Accounts.createUser( { profile: profile, email: user.email, password: user.password } );
 
 			// Give user roles
-			Roles.addUsersToRoles( userId, 'user', 'booking' );
-
-			// Send verification mail
-			Accounts.sendVerificationEmail(userId);
+			Roles.addUsersToRoles( userId, 'user', 'olyp' );
 
 			// Generate user door code
 			Meteor.call('doorCode.add', userId);
+
+			// Send verification mail
+			Accounts.sendVerificationEmail(userId);
 
 		} else {
 			throw new Meteor.Error( 'bad-match', 'User aleady exists' );

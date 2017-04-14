@@ -125,7 +125,7 @@ class RoomSingle extends Component {
 }
 
 export default createContainer((props) => {
-	Meteor.subscribe('rooms');
+	Meteor.subscribe('allRooms');
 	Meteor.subscribe('allUsers');
 
 	const room = Rooms.find({_id: props.params.roomId}).fetch();
