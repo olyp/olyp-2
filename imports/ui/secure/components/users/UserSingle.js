@@ -59,6 +59,10 @@ class UserSingle extends Component {
 		});
 	}
 
+	editDoorCode () {
+		console.log('Editing door code ...');
+	}
+
 	render () {
 
 		const user = (this.props.user) ? this.props.user : null;
@@ -91,7 +95,10 @@ class UserSingle extends Component {
 
 				<div className="row">
 
-					<div className="room-selector col-xs-4 hover room-selector-active">
+					<div 
+						className="room-selector col-xs-4 hover room-selector-active"
+						onClick={this.editDoorCode.bind(this)}
+					>
 						{doorCode}
 					</div>
 

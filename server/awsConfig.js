@@ -4,661 +4,347 @@ import uuid from 'uuid/v4';
 
 import AWS from 'aws-sdk/global';
 import S3 from 'aws-sdk/clients/s3';
-import CloudFront from 'aws-sdk/clients/cloudfront';
-import Lambda from 'aws-sdk/clients/lambda';
-import Iam from 'aws-sdk/clients/iam';
-import APIGateway from 'aws-sdk/clients/apigateway';
-import STS from 'aws-sdk/clients/sts';
+import CloudFormation from 'aws-sdk/clients/cloudformation';
 
-const basePath = path.resolve('.').split('.meteor')[0];
+Meteor.startup( () => {
 
-var myConfig = new AWS.Config({
-	accessKeyId: Meteor.settings.aws.accessKey,
-	secretAccessKey: Meteor.settings.aws.secretKey,
-	region: Meteor.settings.aws.region
-});
-
-AWS.config = myConfig;
-
-var s3 = new S3();
-var cloudfront = new CloudFront();
-var lambda = new Lambda();
-var iam = new Iam();
-var apigateway = new APIGateway();
-var sts = new STS();
-
-// Check if AWS bucket exists
-s3.listBuckets(function(err, data) {
-
-	console.log('Checking if AWS bucket exists ...')
-
-	if (err) {
-		console.log(err, err.stack);
-	} else {
-
-		var bucketExists = false;
-
-		for (var i = 0; i < data.Buckets.length; i++) {
-				if (data.Buckets[i].Name == Meteor.settings.aws.bucket) {
-						bucketExists = true;
-						break;
-				}
-		}
-
-		if (!bucketExists) {
-			console.log('AWS bucket does not exists')
-
-			createNewBucket();
-
-			checkCloudFront();
-			checkLambda();
-
-			// Just for testing
-			// checkApi();
-		}
-
-		if (bucketExists) {
-			console.log('AWS bucket exists');
-
-			checkCloudFront();
-			checkLambda();
-
-			// Just for testing
-			// checkApi();
-		}
-	}
-});
-
-const createNewBucket = () => {
-
-	console.log('Creating AWS bucket ...');
-
-	var newBucket = {
-		Bucket: Meteor.settings.aws.bucket,
-		CreateBucketConfiguration: {
-			LocationConstraint: Meteor.settings.aws.region
-		}
-	};
-
-	if (Meteor.settings.aws.region == 'us-east-1') {
-		newBucket = {
-			Bucket: Meteor.settings.aws.bucket
-		}
-	}
-
-	s3.createBucket(newBucket, function(err, data) {
-		if (err) {
-
-			console.log(err, err.stack);
-
-			if (err.code == 'BucketAlreadyExists') {
-				console.log('********** The AWS bucket name is already taken, please choose another one **********')
-			}
-			
-		} else {
-			console.log("AWS bucket created");
-			console.log("********** I might take up to 2 hours for DNS to update, uploads will NOT work untill this is done **********");
-
-			configureBucket();
-		}
+	var myConfig = new AWS.Config({
+		accessKeyId: Meteor.settings.aws.accessKey,
+		secretAccessKey: Meteor.settings.aws.secretKey,
+		region: Meteor.settings.aws.region
 	});
-};
 
-const configureBucket = () => {
-	console.log("Configuring AWS bucket ...");
+	AWS.config = myConfig;
 
-	var staticHostParams = {
-		Bucket: Meteor.settings.aws.bucket,
-		WebsiteConfiguration: {
-			ErrorDocument: {
-				Key: 'error.html'
-			},
-			IndexDocument: {
-				Suffix: 'index.html'
-			},
-		}
-	};
+	const basePath = path.resolve('.').split('.meteor')[0];
+	const tempBucketName = 'temp-' + Meteor.settings.aws.bucket + '-' + uuid();
+	const tempBucketFile = uuid();
 
-	var corsParams = {
-		Bucket: Meteor.settings.aws.bucket,
-		CORSConfiguration: {
-			CORSRules: [
-				{
-					AllowedMethods: [
-						'POST'
-					],
-					AllowedOrigins: [
-						'*'
-					],
-					AllowedHeaders: [
-						'*'
-					]
-				}
-			]
-		}
-	};
+	const bucket = Meteor.settings.aws.bucket;
+	const region = Meteor.settings.aws.region;
+	const accountId = Meteor.settings.aws.accountId;
 
-	s3.putBucketWebsite(staticHostParams, function(err, data) {
-		if (err) {
-			console.log(err);
-		} else {
-			s3.putBucketCors(corsParams, function(err, data) {
-				if (err) {
-					console.log(err);
-				} else {
-					console.log("AWS bucket configured");
-				}
-			});
-		}
-	});
-};
+	const stackName = bucket + '-stack';
+	const apiName = bucket + '-api';
 
-const checkCloudFront = () => {
+	var s3 = new S3();
+	var cloudformation = new CloudFormation();
 
-	cloudfront.listDistributions(function(err, data) {
-
-		console.log('Checking if CloudFront distribution exists ...');
-
-		if (err) {
-			console.log(err, err.stack);
-		} else {
-			
-			var distExists = false;
-			var distDomainName = 'Does not exist';
-
-			data.DistributionList.Items.map((distributon) => {
-
-				const origins = distributon.Origins.Items;
-
-				const expectedDomainName = Meteor.settings.aws.bucket + '.s3.amazonaws.com';
-
-				for (var i = 0; i < origins.length; i++) {
-
-						if (origins[i].DomainName == expectedDomainName) {
-								distExists = true;
-								distDomainName = distributon.DomainName;
-								break;
-						}
-				}
-			});
-
-			if (!distExists) {
-				console.log('CloudFront distribution does not exists ...');
-				createCloudFront();
-			}
-
-			if (distExists) {
-				console.log('CloudFront distribution exists');
-				process.env.CLOUDFRONT_URL = distDomainName;
-			}
-
-		}
-	});
-};
-
-const createCloudFront = () => {
-	console.log('Creating CloudFront distribution ...');
-
-	var timestamp = + new Date();
-	timestamp = timestamp.toString();
-	const targetOriginId = 'S3-' + Meteor.settings.aws.bucket;
-	const targetDomainName = Meteor.settings.aws.bucket + '.s3.amazonaws.com';
-
-	const newCloudFront = {
-		DistributionConfig: {
-			CallerReference: timestamp,
-			Comment: '',
-			DefaultCacheBehavior: {
-				ForwardedValues: {
-					Cookies: {
-						Forward: 'none',
-						WhitelistedNames: {
-							Quantity: 0,
-							Items: []
-						}
-					},
-					QueryString: false,
-					Headers: {
-						Quantity: 0,
-						Items: []
-					},
-					QueryStringCacheKeys: {
-						Quantity: 0,
-						Items: []
-					}
-				},
-				MinTTL: 0,
-				TargetOriginId: targetOriginId,
-				TrustedSigners: {
-					Enabled: false,
-					Quantity: 0,
-					Items: []
-				},
-				ViewerProtocolPolicy: 'allow-all',
-				AllowedMethods: {
-					Quantity: 2,
-					Items: [ 'HEAD', 'GET' ],
-					CachedMethods: {
-						Items: [ 'HEAD', 'GET' ],
-						Quantity: 2
-					}
-				},
-				Compress: false,
-				DefaultTTL: 86400,
-				LambdaFunctionAssociations: {
-					Quantity: 0,
-					Items: []
-				},
-				MaxTTL: 31536000,
-				SmoothStreaming: false
-			},
-			Enabled: true,
-			Origins: {
-				Quantity: 1,
-				Items: [
-					{
-						DomainName: targetDomainName,
-						Id: targetOriginId,
-						CustomHeaders: {
-							Quantity: 0,
-							Items: []
-						},
-						// CustomOriginConfig: {
-						// 	HTTPPort: 0, /* required */
-						// 	HTTPSPort: 0, /* required */
-						// 	OriginProtocolPolicy: http-only | match-viewer | https-only, /* required */
-						// 	OriginKeepaliveTimeout: 0,
-						// 	OriginReadTimeout: 0,
-						// 	OriginSslProtocols: {
-						// 		Items: [ /* required */
-						// 			SSLv3 | TLSv1 | TLSv1.1 | TLSv1.2,
-						// 			/* more items */
-						// 		],
-						// 		Quantity: 0 /* required */
-						// 	}
-						// },
-						OriginPath: '',
-						S3OriginConfig: {
-							OriginAccessIdentity: ''
-						}
-					},
-				]
-			},
-			Aliases: {
-				Quantity: 0,
-				Items: []
-			},
-			CacheBehaviors: {
-				Quantity: 0,
-				Items: []
-			},
-			CustomErrorResponses: {
-				Quantity: 0,
-				Items: []
-			},
-			DefaultRootObject: '',
-			HttpVersion: 'http2',
-			IsIPV6Enabled: true,
-			Logging: {
-				Bucket: '',
-				Enabled: false,
-				IncludeCookies: false,
-				Prefix: ''
-			},
-			PriceClass: 'PriceClass_All',
-			Restrictions: {
-				GeoRestriction: {
-					Quantity: 0,
-					RestrictionType: 'none',
-					Items: []
-				}
-			},
-			ViewerCertificate: {
-				CertificateSource: 'cloudfront',
-				// CertificateSource: 'iam',
-				CloudFrontDefaultCertificate: true,
-				MinimumProtocolVersion: 'SSLv3',
-			},
-			WebACLId: ''
-		}
-	};
-
-	cloudfront.createDistribution(newCloudFront, function(err, data) {
-		if (err) {
-			console.log(err, err.stack);
-		} else {
-
-			console.log("CloudFront distribution is being created @ " + data.Distribution.DomainName);
-			console.log("This will take some minutes. Visit https://console.aws.amazon.com/cloudfront/home to see the deployment process.");
-
-			process.env.CLOUDFRONT_URL = data.Distribution.DomainName;
-		};
-	});
-};
-
-const checkLambda = () => {
-
-	console.log('Checking if lambda function exists ...');
-
-	lambda.listFunctions(function(err, data) {
+	cloudformation.listStacks( (err, data) => {
 		if (err) {
 			console.log(err);
 		} else {
 
-			var functionExists = false;
-			const functionName = 'resize-images-on-' + Meteor.settings.aws.bucket;
+			var stackExists = false;
 
-			for (var i = 0; i < data.Functions.length; i++) {
-
-				if (data.Functions[i].FunctionName == functionName) {
-						functionExists = true;
-						break;
-				}
-			}
-
-			if (functionExists) {
-				console.log('Lambda function exists');
-			}
-
-			if (!functionExists) {
-				setUpLambda();
-			}
-
-		}
-	});
-}
-
-const setUpLambda = () => {
-
-	console.log('Checking if IAM role exists');
-
-	iam.listRoles(function(err, data) {
-		if (err) {
-			console.log(err);
-		} else {
-
-			var roleExists = false;
-			const roleName = 'resize-images-on-' + Meteor.settings.aws.bucket + '-basic-execution';
-
-			for (var i = 0; i < data.Roles.length; i++) {
-
-				if (data.Roles[i].RoleName == roleName) {
-					roleExists = true;
+			for (var i = 0; i < data.StackSummaries.length; i++) {
+				if (data.StackSummaries[i].StackName == stackName) {
+					stackExists = true;
 					break;
 				}
 			}
 
-			if (roleExists) {
-				console.log('IAM role exists');
-			}
-
-			if (!roleExists) {
-				createIamRole();
+			if (stackExists) {
+				console.log('AWS stack exists.');
+			} else {
+				console.log('Creating AWS stack ...');
+				deployCloudFormationStack();
 			}
 		}
 	});
-}
 
-const createIamRole = () => {
-	console.log('Creating IAM role ...');
+	const deployCloudFormationStack = () => {
 
-	const roleName = 'resize-images-on-' + Meteor.settings.aws.bucket + '-basic-execution';
-	const policyName = roleName + '-policy';
-	const resource = "arn:aws:s3:::" + Meteor.settings.aws.bucket + "/*";
+		s3.createBucket({Bucket: tempBucketName}, (err, res) => {
+			if (err) {
+				console.log(err);
+			} else {
 
-	var trustPolicyDocument = {
-		"Version": "2012-10-17",
-		"Statement": [
-			{
-				"Effect": "Allow",
-				"Principal": {
-					"Service": "lambda.amazonaws.com"
-				},
-				"Action": "sts:AssumeRole"
-			}
- 		]
-	};
+				const filePath = basePath + '/server/' + 'lambdaResizeImage.zip';
 
-	var rolePolicyDocument = {
-		"Version": "2012-10-17",
-		"Statement": [
-			{
-				"Effect": "Allow",
-				"Action": [
-					"logs:CreateLogGroup",
-					"logs:CreateLogStream",
-					"logs:PutLogEvents"
-				],
-				"Resource": "arn:aws:logs:*:*:*"
-			},
-			{
-				"Effect": "Allow",
-				"Action": "s3:PutObject",
-				"Resource": resource    
-			}
-		]
-	};
+				fs.readFile(filePath, (err, data) => {
+					if (err) {
+						console.log(err);
+					} else {
 
-	trustPolicyDocument = JSON.stringify(trustPolicyDocument);
-	rolePolicyDocument = JSON.stringify(rolePolicyDocument);
+						console.log('Temp S3 bucket created.');
 
-	const iamParams = {
-		AssumeRolePolicyDocument: trustPolicyDocument,
-		RoleName: roleName
-	};
+						const uploadParams = {Bucket: tempBucketName, Key: tempBucketFile, Body: new Buffer(data)};
 
-	iam.createRole(iamParams, function(err, data) {
-		if (err) {
-			console.log(err);
-		} else {
-
-			const iamArn = data.Role.Arn;
-
-			const rolePolicyParams = {
-				PolicyDocument: rolePolicyDocument,
-				PolicyName: policyName,
-				RoleName: roleName
-			};
-
-			iam.putRolePolicy(rolePolicyParams, function(err, data) {
-				if (err) {
-					console.log(err);
-				} else {
-					console.log('IAM role created');
-
-					// Waiting for the role policy to implement system wide on AWS
-					setTimeout(function(){
-						createLambda(iamArn);
-					}, 6000);
-				}
-			});
-		}
-	});
-}
-
-const createLambda = (arn) => {
-
-	const iamArn = arn;
-
-	console.log('Creating lambda function ...');
-
-	const filePath = basePath + '/server/' + 'lambdaResizeImage.zip';
-
-	fs.readFile(filePath, (err, data) => {
-		if (err) {
-			console.log(err);
-		} else {
-
-			const functionName = 'resize-images-on-' + Meteor.settings.aws.bucket;
-			const bucketWebEndpoint = 'http://' + Meteor.settings.aws.bucket + '.s3-website-' + Meteor.settings.aws.region + '.amazonaws.com';
-
-			const lambdaParams = {
-				Code: {
-					ZipFile: new Buffer(data)
-				},
-				FunctionName: functionName,
-				Handler: 'index.handler',
-				Role: iamArn,
-				Runtime: 'nodejs6.10',
-				Description: 'Resizes images on the fly',
-				Environment: {
-					Variables: {
-						BUCKET: Meteor.settings.aws.bucket,
-						URL: bucketWebEndpoint
+						s3.upload(uploadParams, (err, res) => {
+							if (err) {
+								console.log(err);
+							} else {
+								console.log('Lambda function zip uploaded.');
+								createCloudFormationStack();
+							}
+						});
 					}
-				},
-				MemorySize: 512,
-				Publish: true,
-				Timeout: 10
-			};
+				});
+			}
+		});
+	}
 
-			lambda.createFunction(lambdaParams, function(err, data) {
-				if (err) {
-					console.log(err);
-				} else {
-					console.log('Lambda function created');
-					checkApi();
-				}
-			});
-		}
-	});
-};
+	const createCloudFormationStack = () => {
 
+		console.log('Deploying stack ...');
 
-const checkApi = () => {
-
-	console.log('Checking API ...');
-
-	const apiName = 'resize-images-on-' + Meteor.settings.aws.bucket + '-api';
-
-	apigateway.getRestApis(function(err, data) {
-		if (err) {
-			console.log(err);
-		} else {
-
-			var apiExists = false;
-
-			for (var i = 0; i < data.items.length; i++) {
-				if (data.items[i].name == apiName) {
-					apiExists = true;
-					break;
+		const apiTemplate = {
+			"swagger": 2,
+			"info": {
+				"title": apiName
+			},
+			"paths": {
+				"/": {
+					"get": {
+						"x-amazon-apigateway-integration": {
+							"uri": "arn:aws:apigateway:" + region + ":lambda:path/2015-03-31/functions/arn:aws:lambda:" + region + ":" + accountId + ":function:${stageVariables.LambdaFunctionName}/invocations",
+							"type": "AWS_PROXY",
+							"httpMethod": "post"
+						}
+					}
 				}
 			}
+		}
 
-			if (apiExists) {
-				console.log('API exists');
+		var template = {
+		    "AWSTemplateFormatVersion":"2010-09-09",
+		    "Outputs":{
+		        "Bucket":{
+		            "Value":{
+		                "Ref":"ImageBucket"
+		            }
+		        },
+		        "BucketWebsiteUrl":{
+		            "Value":{
+		                "Fn::GetAtt":[
+		                    "ImageBucket",
+		                    "WebsiteURL"
+		                ]
+		            }
+		        }
+		    },
+		    "Resources":{
+		        "ResizeFunctionRole":{
+		            "Type":"AWS::IAM::Role",
+		            "Properties":{
+		                "ManagedPolicyArns":[
+		                    "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+		                ],
+		                "Policies":[
+		                    {
+		                        "PolicyName":"ResizeFunctionRolePolicy0",
+		                        "PolicyDocument":{
+		                            "Statement":[
+		                                {
+		                                    "Action":[
+		                                        "s3:PutObject"
+		                                    ],
+		                                    "Resource":{
+		                                        "Fn::Sub":"arn:aws:s3:::${ImageBucket}/*"
+		                                    },
+		                                    "Effect":"Allow"
+		                                }
+		                            ]
+		                        }
+		                    }
+		                ],
+		                "AssumeRolePolicyDocument":{
+		                    "Version":"2012-10-17",
+		                    "Statement":[
+		                        {
+		                            "Action":[
+		                                "sts:AssumeRole"
+		                            ],
+		                            "Effect":"Allow",
+		                            "Principal":{
+		                                "Service":[
+		                                    "lambda.amazonaws.com"
+		                                ]
+		                            }
+		                        }
+		                    ]
+		                }
+		            }
+		        },
+		        "Api":{
+		            "Type":"AWS::ApiGateway::RestApi",
+		            "Properties":{
+		                "Body": apiTemplate,
+		            }
+		        },
+		        "ApiDeploymentcbe884f39d":{
+		            "Type":"AWS::ApiGateway::Deployment",
+		            "Properties":{
+		                "RestApiId":{
+		                    "Ref":"Api"
+		                },
+		                "StageName":"Stage"
+		            }
+		        },
+		        "ResizeFunction":{
+		            "Type":"AWS::Lambda::Function",
+		            "Properties":{
+		            	"Code": {
+							"S3Bucket" : tempBucketName,
+							"S3Key" : tempBucketFile,
+		            	},
+		                "MemorySize":1536,
+		                "Environment":{
+		                    "Variables":{
+		                        "URL":{
+		                            "Fn::GetAtt":[
+		                                "ImageBucket",
+		                                "WebsiteURL"
+		                            ]
+		                        },
+		                        "BUCKET":{
+		                            "Ref":"ImageBucket"
+		                        }
+		                    }
+		                },
+		                "Handler":"index.handler",
+		                "Role":{
+		                    "Fn::GetAtt":[
+		                        "ResizeFunctionRole",
+		                        "Arn"
+		                    ]
+		                },
+		                "Timeout":60,
+		                "Runtime":"nodejs6.10"
+		            }
+		        },
+		        "ImageBucketPolicy":{
+		            "Type":"AWS::S3::BucketPolicy",
+		            "Properties":{
+		                "PolicyDocument":{
+		                    "Statement":[
+		                        {
+		                            "Action":"s3:GetObject",
+		                            "Resource":{
+		                                "Fn::Sub":"arn:aws:s3:::${ImageBucket}/*"
+		                            },
+		                            "Effect":"Allow",
+		                            "Principal":"*"
+		                        }
+		                    ]
+		                },
+		                "Bucket":{
+		                    "Ref":"ImageBucket"
+		                }
+		            }
+		        },
+		        "ApiprodStage":{
+		            "Type":"AWS::ApiGateway::Stage",
+		            "Properties":{
+		                "Variables":{
+		                    "LambdaFunctionName":{
+		                        "Ref":"ResizeFunction"
+		                    }
+		                },
+		                "RestApiId":{
+		                    "Ref":"Api"
+		                },
+		                "DeploymentId":{
+		                    "Ref":"ApiDeploymentcbe884f39d"
+		                },
+		                "StageName":"prod"
+		            }
+		        },
+		        "ImageBucket":{
+		            "DeletionPolicy":"Retain",
+		            "Type":"AWS::S3::Bucket",
+		            "Properties":{
+		            	"BucketName": bucket + '-images',
+		                "AccessControl":"PublicRead",
+		                "WebsiteConfiguration":{
+		                    "IndexDocument":"index.html",
+		                    "RoutingRules":[
+		                        {
+		                            "RoutingRuleCondition":{
+		                                "HttpErrorCodeReturnedEquals":404
+		                            },
+		                            "RedirectRule":{
+		                                "HostName":{
+		                                    "Fn::Sub":"${Api}.execute-api.${AWS::Region}.amazonaws.com"
+		                                },
+		                                "Protocol":"https",
+		                                "ReplaceKeyPrefixWith":"prod?key=",
+		                                "HttpRedirectCode":307
+		                            }
+		                        }
+		                    ]
+		                }
+		            }
+		        },
+		        "ResizeFunctionPermission":{
+		            "Type":"AWS::Lambda::Permission",
+		            "Properties":{
+		                "Action":"lambda:InvokeFunction",
+		                "Principal":"apigateway.amazonaws.com",
+		                "FunctionName":{
+		                    "Ref":"ResizeFunction"
+		                },
+		                "SourceArn":{
+		                    "Fn::Sub":"arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${Api}/*"
+		                }
+		            }
+		        }
+		    }
+		}
+
+		template = JSON.stringify(template);
+
+		const cloudFormationParams = {
+			"StackName": stackName,
+			"Capabilities": [
+				"CAPABILITY_IAM"
+			],
+			"TemplateBody": template
+		}
+
+		cloudformation.createStack(cloudFormationParams, function(err, res) {
+			if (err) {
+				console.log(err) 
+			} else {
+
+				const waitForParams = {
+					"StackName": stackName
+				};
+
+				cloudformation.waitFor('stackCreateComplete', waitForParams, function(err, res) {
+					if (err) {
+						console.log(err);
+					} else {
+						console.log('Stack created!');
+
+						const deleteFileParams = {
+							Bucket: tempBucketName,
+							Key: tempBucketFile,
+						};
+
+						s3.deleteObject(deleteFileParams, function(err, data) {
+							if (err) {
+								console.log(err);
+							} else {
+
+								const deleteBucketParams = {
+									Bucket: tempBucketName
+								};
+
+								s3.deleteBucket(deleteBucketParams, function(err, res) {
+									if (err) {
+										console.log(err);
+									} else {
+										console.log('Temp S3 bucket deleted.')
+									}
+								});
+
+							}
+						});
+					}
+				});
 			}
-
-			if (!apiExists) {
-				createApi();
-			}
-
-		}
-	});
-};
-
-const createApi = () => {
-
-	sts.getCallerIdentity(function(err, data) {
-		if (err) {
-			console.log(err);
-		} else {
-
-			const accountId = data.Account;
-			const functionName = 'resize-images-on-' + Meteor.settings.aws.bucket;
-
-			const apiName = 'resize-images-on-' + Meteor.settings.aws.bucket + '-api';
-			const uri = 'arn:aws:apigateway:' + Meteor.settings.aws.region + ':lambda:path/2015-03-31/functions/arn:aws:lambda:' + Meteor.settings.aws.region + ':' + accountId + ':function:' + functionName + '/invocations';
-
-			var apiSwagger = {
-			  "swagger": "2.0",
-			  "info": {
-			    "version": "2017-04-10T12:43:16Z",
-			    "title": apiName
-			  },
-			  "basePath": "/prod",
-			  "schemes": [
-			    "https"
-			  ],
-			  "paths": {
-			    "/resize": {
-			      "x-amazon-apigateway-any-method": {
-			        "responses": {
-			          "200": {
-			            "description": "200 response"
-			          }
-			        },
-			        "x-amazon-apigateway-integration": {
-			          "responses": {
-			            ".*": {
-			              "statusCode": "200"
-			            }
-			          },
-			          "uri": uri,
-			          "passthroughBehavior": "when_no_match",
-			          "httpMethod": "POST",
-			          "type": "aws_proxy"
-			        }
-			      }
-			    }
-			  }
-			}
-
-			apiSwagger = JSON.stringify(apiSwagger);
-
-			const apiParams = {
-				body: apiSwagger,
-			};
-
-			apigateway.importRestApi(apiParams, function(err, data) {
-				if (err) {
-					console.log(err);
-				} else {
-					console.log('API created');
-					configureLambda(data.id, accountId);
-				}
-			});
-		}
-	});
-}
-
-const configureLambda = (apiId, accountId) => {
-
-	console.log('Configuring lambda ...');
-
-	const functionName = 'resize-images-on-' + Meteor.settings.aws.bucket;
-
-	const lambdaPolicies = [
-		{
-			Action: "lambda:InvokeFunction", 
-			FunctionName: functionName, 
-			Principal: "apigateway.amazonaws.com", 
-			StatementId: uuid(),
-			SourceArn: 'arn:aws:execute-api:' + Meteor.settings.aws.region + ':' + accountId + ':' + apiId + '/prod/ANY/resize'
-		},
-		{
-			Action: "lambda:InvokeFunction", 
-			FunctionName: functionName, 
-			Principal: "apigateway.amazonaws.com", 
-			StatementId: uuid(),
-			SourceArn: 'arn:aws:execute-api:' + Meteor.settings.aws.region + ':' + accountId + ':' + apiId + '/*/*/resize'
-		}
-	];
-
-	lambda.addPermission(lambdaPolicies[0], function(err, data) {
-		if (err) {
-			console.log(err);
-		} else {
-			lambda.addPermission(lambdaPolicies[1], function(err, data) {
-				if (err) {
-					console.log(err);
-				} else {
-					console.log('Lambda configured');
-				}
-			});
-
-		}
-	});
-}
-
-
+		});
+	}
+});

@@ -494,12 +494,12 @@ a:hover {
 /* Medium Devices, Desktops */
 @media only screen and (min-width : 992px) {
 
-	#mobile-home {
+/*	#mobile-home {
 		display: none;
-	}
+	}*/
 
 	#desktop-home {
-		display: block;
+		display: none;
 	}
 
 /*	#overlay-container {
