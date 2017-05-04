@@ -1,8 +1,25 @@
 import crypto from 'crypto';
 import uuid from 'uuid/v4';
 
+import Files from '../collections/files';
+import Images from '../collections/images';
+
 Meteor.methods({
-	'file.generateUploadTicket': function (filename) {
+	'file.generateUploadTicket': function (filename, type) {
+
+		check(filename, String);
+		check(type, String);
+
+		var bucket = '';
+
+		if (type == 'file') {
+			bucket = Meteor.settings.aws.bucket;
+		}
+
+		if (type == 'image') {
+			bucket = Meteor.settings.aws.imageBucket;
+		}
+
 
 		const key = uuid() + '-' + filename;
 		
@@ -10,8 +27,9 @@ Meteor.methods({
 
 		function s3Credentials(filename) {
 			return {
-				// endpoint_url: "https://" + Meteor.settings.aws.bucket + '.s3-' + Meteor.settings.aws.region + ".amazonaws.com",
-				endpoint_url: "https://" + Meteor.settings.aws.bucket + ".s3.amazonaws.com",
+				// S3 uses some hours to update DNS, region specified URL works imedeatly, but not with us-east-1
+				endpoint_url: "https://" + bucket + '.s3-' + Meteor.settings.aws.region + ".amazonaws.com",
+				// endpoint_url: "https://" + bucket + ".s3.amazonaws.com",
 				params: s3Params(filename)
 			}
 		}
@@ -48,7 +66,7 @@ Meteor.methods({
 	   			// 5 minutes into the future
 				expiration: new Date((new Date).getTime() + (5 * 60 * 1000)).toISOString(),
 				conditions: [
-					{ bucket: Meteor.settings.aws.bucket },
+					{ bucket: bucket },
 					{ key: filename },
 					{ acl: 'public-read' },
 					{ success_action_status: "201" },
@@ -75,6 +93,21 @@ Meteor.methods({
 			var dateRegionServiceKey = hmac(dateRegionKey, 's3');
 			var signingKey = hmac(dateRegionServiceKey, 'aws4_request');
 			return hmac(signingKey, policyBase64).toString('hex');
+		}
+	},
+	'file.registerFile': function (file, type) {
+		check(file, Object);
+		check(type, String);
+
+		file.dateAdded = new Date();
+		file.addedBy = Meteor.userId();
+
+		if (type == 'image') {
+			Images.insert(file);
+		}
+
+		if (type == 'file') {
+			Files.insert(file);
 		}
 	}
 });
