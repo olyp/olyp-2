@@ -6,7 +6,9 @@ class awsUpload extends Component {
 
 	componentDidMount() {
 
-		$('#fileInput').fileupload({
+		const id = '#' + this.props.elementId;
+
+		$(id).fileupload({
 			// acceptFileTypes: /(gif|jpe?g|png)$/i,
 			// maxFileSize: maxFileSize,
 			paramName: 'file',
@@ -26,14 +28,16 @@ class awsUpload extends Component {
 
 	s3Add (e, data) {
 
-		const type = (this.props.type == 'image') ? 'image' : 'file';
+		$('#progress').css('display', 'block');
+
+		const type = this.props.image ? 'image' : 'file';
 
 		var params = [];
 
 		data.files.map((file) => {
 
 			const fileName = file.name;
-			const contentType = file.type;
+			// const contentType = file.type;
 
 			Meteor.call('file.generateUploadTicket', fileName, type, (err, res) => {
 				if (err) {
@@ -54,10 +58,9 @@ class awsUpload extends Component {
 
 	s3Done (e, data) {
 
-		console.log(e);
-		console.log(data);
+		$('#progress').css('display', 'none');
 
-		const type = (this.props.type == 'image') ? 'image' : 'file';
+		const type = this.props.image ? 'image' : 'file';
 
 		const file = {
 			awsKey: data.formData.key,
@@ -79,14 +82,20 @@ class awsUpload extends Component {
 
 	render () {
 
-		const accept = (this.props.type == 'image') ? "image/*" : '*';
+		const accept = this.props.image ? "image/*" : '*';
 
 		return (
 			<div>
 				<form>
-					<input id="fileInput" type="file" name="file" accept={accept} multiple/>
+					<input 
+						id={this.props.elementId}
+						type="file"
+						accept={accept} 
+						style={{display: 'none'}}
+						multiple
+					/>
 				</form>
-				<div id="progress" className="progress">
+				<div id="progress" className="progress" style={{display: 'none'}}>
 					<div className="progress-bar progress-bar-success"></div>
 				</div>
 			</div>

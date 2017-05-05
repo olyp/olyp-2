@@ -75,6 +75,19 @@ input {
 	box-shadow: rgba(0, 0, 0, 0.2) -2px 2px 4px -1px;
 }
 
+.progress {
+	position: fixed;
+	width: 100%;
+	top: 0;
+	left: 0;
+	height: 4px;
+	background-color: rgba(38, 84, 249, 0.4);
+}
+
+.progress-bar-success {
+	background-color: rgba(38, 84, 249, 1);
+}
+
 /*==========  GLOBAL END ==========*/
 
 /*==========  LOGIN LAYOUT  ==========*/

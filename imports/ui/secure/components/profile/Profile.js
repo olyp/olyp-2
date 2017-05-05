@@ -6,6 +6,10 @@ import swal from 'sweetalert2';
 import DoorCodes from '../../../../api/collections/doorCodes.js';
 import Rooms from '../../../../api/collections/rooms.js';
 
+import AwsUpload from '../../../shared/files/awsUpload.js';
+import AwsImage from '../../../shared/files/awsImage.js';
+
+
 class Profile extends Component {
 
 	newEmail () {
@@ -136,9 +140,18 @@ class Profile extends Component {
 
 		return (
 			<div className="container">
+
+				<AwsUpload elementId='uploadProfilePicture' image />
+
 				<div className="row">
 					<div className="col-xs-4">
-						<img className="img-responsive" src="http://eng.icrconference.org/wp-content/uploads/2016/04/blank.gif" />
+						<AwsImage 
+							awsKey='62dc5cd0-a932-4dc5-9930-85b74a2a5d1b-horse.jpg'
+							onClick={() => {$('#uploadProfilePicture').trigger('click')}}
+							className="img-responsive"
+							size='80x80'
+						/>
+
 					</div>
 					<div className="col-xs-8">
 						<h4 onClick={this.renameUser.bind(this)}><u>{name}</u></h4>

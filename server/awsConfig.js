@@ -107,7 +107,7 @@ Meteor.startup( () => {
 			var stackExists = false;
 
 			for (var i = 0; i < data.StackSummaries.length; i++) {
-				if (data.StackSummaries[i].StackName == stackName) {
+				if (data.StackSummaries[i].StackName == stackName && data.StackSummaries[i].StackStatus != 'DELETE_COMPLETE') {
 					stackExists = true;
 					break;
 				}
