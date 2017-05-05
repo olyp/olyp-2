@@ -113,6 +113,7 @@ class Profile extends Component {
 
 		const user = this.props.user;
 		const name = (user && user.profile && user.profile.name);
+		const awsKey = (user && user.profile && user.profile.image && user.profile.image.awsKey);
 
 		const rooms = (this.props.rooms) ? this.props.rooms : [];
 		var canAccess = this.props.rooms.filter(
@@ -141,12 +142,17 @@ class Profile extends Component {
 		return (
 			<div className="container">
 
-				<AwsUpload elementId='uploadProfilePicture' image />
+				<AwsUpload 
+					elementId='uploadProfilePicture'
+					postUploadMethod='user.addProfilePicture'
+					image 
+				/>
 
 				<div className="row">
 					<div className="col-xs-4">
+					
 						<AwsImage 
-							awsKey='d86e420c-c7d0-47e7-b5de-b7cc58ce4a81-horse.jpg'
+							awsKey={awsKey}
 							onClick={() => {$('#uploadProfilePicture').trigger('click')}}
 							className="img-responsive"
 							size='100x100'

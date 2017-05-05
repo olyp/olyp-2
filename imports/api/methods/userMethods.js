@@ -87,6 +87,13 @@ Meteor.methods({
 
 		Meteor.users.update({_id: Meteor.userId()}, {$set: {'profile.name': name}});
 	},
+	'user.addProfilePicture' (awsKey, imageId) {
+		check(awsKey, String);
+		check(imageId, String);
+
+		Meteor.users.update({_id: Meteor.userId()}, {$set: {'profile.image.awsKey': awsKey, 'profile.image.localId': imageId}})
+
+	},
 	sendVerificationEmail () {
 		Accounts.sendVerificationEmail(Meteor.userId());
 	}

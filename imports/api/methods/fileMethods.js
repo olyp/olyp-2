@@ -103,11 +103,13 @@ Meteor.methods({
 		file.addedBy = Meteor.userId();
 
 		if (type == 'image') {
-			Images.insert(file);
+			const entry = Images.insert(file);
+			return entry;
 		}
 
 		if (type == 'file') {
-			Files.insert(file);
+			const entry = Files.insert(file);
+			return entry;
 		}
 	}
 });

@@ -69,13 +69,22 @@ class awsUpload extends Component {
 			type: data.files[0].type
 		};
 
+		// Add file reference to correct collection
 		Meteor.call('file.registerFile', file, type, (err, res) => {
 			if (err) {
 				console.log(err);
 				$('#progress .progress-bar').css('width','0%');
 			} else {
-				Bert.alert('File uploaded', 'success', 'growl-bottom-right', 'fa-smile-o');
-				$('#progress .progress-bar').css('width','0%');
+
+				// Attach file reference to relevant document
+				Meteor.call(this.props.postUploadMethod, file.awsKey, res, (err, res) => {
+					if (err) {
+						console.log(err);
+					} else {
+						Bert.alert('File uploaded', 'success', 'growl-bottom-right', 'fa-smile-o');
+						$('#progress .progress-bar').css('width','0%');
+					}
+				});
 			}
 		});
 	}
