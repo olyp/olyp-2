@@ -13,11 +13,11 @@ Meteor.methods({
 		var bucket = '';
 
 		if (type == 'file') {
-			bucket = Meteor.settings.aws.bucket;
+			bucket = Meteor.settings.public.aws.bucket;
 		}
 
 		if (type == 'image') {
-			bucket = Meteor.settings.aws.imageBucket;
+			bucket = Meteor.settings.public.aws.imageBucket;
 		}
 
 
@@ -28,7 +28,7 @@ Meteor.methods({
 		function s3Credentials(filename) {
 			return {
 				// S3 uses some hours to update DNS, region specified URL works imedeatly, but not with us-east-1
-				endpoint_url: "https://" + bucket + '.s3-' + Meteor.settings.aws.region + ".amazonaws.com",
+				endpoint_url: "https://" + bucket + '.s3-' + Meteor.settings.public.aws.region + ".amazonaws.com",
 				// endpoint_url: "https://" + bucket + ".s3.amazonaws.com",
 				params: s3Params(filename)
 			}
@@ -57,7 +57,7 @@ Meteor.methods({
 		}
 
 		function amzCredential() {
-			return [Meteor.settings.aws.accessKey, dateString(), Meteor.settings.aws.region, 's3/aws4_request'].join('/')
+			return [Meteor.settings.aws.accessKey, dateString(), Meteor.settings.public.aws.region, 's3/aws4_request'].join('/')
 		}
 
 		// Constructs the policy
@@ -89,7 +89,7 @@ Meteor.methods({
 		// Signs the policy with the credential
 		function s3UploadSignature(policyBase64, credential) {
 			var dateKey = hmac('AWS4' + Meteor.settings.aws.secretKey, dateString());
-			var dateRegionKey = hmac(dateKey, Meteor.settings.aws.region);
+			var dateRegionKey = hmac(dateKey, Meteor.settings.public.aws.region);
 			var dateRegionServiceKey = hmac(dateRegionKey, 's3');
 			var signingKey = hmac(dateRegionServiceKey, 'aws4_request');
 			return hmac(signingKey, policyBase64).toString('hex');

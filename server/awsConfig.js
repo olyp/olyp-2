@@ -11,7 +11,7 @@ Meteor.startup( () => {
 	var myConfig = new AWS.Config({
 		accessKeyId: Meteor.settings.aws.accessKey,
 		secretAccessKey: Meteor.settings.aws.secretKey,
-		region: Meteor.settings.aws.region
+		region: Meteor.settings.public.aws.region
 	});
 
 	AWS.config = myConfig;
@@ -28,7 +28,7 @@ Meteor.startup( () => {
 			var fileBucketExists = false;
 
 			for (var i = 0; i < data.Buckets.length; i++) {
-				if (data.Buckets[i].Name == Meteor.settings.aws.bucket) {
+				if (data.Buckets[i].Name == Meteor.settings.public.aws.bucket) {
 					fileBucketExists = true;
 					break;
 				}
@@ -38,7 +38,7 @@ Meteor.startup( () => {
 				console.log('File bucket exists.');
 			} else {
 				console.log('Creating file bucket ...');
-				s3.createBucket({Bucket: Meteor.settings.aws.bucket}, (err, res) => {
+				s3.createBucket({Bucket: Meteor.settings.public.aws.bucket}, (err, res) => {
 					if (err) {
 						console.log(err);
 					} else {
@@ -47,7 +47,7 @@ Meteor.startup( () => {
 						// Setting CORS to enable browser upload
 
 						var fileBucketPermissionsParams = {
-							Bucket: Meteor.settings.aws.bucket,
+							Bucket: Meteor.settings.public.aws.bucket,
 							CORSConfiguration: {
 								CORSRules: [
 									{
@@ -89,12 +89,12 @@ Meteor.startup( () => {
 	// Create image bucket and serverless on-demand resizing
 
 	const basePath = path.resolve('.').split('.meteor')[0];
-	const tempBucketName = 'temp-' + Meteor.settings.aws.imageBucket + '-' + uuid();
-	const tempBucketFile = uuid();
-
-	const bucket = Meteor.settings.aws.imageBucket;
-	const region = Meteor.settings.aws.region;
+	
+	const bucket = Meteor.settings.public.aws.imageBucket;
+	const region = Meteor.settings.public.aws.region;
 	const accountId = Meteor.settings.aws.accountId;
+	const tempBucketName = 'temp-' + bucket + '-' + uuid();
+	const tempBucketFile = uuid();
 
 	const stackName = bucket + '-stack';
 	const apiName = bucket + '-api';

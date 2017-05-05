@@ -146,10 +146,10 @@ class Profile extends Component {
 				<div className="row">
 					<div className="col-xs-4">
 						<AwsImage 
-							awsKey='62dc5cd0-a932-4dc5-9930-85b74a2a5d1b-horse.jpg'
+							awsKey='d86e420c-c7d0-47e7-b5de-b7cc58ce4a81-horse.jpg'
 							onClick={() => {$('#uploadProfilePicture').trigger('click')}}
 							className="img-responsive"
-							size='80x80'
+							size='100x100'
 						/>
 
 					</div>
