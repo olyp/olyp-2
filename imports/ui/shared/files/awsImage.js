@@ -5,7 +5,9 @@ class awsImage extends Component {
 
 		const url = 'http://' + Meteor.settings.public.aws.imageBucket + '.s3-website-' + Meteor.settings.public.aws.region + '.amazonaws.com/';
 		const size = this.props.size ? (this.props.size + '/') : '';
-		const src = url + size + this.props.awsKey;
+		const awsUrl = url + size + this.props.awsKey;
+
+		const src = this.props.awsKey ? awsUrl : '/images/default_avatar.gif';
 
 		return (
 			<img 

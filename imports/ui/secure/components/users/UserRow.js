@@ -2,6 +2,8 @@ import React, {Component} from 'react';
 import { Link } from 'react-router';
 import swal from 'sweetalert2';
 
+import AwsImage from '../../../shared/files/awsImage.js';
+
 export default class UserRow extends Component {
 
 	constructor(props) {
@@ -47,6 +49,7 @@ export default class UserRow extends Component {
 		const profile = user.profile;
 		const email = (user && user.emails && user.emails[0]) ? user.emails[0].address : '';
 		const url = '/secure/users/' + user._id;
+		const awsKey = (user && user.profile && user.profile.image && user.profile.image.awsKey);
 
 		const isOnline = (user && user.status && user.status.online) ? <p>online</p> : null;
 		const isAdmin = (user && Roles.userIsInRole(user._id, ['super-admin', 'admin'], 'olyp')) ? <p>admin</p> : null;
@@ -55,7 +58,11 @@ export default class UserRow extends Component {
 			<Link to={url}>
 				<div className="row">
 					<div className="col-xs-4">
-						<img src="http://eng.icrconference.org/wp-content/uploads/2016/04/blank.gif" />
+						<AwsImage 
+							awsKey={awsKey}
+							className="img-responsive"
+							size='100x100'
+						/>
 					</div>
 					<div className="col-xs-8">
 						<h4>{profile.name}</h4>

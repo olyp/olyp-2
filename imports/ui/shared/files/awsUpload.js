@@ -2,6 +2,11 @@ import React, { Component } from 'react';
 import { HTTP } from 'meteor/http';
 import 'blueimp-file-upload';
 
+// elementId - required
+// postUploadMethod - required
+// image
+// multiple
+
 class awsUpload extends Component {
 
 	componentDidMount() {
@@ -91,6 +96,7 @@ class awsUpload extends Component {
 
 	render () {
 
+		const multiple = this.props.multiple ? 'true' : 'false';
 		const accept = this.props.image ? "image/*" : '*';
 
 		return (
@@ -101,7 +107,7 @@ class awsUpload extends Component {
 						type="file"
 						accept={accept} 
 						style={{display: 'none'}}
-						multiple
+						multiple={multiple}
 					/>
 				</form>
 				<div id="progress" className="progress" style={{display: 'none'}}>
