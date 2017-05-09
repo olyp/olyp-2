@@ -1,6 +1,12 @@
 import React, { Component } from 'react';
 import { HTTP } from 'meteor/http';
 import 'blueimp-file-upload';
+import 'blueimp-load-image';
+import 'blueimp-canvas-to-blob';
+import 'blueimp-file-upload/js/jquery.iframe-transport.js';
+import 'blueimp-file-upload/js/jquery.fileupload.js';
+import 'blueimp-file-upload/js/jquery.fileupload-process.js';
+import 'blueimp-file-upload/js/jquery.fileupload-image.js';
 
 // elementId - required
 // postUploadMethod - required
@@ -16,6 +22,7 @@ class awsUpload extends Component {
 		$(id).fileupload({
 			// acceptFileTypes: /(gif|jpe?g|png)$/i,
 			// maxFileSize: maxFileSize,
+			disableImageResize: false,
 			paramName: 'file',
 			add: this.s3Add.bind(this),
 			dataType: 'xml',
@@ -42,7 +49,6 @@ class awsUpload extends Component {
 		data.files.map((file) => {
 
 			const fileName = file.name;
-			// const contentType = file.type;
 
 			Meteor.call('file.generateUploadTicket', fileName, type, (err, res) => {
 				if (err) {
@@ -65,8 +71,6 @@ class awsUpload extends Component {
 
 		$('#progress').css('display', 'none');
 
-		const type = this.props.image ? 'image' : 'file';
-
 		const file = {
 			awsKey: data.formData.key,
 			name: data.files[0].name,
@@ -74,22 +78,13 @@ class awsUpload extends Component {
 			type: data.files[0].type
 		};
 
-		// Add file reference to correct collection
-		Meteor.call('file.registerFile', file, type, (err, res) => {
+		// Attach file reference to relevant document
+		Meteor.call(this.props.postUploadMethod, file, (err, res) => {
 			if (err) {
 				console.log(err);
-				$('#progress .progress-bar').css('width','0%');
 			} else {
-
-				// Attach file reference to relevant document
-				Meteor.call(this.props.postUploadMethod, file.awsKey, res, (err, res) => {
-					if (err) {
-						console.log(err);
-					} else {
-						Bert.alert('File uploaded', 'success', 'growl-bottom-right', 'fa-smile-o');
-						$('#progress .progress-bar').css('width','0%');
-					}
-				});
+				Bert.alert('File uploaded', 'success', 'growl-bottom-right', 'fa-smile-o');
+				$('#progress .progress-bar').css('width','0%');
 			}
 		});
 	}

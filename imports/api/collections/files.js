@@ -33,6 +33,26 @@ const FilesSchema = new SimpleSchema({
 	},
 	"addedBy": {
 		type: String
+	},
+	"inTrash": {
+		type: Boolean,
+		optional: true
+	},
+	"dateTrashed": {
+		type: Date,
+		optional: true
+	},
+	"trashedBy": {
+		type: String,
+		optional: true
+	},
+	"deletedFromS3": {
+		type: Boolean,
+		optional: true
+	},
+	"dateDeleted": {
+		type: Date,
+		optional: true
 	}
 });
 

@@ -1,10 +1,15 @@
 import fs from 'fs';
 import path from 'path';
 import uuid from 'uuid/v4';
+import cron from 'cron'
+import moment from 'moment';
 
 import AWS from 'aws-sdk/global';
 import S3 from 'aws-sdk/clients/s3';
 import CloudFormation from 'aws-sdk/clients/cloudformation';
+
+import Files from '../imports/api/collections/files.js';
+import Images from '../imports/api/collections/images.js';
 
 Meteor.startup( () => {
 
@@ -438,5 +443,79 @@ Meteor.startup( () => {
 				});
 			}
 		});
-	}
+	};
+
+	// Garbage collection local files vs aws
+
+	var job = new cron.CronJob({
+		cronTime: '0 * * * *',
+		onTick: Meteor.bindEnvironment(function() {
+
+			console.log('Running S3 garbage collection ' + moment().toDate());
+			const expireTreshold = moment().subtract(1, 'minutes').toDate();
+
+
+			// Images
+			const expiredImages = Images.find(
+				{
+					inTrash: true,
+					deletedFromS3: { $exists: false }, 
+					dateTrashed: {
+						$lt: expireTreshold
+					}
+				}, 
+				{ fields: {_id: 1, awsKey: 1} }
+			).fetch();
+
+			expiredImages.map((file) => {
+
+				s3.deleteObject({Bucket: Meteor.settings.public.aws.imageBucket, Key: file.awsKey}, Meteor.bindEnvironment((err, data) => {
+					if (err) {
+						console.log(err);
+					} else {
+						console.log('Deleted ' + file.awsKey + ' from S3');
+
+						Images.update({_id: file._id}, {$set: {'deletedFromS3': true, 'dateDeleted': moment().toDate()}});
+
+					}
+				}));
+
+			});
+
+
+			// Files
+			const expiredFiles = Files.find(
+				{
+					inTrash: true,
+					deletedFromS3: { $exists: false }, 
+					dateTrashed: {
+						$lt: expireTreshold
+					}
+				}, 
+				{ fields: {_id: 1, awsKey: 1} }
+			).fetch();
+
+			expiredFiles.map((file) => {
+
+				s3.deleteObject({Bucket: Meteor.settings.public.aws.bucket, Key: file.awsKey}, Meteor.bindEnvironment((err, data) => {
+					if (err) {
+						console.log(err);
+					} else {
+						console.log('Deleted ' + file.awsKey + ' from S3');
+
+						Files.update({_id: file._id}, {$set: {'deletedFromS3': true, 'dateDeleted': moment().toDate()}});
+
+					}
+				}));
+
+			});
+
+
+		}),
+		start: false,
+		timeZone: "Europe/Oslo"
+	});
+
+	job.start();
+
 });

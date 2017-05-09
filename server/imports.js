@@ -6,6 +6,8 @@ import '../imports/api/collections/rooms.js';
 import '../imports/api/collections/customers.js';
 import '../imports/api/collections/doorCodeLog.js';
 import '../imports/api/collections/deletedUsers.js';
+import '../imports/api/collections/images.js';
+import '../imports/api/collections/files.js';
 
 // Methods
 import '../imports/api/methods/doorCodeMethods.js';

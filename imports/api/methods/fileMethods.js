@@ -1,5 +1,6 @@
 import crypto from 'crypto';
 import uuid from 'uuid/v4';
+import moment from 'moment';
 
 import Files from '../collections/files';
 import Images from '../collections/images';
@@ -95,21 +96,47 @@ Meteor.methods({
 			return hmac(signingKey, policyBase64).toString('hex');
 		}
 	},
-	'file.registerFile': function (file, type) {
+	'file.add': function (file, type) {
 		check(file, Object);
 		check(type, String);
 
-		file.dateAdded = new Date();
+		file.dateAdded = moment().toDate();
 		file.addedBy = Meteor.userId();
 
 		if (type == 'image') {
 			const entry = Images.insert(file);
-			return entry;
+
+			const res = {
+				localId: entry,
+				awsKey: file.awsKey
+			}
+
+			return res;
 		}
 
 		if (type == 'file') {
 			const entry = Files.insert(file);
-			return entry;
+
+			const res = {
+				localId: entry,
+				awsKey: file.awsKey
+			}
+
+			return res;
+		}
+	},
+	'file.toTrash': function (fileId, type) {
+		check(fileId, String);
+		check(type, String);
+
+		// Files will be deleted from S3 with a cron job, intervall set at server/awsConfig.js
+
+		if (type == 'image') {
+			Images.update({_id: fileId}, {$set: {inTrash: true, trashedBy: Meteor.userId(), dateTrashed: moment().toDate()}});
+		}
+
+		if (type == 'file') {
+			Files.update({_id: fileId}, {$set: {inTrash: true, trashedBy: Meteor.userId(), dateTrashed: moment().toDate()}});
 		}
 	}
 });
