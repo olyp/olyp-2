@@ -1,9 +1,12 @@
 import crypto from 'crypto';
 import uuid from 'uuid/v4';
 import moment from 'moment';
+import S3 from 'aws-sdk/clients/s3';
 
 import Files from '../collections/files';
 import Images from '../collections/images';
+
+var s3 = new S3();
 
 Meteor.methods({
 	'file.generateUploadTicket': function (filename, type) {
@@ -71,7 +74,7 @@ Meteor.methods({
 					{ key: filename },
 					{ acl: 'public-read' },
 					{ success_action_status: "201" },
-					// Optionally control content type and file size
+					// Content type and file size
 					// {'Content-Type': 'application/pdf'},
 					// ['content-length-range', 0, 1000000],
 					{ 'x-amz-algorithm': 'AWS4-HMAC-SHA256' },
@@ -138,5 +141,105 @@ Meteor.methods({
 		if (type == 'file') {
 			Files.update({_id: fileId}, {$set: {inTrash: true, trashedBy: Meteor.userId(), dateTrashed: moment().toDate()}});
 		}
+	},
+	'files.emptyTrash': function () {
+
+		console.log('Running S3 garbage collection ' + moment().toDate());
+		const expireTreshold = moment().subtract(1, 'minutes').toDate();
+
+		// Delete trashed and expired images
+		const expiredImages = Images.find(
+			{
+				inTrash: true,
+				deletedFromS3: { $exists: false }, 
+				dateTrashed: {
+					$lt: expireTreshold
+				}
+			}, 
+			{ fields: {_id: 1, awsKey: 1} }
+		).fetch();
+
+		expiredImages.map((file) => {
+
+			s3.deleteObject({Bucket: Meteor.settings.public.aws.imageBucket, Key: file.awsKey}, Meteor.bindEnvironment((err, data) => {
+				if (err) {
+					console.log(err);
+				} else {
+					console.log('Deleted ' + file.awsKey + ' from S3');
+
+					Images.update({_id: file._id}, {$set: {'deletedFromS3': true, 'dateDeleted': moment().toDate()}});
+
+				}
+			}));
+		});
+
+		// Delete trashed and expired files
+		const expiredFiles = Files.find(
+			{
+				inTrash: true,
+				deletedFromS3: { $exists: false }, 
+				dateTrashed: {
+					$lt: expireTreshold
+				}
+			}, 
+			{ fields: {_id: 1, awsKey: 1} }
+		).fetch();
+
+		expiredFiles.map((file) => {
+
+			s3.deleteObject({Bucket: Meteor.settings.public.aws.bucket, Key: file.awsKey}, Meteor.bindEnvironment((err, data) => {
+				if (err) {
+					console.log(err);
+				} else {
+					console.log('Deleted ' + file.awsKey + ' from S3');
+
+					Files.update({_id: file._id}, {$set: {'deletedFromS3': true, 'dateDeleted': moment().toDate()}});
+
+				}
+			}));
+
+		});
+	},
+	'files.compareAndDelete': function () {
+		// Delete all images that had been marked as deleted on S3 in case they are not or if there has been made any minified versions of them
+		s3.listObjectsV2({Bucket: Meteor.settings.public.aws.imageBucket}, Meteor.bindEnvironment((err, data) => {
+			if (err) {
+				console.log(err);
+			} else {
+
+				data.Contents.map((file) => {
+					const pathAndName = file.Key.split("/");
+					const originalKey = pathAndName[pathAndName.length -1];
+
+					const originalImageHasBeenDeleted = Images.findOne({awsKey: originalKey, deletedFromS3: true}, {fields: {_id: 1}});
+
+					if (originalImageHasBeenDeleted) {
+						s3.deleteObject({Bucket: Meteor.settings.public.aws.imageBucket, Key: file.Key}, (err,res) => {
+							console.log('Deleted ' + file.Key + ' from S3');
+						});
+					}
+				});
+			}
+		}));
+
+
+		// Delete all files that had been marked as deleted on S3 in case they are not
+		s3.listObjectsV2({Bucket: Meteor.settings.public.aws.bucket}, Meteor.bindEnvironment((err, data) => {
+			if (err) {
+				console.log(err);
+			} else {
+
+				data.Contents.map((file) => {
+
+					const originalFileHasBeenDeleted = Files.findOne({awsKey: file.Key, deletedFromS3: true}, {fields: {_id: 1}});
+
+					if (originalFileHasBeenDeleted) {
+						s3.deleteObject({Bucket: Meteor.settings.public.aws.bucket, Key: file.Key}, (err,res) => {
+							console.log('Deleted ' + file.Key + ' from S3');
+						});
+					}
+				});
+			}
+		}));
 	}
 });
