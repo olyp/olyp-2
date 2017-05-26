@@ -4,7 +4,7 @@ import {Router, Route, IndexRoute, browserHistory} from 'react-router';
 
 // LAYOUTS
 import FrontLayout from '../imports/ui/front/components/FrontLayout.js';
-import LoginLayout from '../imports/ui/front/components/LoginLayout.js';
+// import LoginLayout from '../imports/ui/front/components/LoginLayout.js';
 import SecureLayout from '../imports/ui/secure/components/SecureLayout.js';
 
 // SECURE
@@ -97,7 +97,7 @@ const routes = (
 			<Route path="upload" component={awsUpload} />
 		</Route>
 
-		<Route component={LoginLayout}>
+		<Route component={FrontLayout}>
 			<Route path="/login" component={Login} onEnter={isLoggedIn}></Route>
 			<Route path="/forgot" component={Forgot}></Route>
 			<Route path="/signup" component={SignUp}></Route>

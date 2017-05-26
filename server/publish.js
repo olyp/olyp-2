@@ -49,9 +49,7 @@ Meteor.publish('allUsers', function () {
 		return Meteor.users.find({}, {fields: {"profile": 1, "emails": 1, "createdAt": 1, "roles": 1, "status": 1}});
 	} else {
 		return null;
-	}
-
-    
+	} 
 });
 
 Meteor.publish('allRooms', function () {

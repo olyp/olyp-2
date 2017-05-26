@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Link, browserHistory } from 'react-router';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
-import MobileMenu from './MobileMenu.js';
+import MenuContent from './MenuContent.js';
 
 class NavBar extends Component {
 
@@ -30,7 +30,7 @@ class NavBar extends Component {
 			<img src="/images/menu-square.png" /> : 
 			<img src="/images/menu-burger.png" /> ;
 			
-		const menu = this.state.menuOpen ? <MobileMenu onLinkClick={(destination) => {this.redirect(destination)}}/> : '';
+		const menu = this.state.menuOpen ? <MenuContent onLinkClick={(destination) => {this.redirect(destination)}}/> : '';
 
 		const layout = Meteor.userId() ? <span className="glyphicon glyphicon-lock nav-lock"></span> : <img src="/images/logo/logo3.png" />;
 
@@ -39,7 +39,6 @@ class NavBar extends Component {
 		const navClass = (pathArray[1] == 'secure') ? 'shadow' : '';
 
 		const link = Meteor.userId() ? '/secure' : '/';
-
 
 		return (
 			<div>
