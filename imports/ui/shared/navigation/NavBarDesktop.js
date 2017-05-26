@@ -29,19 +29,7 @@ class NavBarDesktop extends Component {
 
 	updateDimensions () {
 
-		// const scroll = $(window).scrollTop();
-
-		// if (scroll < this.state.window.scroll) {
-		// 	this.setState({
-		// 		navBarVisible: true
-		// 	});
-		// } else if (scroll > 100) {
-		// 	this.setState({
-		// 		navBarVisible: false
-		// 	});
-		// }
-
-		// 1 -> 0 based on one whole window-scroll
+		// 0 -> 1 based on one whole window-scroll
 		var scrollFactor = $(window).scrollTop() / $(window).height();
 		
 		if (scrollFactor >= 1) {
@@ -52,6 +40,7 @@ class NavBarDesktop extends Component {
 			scrollFactor = 0;
 		}
 
+		// 1 -> 0 based on one whole window-scroll
 		const scrollFactorRev = (scrollFactor * -1) + 1;
 
         this.setState({
@@ -96,7 +85,7 @@ class NavBarDesktop extends Component {
 		// Follow the bootstrap container as outer border for the letters
 		const sideOffset = (this.state.window.width - this.state.window.containerWidth) / 2;
 
-		// All images are square, but only the "O" goes all the way out
+		// All images are square, but only the "O" goes all the way out to the sides
 		const oBuffer = 3;
 
 		const lOffsetTop = (overlayCenterY - 100) * this.state.window.scrollRev;
@@ -123,7 +112,6 @@ class NavBarDesktop extends Component {
 				top: pOffsetTop + 'px',
 				left: (overlayCenterX - 25) + 'px'
 			}
-
 		}
 
 		if (isHomePage) {
