@@ -67,27 +67,23 @@ class NavBarDesktop extends Component {
 		// console.log(overlayCenterX);
 
 		// Text logo
-		const logoTextOsloOffsetTop = (overlayCenterY - 19) * this.state.window.scrollRev;
-		const logoTextOsloOffsetLeft = (overlayContainerCenterX - 225) * this.state.window.scrollRev;
+		const logoTextOsloOffsetTop = ((overlayCenterY - 19) * this.state.window.scrollRev) + 19;
+		const logoTextOsloOffsetLeft = ( ((overlayCenterX - 18) - (overlayCenterX - (overlayContainerCenterX / 2) - 37)) * this.state.window.scrollRev) + (overlayCenterX - (overlayContainerCenterX / 2) - 37);
 
-		const logoTextLydproduksjonOffsetTop = (overlayCenterY + 2) * this.state.window.scrollRev;
-		const logoTextLydproduksjonOffsetLeft = (overlayContainerCenterX - 300) * this.state.window.scrollRev;
+		const logoTextLydproduksjonOffsetTop = ((overlayCenterY) * this.state.window.scrollRev) + 19;
+		const logoTextLydproduksjonOffsetLeft = ( ((overlayCenterX - 55) - (overlayCenterX - (overlayContainerCenterX / 2) + 4)) * this.state.window.scrollRev) + (overlayCenterX - (overlayContainerCenterX / 2) + 4);
 		// const logoWidth = (this.state.window.scrollRev > 0.7) ? '111px' : '100%';
 
 		console.log(overlayContainerCenterX);
 
 		const logoTextOslo = {
 			top: logoTextOsloOffsetTop + 'px',
-			left: logoTextOsloOffsetLeft + 'px',
-			position: 'absolute',
-			marginLeft: (overlayContainerCenterX / 2) - 37 + 'px'
+			left: logoTextOsloOffsetLeft + 'px'
 		}
 
 		const logoTextLydproduksjon = {
 			top: logoTextLydproduksjonOffsetTop + 'px',
-			left: logoTextLydproduksjonOffsetLeft + 'px',
-			position: 'absolute',
-			marginLeft: (overlayContainerCenterX / 2) + 4 + 'px'
+			left: logoTextLydproduksjonOffsetLeft + 'px'
 			// marginTop: -29 + 'px',
 			// marginLeft: (overlayContainerCenterX - 179) + 'px',
 			// width: 111 + 'px'
@@ -139,10 +135,7 @@ class NavBarDesktop extends Component {
 						<div id="desktop-nav-container" className="container">
 							<div className="row">
 								<div className="col-sm-6 text-center">
-									<div>
-										<h4 style={logoTextOslo}>Oslo</h4>
-										<h4 style={logoTextLydproduksjon}>Lydproduksjon</h4>
-									</div>
+
 								</div>
 								<div className="col-sm-3 text-right">
 									<h4>Book rom</h4>
@@ -152,6 +145,14 @@ class NavBarDesktop extends Component {
 								</div>
 							</div>
 						</div>
+					</div>
+
+					<div className="overlay-letter" style={logoTextOslo}>
+						<h4>Oslo</h4>
+					</div>
+
+					<div className="overlay-letter" style={logoTextLydproduksjon}>
+						<h4>Lydproduksjon</h4>
 					</div>
 
 					<div className="overlay-letter" style={letterStyles.l}>

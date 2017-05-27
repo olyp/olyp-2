@@ -322,7 +322,8 @@ input {
 #custom-nav h4,
 .glyphicon,
 a:hover,
-#desktop-nav h4 {
+#desktop-nav h4,
+.overlay-letter h4 {
 	color: rgb(38, 84, 249);
 }
 
