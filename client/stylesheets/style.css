@@ -13,6 +13,10 @@ a {
 	color: inherit;
 }
 
+a:hover {
+	cursor: pointer;
+}
+
 input:-webkit-autofill {
     -webkit-box-shadow: 0 0 0px 1000px white inset;
 }
@@ -26,6 +30,15 @@ input {
 
 .desktop {
 	display: none;
+}
+
+.full-width {
+	min-width: 100%;
+}
+
+.red-border {
+	border: 1px solid #EA2427;
+	padding: 1px 6px;
 }
 
 .search-bar {
@@ -121,6 +134,21 @@ input {
 /*==========  LOGIN LAYOUT END ==========*/
 
 /*==========  FRONT LAYOUT  ==========*/
+
+#desktop-content {
+	max-width: 700px;
+	margin: 0 auto;
+}
+
+#grey-background {
+	position: absolute;
+	z-index: -1;
+	width: 100%;
+	height: 760px;
+	top: 1856px;
+	left: 0px;
+	background-color: #E6E6E6;
+}
 
 /*==========  FRONT LAYOUT END ==========*/
 
@@ -314,6 +342,7 @@ input {
 #home-container a,
 #home-container h1,
 #home-container h4,
+#home-container p,
 #mobile-menu-content a,
 #mobile-menu-content h1,
 .login-layout h1,
@@ -532,7 +561,11 @@ a:hover,
 	}
 
 	.desktop {
-		display: inline;
+		display: block;
+	}
+
+	#home-container h1 {
+		font-size: 4em;
 	}
 
 }

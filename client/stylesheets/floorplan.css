@@ -33,6 +33,16 @@
 	position: absolute;
 }
 
+.floor-plan-overlay {
+	position: absolute;
+	width: 100%;
+	height: 100%; 
+}
+
+.floor-plan-overlay h4 {
+	position: absolute;
+}
+
 /* ==========================================================================
    Room position in floor plan --- Now done with SVG path
    ========================================================================== */

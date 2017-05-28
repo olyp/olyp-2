@@ -97,7 +97,7 @@ const routes = (
 			<Route path="upload" component={awsUpload} />
 		</Route>
 
-		<Route component={LoginLayout}>
+		<Route component={FrontLayout}>
 			<Route path="/login" component={Login} onEnter={isLoggedIn}></Route>
 			<Route path="/forgot" component={Forgot}></Route>
 			<Route path="/signup" component={SignUp}></Route>

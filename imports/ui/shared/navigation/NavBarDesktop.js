@@ -1,18 +1,17 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router';
 
 class NavBarDesktop extends Component {
 
 	constructor(props) {
 		super(props);
 		this.state = {
-			loading: false,
 			window: {
 				height: 0,
 				width: 0,
 				scroll: 0,
 				scrollRev: 0
-			},
-			navBarVisible: true
+			}
 		}
 	}
 
@@ -63,18 +62,12 @@ class NavBarDesktop extends Component {
 		const overlayCenterX = this.state.window.width / 2;
 		const overlayContainerCenterX = this.state.window.containerWidth / 2;
 
-		console.log(this.state.window.scrollRev);
-		// console.log(overlayCenterX);
-
 		// Text logo
 		const logoTextOsloOffsetTop = ((overlayCenterY - 19) * this.state.window.scrollRev) + 19;
-		const logoTextOsloOffsetLeft = ( ((overlayCenterX - 18) - (overlayCenterX - (overlayContainerCenterX / 2) - 37)) * this.state.window.scrollRev) + (overlayCenterX - (overlayContainerCenterX / 2) - 37);
+		const logoTextOsloOffsetLeft = ( ((overlayCenterX - 18) - (overlayCenterX - (overlayContainerCenterX / 2) - 75)) * this.state.window.scrollRev) + (overlayCenterX - (overlayContainerCenterX / 2) - 75);
 
 		const logoTextLydproduksjonOffsetTop = ((overlayCenterY) * this.state.window.scrollRev) + 19;
-		const logoTextLydproduksjonOffsetLeft = ( ((overlayCenterX - 55) - (overlayCenterX - (overlayContainerCenterX / 2) + 4)) * this.state.window.scrollRev) + (overlayCenterX - (overlayContainerCenterX / 2) + 4);
-		// const logoWidth = (this.state.window.scrollRev > 0.7) ? '111px' : '100%';
-
-		console.log(overlayContainerCenterX);
+		const logoTextLydproduksjonOffsetLeft = ( ((overlayCenterX - 55) - (overlayCenterX - (overlayContainerCenterX / 2) - 34)) * this.state.window.scrollRev) + (overlayCenterX - (overlayContainerCenterX / 2) - 34);
 
 		const logoTextOslo = {
 			top: logoTextOsloOffsetTop + 'px',
@@ -84,14 +77,8 @@ class NavBarDesktop extends Component {
 		const logoTextLydproduksjon = {
 			top: logoTextLydproduksjonOffsetTop + 'px',
 			left: logoTextLydproduksjonOffsetLeft + 'px'
-			// marginTop: -29 + 'px',
-			// marginLeft: (overlayContainerCenterX - 179) + 'px',
-			// width: 111 + 'px'
-		}
 
-		// const logoStyle = {
-		// 	width: logoWidth
-		// }
+		}
 
 		// Logo letters
 
@@ -119,7 +106,8 @@ class NavBarDesktop extends Component {
 			},
 			y: {
 				top: (overlayCenterY + 7) + 'px',
-				left: yOffsetLeft + 'px'
+				left: yOffsetLeft + 'px',
+				zIndex: -2
 			},
 			p: {
 				top: pOffsetTop + 'px',
@@ -138,7 +126,9 @@ class NavBarDesktop extends Component {
 
 								</div>
 								<div className="col-sm-3 text-right">
-									<h4>Book rom</h4>
+									<Link to="/secure">
+										<h4><span className="red-border">Book rom</span></h4>
+									</Link>
 								</div>
 								<div className="col-sm-3">
 									<h4>Kontakt</h4>
@@ -171,9 +161,6 @@ class NavBarDesktop extends Component {
 						<img src="/images/logo/logo-y.png" />
 					</div>
 
-					<div style={{minHeight: $(window).height()}}>
-					</div>
-
 				</div>
 			);
 		}
@@ -182,9 +169,13 @@ class NavBarDesktop extends Component {
 			<div id="desktop-nav">
 				<div className="container">
 					<div className="row">
-						<div className="col-sm-6 text-center">Oslo Lydproduksjon</div>
-						<div className="col-sm-3 text-right">Book rom</div>
-						<div className="col-sm-3">Kontakt</div>
+						<div className="col-sm-6 text-center"><h4>Oslo Lydproduksjon</h4></div>
+						<div className="col-sm-3 text-right">
+							<Link to="/secure">
+								<h4><span className="red-border">Book rom</span></h4>
+							</Link>
+						</div>
+						<div className="col-sm-3"><h4>Kontakt</h4></div>
 					</div>
 				</div>
 			</div>

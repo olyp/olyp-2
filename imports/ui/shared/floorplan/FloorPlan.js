@@ -5,9 +5,13 @@ import Vivus from 'vivus';
 class FloorPlan extends Component {
 
 	componentDidMount() {
+
+		const type = this.props.type ? this.props.type : 'oneByOne';
+		const duration = this.props.duration ? this.props.duration : 200;
+
 		new Vivus('vivus-hook', {
-			duration: 200,
-			type: 'oneByOne',
+			duration: duration,
+			type: type,
 			reverseStack: false
 		});
 	}
@@ -17,8 +21,84 @@ class FloorPlan extends Component {
 		const strokeWidth = this.props.strokeWidth ? this.props.strokeWidth : "2";
 		const color = this.props.color ? this.props.color : "#ea2427";
 
+		const overlayStyles = {
+			roomOne: {
+				top: 8 + '%',
+				left: 57.5 + '%'
+			},
+			roomTwo: {
+				top: 8 + '%',
+				left: 42.5 + '%'
+			},
+			roomThree: {
+				top: 8 + '%',
+				left: 28.5 + '%'
+			},
+			roomFour: {
+				top: 4 + '%',
+				left: 9 + '%'
+			},
+			roomFive: {
+				top: 43 + '%',
+				left: 5 + '%'
+			},
+			roomSix: {
+				top: 85 + '%',
+				left: 5 + '%'
+			},
+			roomSeven: {
+				top: 85 + '%',
+				left: 25.5 + '%'
+			},
+			roomEight: {
+				top: 85 + '%',
+				left: 41.5 + '%'
+			},
+			roomNine: {
+				top: 43 + '%',
+				left: 24.5 + '%'
+			},
+			roomTen: {
+				top: 43 + '%',
+				left: 41.5 + '%'
+			},
+			storage: {
+				top: 8 + '%',
+				left: 86.5 + '%'
+			},
+			toilet: {
+				top: 8 + '%',
+				left: 71 + '%'
+			},
+			common: {
+				top: 59 + '%',
+				left: 72 + '%'
+			},
+			driveIn: {
+				top: 40 + '%',
+				left: 91 + '%'
+			}
+		}
+
 		return (
 			<div id="floor-plan-wrapper">
+
+				<div className="floor-plan-overlay">
+					<h4 style={overlayStyles.roomOne}>Rom 1</h4>
+					<h4 style={overlayStyles.roomTwo}>Rom 2</h4>
+					<h4 style={overlayStyles.roomThree}>Rom 3</h4>
+					<h4 style={overlayStyles.roomFour}>Rom 4</h4>
+					<h4 style={overlayStyles.roomFive}>Rom 5</h4>
+					<h4 style={overlayStyles.roomSix}>Rom 6</h4>
+					<h4 style={overlayStyles.roomSeven}>Rom 7</h4>
+					<h4 style={overlayStyles.roomEight}>Rom 8</h4>
+					<h4 style={overlayStyles.roomNine}>Rom 9</h4>
+					<h4 style={overlayStyles.roomTen}>Rom 10</h4>
+					<h4 style={overlayStyles.storage}>Lager</h4>
+					<h4 style={overlayStyles.toilet}>Toalett</h4>
+					<h4 style={overlayStyles.common}>Felles</h4>
+					<h4 style={overlayStyles.driveIn}>Drive-in</h4>
+				</div>
 					
 				<div id="floor-plan">
 

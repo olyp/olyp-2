@@ -9,10 +9,37 @@ import VivusContainer from '../../../shared/floorplan/VivusContainer.js';
 const scroll = Scroll.animateScroll;
 const scroller = Scroll.scroller;
 
-// import HomeMobile from './HomeMobile.js';
 import FloorPlan from '../../../shared/floorplan/FloorPlan.js';
 
 class Home extends Component {
+
+	constructor(props) {
+		super(props);
+		this.state = {
+			window: {
+				height: 0
+			}
+		}
+	}
+
+    componentDidMount () {
+    	this.updateDimensions();
+
+        window.addEventListener("resize", this.updateDimensions.bind(this));
+    }
+    componentWillUnmount () {
+        window.removeEventListener("resize", this.updateDimensions.bind(this));
+    }
+
+	updateDimensions () {
+
+        this.setState({
+        	window: {
+        		height: $(window).height()
+        	}
+        });
+    }
+
 
 	scrollToAnchor(id) {
 		scroller.scrollTo(id, {'duration': 300, 'smooth': true});
@@ -26,33 +53,183 @@ class Home extends Component {
 
 					<div id="home">
 
-						<ReactCSSTransitionGroup
-							transitionName='page-content'
-							transitionEnterTimeout={300}
-							transitionLeaveTimeout={300}
-							transitionAppear={true}
-							transitionAppearTimeout={300}
-						>
+						<div id="grey-background" className="desktop"></div>
 
-							<div style={{minHeight: this.props.window.height - 250}}>
+						<div className="desktop">
 
-								<div className="banner-text-container text-center">
-									<h1>Olyp tilbyr gode<br />øvingsrom, et<br />arbeidssted og <br />knutepunkt for <br />yrkesmusikere<br />og band i Oslo.</h1>
-								</div>
-
-								<div className="container">
-									<div id="book-room-button" className="text-center">
-										<Link to="/secure">
-											<h1>Book Rom</h1>
-										</Link>
-									</div>
+							<div className="container">
+								<div style={{minHeight: this.state.window.height - 200}}></div>
+								<div className="text-center">
+									<img 
+										onClick={() => {this.scrollToAnchor('desktop-content')}}
+										className="arrow" 
+										src="/images/arrow-down.png" 
+									/>
 								</div>
 
 							</div>
 
-						</ReactCSSTransitionGroup>
+						</div>
 
-						<div id="mobile-content">
+						<div id="desktop-content" className="desktop">
+
+							<div className="spacer-50"></div>
+							<div className="spacer-50"></div>
+							<div className="spacer-50"></div>
+
+
+							<div className="row">
+								<div className="col-xs-8 col-xs-offset-2 text-center">
+									<h1>Hos oss kan du leie øverom. Både fast og på timesbasis.</h1>
+								</div>
+							</div>
+
+
+							<div className="spacer-50"></div>
+							<div className="spacer-50"></div>
+							<div className="spacer-50"></div>
+
+							<div className="row">
+								
+								<div className="col-sm-6 text-center">
+									<h4><u>4 rom</u></h4>
+									<h4>For solister og små ensembler</h4>
+									<h4>12 - 18 kvm</h4>
+								</div>
+								<div className="col-sm-6 text-center">
+									<h4><u>1 rom</u></h4>
+									<h4>For større ensembler</h4>
+									<h4>34 kvm</h4>
+								</div>
+
+								<div className="row">
+									<div className="col-sm-6 text-center">
+										<h4><u>5 rom</u></h4>
+										<h4>For mellomstore ensembler</h4>
+										<h4>ca 21kvm</h4>
+									</div>
+									<div className="col-sm-6 text-center">
+										<h4><u>Drive-in-lager</u></h4>
+										<h4>Direkte tilgang via garasje</h4>
+										<h4>80 kvm</h4>
+									</div>
+								</div>
+							</div>
+
+							<div className="spacer-50"></div>
+							<div className="spacer-50"></div>
+							<div className="spacer-50"></div>
+
+							<div className="row">
+								<div className="col-sm-12">
+									<FloorPlan type='delayed' duration={50}/>
+								</div>
+							</div>
+
+							<div className="spacer-50"></div>
+
+							<div className="row">
+								<div className="text-center">
+									<h4>Olaf Schous Vei 6</h4>
+								</div>
+							</div>
+
+							<div className="spacer-50"></div>
+							<div className="spacer-50"></div>
+							<div className="spacer-50"></div>
+
+							<div className="row">
+								<img className="img-responsive full-width" src="/images/art-christina.jpg" />
+							</div>
+
+
+							<div className="spacer-50"></div>
+							<div className="spacer-50"></div>
+							<div className="spacer-50"></div>
+
+
+							<div className="row">
+								<div className="col-xs-8 col-xs-offset-2 text-center">
+									<h1>Vi holder til på Rosenhoff, mellom Carl Berner og Sinsen.<br />_</h1>
+								</div>
+							</div>
+
+							<div className="spacer-50"></div>
+							<div className="spacer-50"></div>
+							<div className="spacer-50"></div>
+
+							<div id="contact" className="row">
+								<div className="col-sm-6">
+									<Link to="https://goo.gl/maps/6v3eMub7sTS2" target="blank">
+										<img src="/images/map.jpg" className="img-responsive" />
+									</Link>	
+								</div>
+								<div className="col-sm-6">
+									<div className="row">
+										<div className="col-sm-6">
+											<h4><u>Booking og leie</u></h4>
+											<h4>Jonas Barsten<br />jonas@olyp.no</h4>
+										</div>
+										<div className="col-sm-6">
+											<h4><u>Bygg og utstyr</u></h4>
+											<h4>Haakon Mathisen<br />haakon@olyp.no</h4>
+										</div>
+									</div>
+									<div className="row">
+										<div className="col-sm-6">
+											<h4><u>Kundeforhold</u></h4>
+											<h4>Simen Solli Schøien<br />simen@olyp.no</h4>
+										</div>
+										<div className="col-sm-6">
+											<h4><u>Økonomi</u></h4>
+											<h4>Alf Lund Godbolt<br />alf@olyp.no</h4>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div className="spacer-50"></div>
+							<div className="spacer-50"></div>
+							<div className="spacer-50"></div>
+
+						</div>
+
+						<div className="mobile">
+
+							<ReactCSSTransitionGroup
+								transitionName='page-content'
+								transitionEnterTimeout={300}
+								transitionLeaveTimeout={300}
+								transitionAppear={true}
+								transitionAppearTimeout={300}
+							>
+
+								<div style={{minHeight: this.state.window.height - 250}}>
+
+									<div className="container">
+
+										<div className="row">
+											<div className="col-xs-8 col-xs-offset-2 text-center">
+												<h1>Hos oss kan du leie øverom både fast og på timesbasis.</h1>
+											</div>
+										</div>
+
+										<div className="container mobile">
+											<div id="book-room-button" className="text-center">
+												<Link to="/secure">
+													<h1>Book Rom</h1>
+												</Link>
+											</div>
+										</div>
+
+									</div>
+
+								</div>
+
+							</ReactCSSTransitionGroup>
+						</div>
+
+						<div id="mobile-content" className="mobile">
 
 							<div className="container text-center">
 								<img 
