@@ -4,6 +4,11 @@ import Reservations from '../imports/api/collections/reservations.js';
 import Rooms from '../imports/api/collections/rooms.js';
 import Customers from '../imports/api/collections/customers.js';
 
+Meteor.publish("rolesIsReady", function () {
+	return Meteor.roles.find({}, {reactive: false});
+});
+
+
 Meteor.publish('allDoorCodes', function () {
 
 	const isAdmin = Roles.userIsInRole(this.userId, ['admin', 'super-admin'], 'olyp');

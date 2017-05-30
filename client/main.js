@@ -50,16 +50,16 @@ const authenticateSecure = (nextState, replace, callback) => {
 };
 
 const authenticateAdmin = (nextState, replace, callback) => {
+	Meteor.subscribe("rolesIsReady", function () {
+		if (!Roles.userIsInRole(Meteor.userId(), ['super-admin', 'admin'], 'olyp')) {
+			replace({
+				pathname: '/secure',
+				state: { nextPathname: nextState.location.pathname },
+			});
+		}
 
-	// If no user, send to login
-	if (!Roles.userIsInRole(Meteor.userId(), ['super-admin', 'admin'], 'olyp')) {
-		replace({
-			pathname: '/secure',
-			state: { nextPathname: nextState.location.pathname },
-		});
-	}
-	callback();
-	
+		callback();
+	});
 };
 
 const isLoggedIn = (nextState, replace, callback) => {
