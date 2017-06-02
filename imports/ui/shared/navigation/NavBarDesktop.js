@@ -21,6 +21,7 @@ class NavBarDesktop extends Component {
         window.addEventListener("resize", this.updateDimensions.bind(this));
         window.addEventListener("scroll", this.updateDimensions.bind(this));
     }
+    
     componentWillUnmount () {
         window.removeEventListener("resize", this.updateDimensions.bind(this));
         window.removeEventListener("scroll", this.updateDimensions.bind(this));
@@ -42,15 +43,23 @@ class NavBarDesktop extends Component {
 		// 1 -> 0 based on one whole window-scroll
 		const scrollFactorRev = (scrollFactor * -1) + 1;
 
-        this.setState({
-        	window: {
-        		containerWidth: document.getElementById('desktop-nav-container').offsetWidth,
-        		width: $(window).width(),
-        		height: $(window).height(),
-        		scrollRev: scrollFactorRev,
-        		scroll: scrollFactor
-        	}
-        });
+		// TODO: NavBarDesktop-component seems to not unmount and keeps running the event listener after it should have been unmounted. When this is fixed, we can remove the followinf if-statement, but keep the setState.
+
+		if (document.getElementById('desktop-nav')) {
+
+	        this.setState({
+	        	window: {
+	        		containerWidth: document.getElementById('desktop-nav-container').offsetWidth,
+	        		width: $(window).width(),
+	        		height: $(window).height(),
+	        		scrollRev: scrollFactorRev,
+	        		scroll: scrollFactor
+	        	}
+	        });
+
+		}
+
+
     }
 
 	render () {
@@ -167,7 +176,7 @@ class NavBarDesktop extends Component {
 
 		return (
 			<div id="desktop-nav">
-				<div className="container">
+				<div id="desktop-nav-container" className="container">
 					<div className="row">
 						<div className="col-sm-6 text-center"><h4>Oslo Lydproduksjon</h4></div>
 						<div className="col-sm-3 text-right">

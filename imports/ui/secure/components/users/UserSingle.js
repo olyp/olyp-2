@@ -80,7 +80,7 @@ class UserSingle extends Component {
 		}
 
 		return (
-			<div className="container">
+			<div className="container user-single">
 				<div className="row">
 					<div className="col-xs-4">
 						<AwsImage 

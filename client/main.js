@@ -89,10 +89,10 @@ const routes = (
 			<Route path="codes" component={DoorCodes} />
 			<Route path="profile" component={Profile} />
 
-			<Route path="users" component={Users} onEnter={authenticateAdmin} />
-			<Route path="users/:userId" component={UserSingle} onEnter={authenticateAdmin} />
-			<Route path="rooms" component={Rooms} onEnter={authenticateAdmin} />
-			<Route path="rooms/:roomId" component={RoomSingle} onEnter={authenticateAdmin} />
+			<Route path="users" component={Users} />
+			<Route path="users/:userId" component={UserSingle} />
+			<Route path="rooms" component={Rooms} />
+			<Route path="rooms/:roomId" component={RoomSingle} />
 
 			<Route path="upload" component={awsUpload} />
 		</Route>

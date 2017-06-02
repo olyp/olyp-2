@@ -5,7 +5,7 @@
     .calendar-grid { flex: auto; order: 1; margin-right: 15px; display: flex; flex-flow: column; }
     .calendar-grid-week { overflow-y: auto; }
     .calendar-grid-agenda { flex: auto; padding: 0 15px; }
-    .booking-form { width: 300px; order: 2; }
+    .booking-form { width: 300px; order: 2; z-index: 1;}
 }
 
 @media only screen and (min-width: 1130px) {

@@ -140,7 +140,7 @@ class Profile extends Component {
 		const verifiedEmail = (user && user.emails[0] && user.emails[0].verified) ? <p>Verified</p> : <p onClick={this.sendVerificationEmail}>click to send verification email</p>;
 
 		return (
-			<div className="container">
+			<div className="container user-profile">
 
 				<AwsUpload 
 					elementId='uploadProfilePicture'

@@ -131,7 +131,7 @@ export default class Booking extends TrackerReact(React.Component) {
     render() {
         return React.DOM.div(null,
 			React.DOM.div({className: "row booking-form-calendar-grid"},
-				React.DOM.div({className: "booking-form"},
+				React.DOM.div({className: "booking-form container"},
 					React.createElement(BookingForm, {
 						from: this.state.bookingForm.from,
 						to: this.state.bookingForm.to,
@@ -143,7 +143,7 @@ export default class Booking extends TrackerReact(React.Component) {
 						isSubmitting: this.state.bookingForm.isSubmitting
 					})),
 				React.DOM.hr({className: "booking-form-calendar-grid-separator"}),
-				React.DOM.div({className: "calendar-grid"},
+				React.DOM.div({className: "calendar-grid container"},
 					React.createElement(Calendar, {
 						baseDay: this.state.baseDay,
 						days: getDaysForBaseDay(this.state.baseDay),
