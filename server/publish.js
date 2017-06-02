@@ -65,6 +65,14 @@ Meteor.publish('allRooms', function () {
 	}
 });
 
+Meteor.publish('allCustomers', function () {
+	const isAdmin = Roles.userIsInRole(this.userId, ['admin', 'super-admin'], 'olyp');
+
+	if (isAdmin) {
+		return Customers.find();
+	}
+});
+
 Meteor.publish('userRooms', function () {
 
 	const userId = this.userId;

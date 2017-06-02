@@ -16,3 +16,4 @@ import '../imports/api/methods/bookingMethods.js';
 import '../imports/api/methods/roomMethods.js';
 import '../imports/api/methods/deletedUserMethods.js';
 import '../imports/api/methods/fileMethods.js';
+import '../imports/api/methods/customerMethods.js';

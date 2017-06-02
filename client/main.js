@@ -14,6 +14,9 @@ import Profile from '../imports/ui/secure/components/profile/Profile.js';
 import Booking from '../imports/ui/secure/components/booking/Booking.js';
 import Users from '../imports/ui/secure/components/users/Users.js';
 import UserSingle from '../imports/ui/secure/components/users/UserSingle.js';
+import Customers from '../imports/ui/secure/components/customers/Customers.js';
+import CustomerSingle from '../imports/ui/secure/components/customers/CustomerSingle.js';
+import CustomerAdd from '../imports/ui/secure/components/customers/CustomerAdd.js';
 import Rooms from '../imports/ui/secure/components/rooms/Rooms.js';
 import RoomSingle from '../imports/ui/secure/components/rooms/RoomSingle.js';
 
@@ -80,28 +83,33 @@ const routes = (
 	<Router history={browserHistory}>
 
 		<Route path="/" component={FrontLayout}>
-			<IndexRoute component={Home} />	
+			<IndexRoute component={Home} />
+
+			<Route path="/login" component={Login} onEnter={isLoggedIn}></Route>
+			<Route path="/forgot" component={Forgot}></Route>
+			<Route path="/signup" component={SignUp}></Route>
+			<Route path="/resetPassword/:token" component={ResetPassword}></Route>
 		</Route>
 
 		<Route path="/secure" component={SecureLayout} onEnter={authenticateSecure}>
 			<IndexRoute component={Dashboard} />
+
 			<Route path="booking" component={Booking} />		
 			<Route path="codes" component={DoorCodes} />
 			<Route path="profile" component={Profile} />
 
 			<Route path="users" component={Users} />
 			<Route path="users/:userId" component={UserSingle} />
+
+			<Route path="customers" component={Customers} />
+			<Route path="customers/:customerId" component={CustomerSingle} />
+			<Route path="addCustomer" component={CustomerAdd} />
+			<Route path="addCustomer/:userId" component={CustomerAdd} />
+
 			<Route path="rooms" component={Rooms} />
 			<Route path="rooms/:roomId" component={RoomSingle} />
 
 			<Route path="upload" component={awsUpload} />
-		</Route>
-
-		<Route component={FrontLayout}>
-			<Route path="/login" component={Login} onEnter={isLoggedIn}></Route>
-			<Route path="/forgot" component={Forgot}></Route>
-			<Route path="/signup" component={SignUp}></Route>
-			<Route path="/resetPassword/:token" component={ResetPassword}></Route>
 		</Route>
 
 	</Router>

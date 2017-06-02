@@ -112,5 +112,13 @@ Meteor.methods({
 	},
 	sendVerificationEmail () {
 		Accounts.sendVerificationEmail(Meteor.userId());
+	},
+	'user.addCustomer': (userId, customerId) => {
+		check(userId, String);
+		check(customerId, String);
+
+		if (userId == Meteor.userId() || Roles.userIsInRole(Meteor.userId(), ['super-admin', 'admin'], 'olyp')) {
+			Meteor.users.update({_id: userId}, {$push: {customers: customerId}});
+		};
 	}
 });

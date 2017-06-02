@@ -25,7 +25,9 @@ const CustomerSchema = new SimpleSchema({
 	},
 
 	"address": {
-		type: String
+		type: String,
+		// Some small rural areas does not have an address
+		optional: true
 	},
 
 	"zip": {
@@ -36,8 +38,42 @@ const CustomerSchema = new SimpleSchema({
 		type: String
 	},
 
+	"brregId": {
+		type: String,
+		optional: true
+	},
+
+	"dateAdded": {
+		type: Date,
+		optional: true
+	},
+
+	"addedBy": {
+		type: String,
+		optional: true
+	},
+
+	"contactPerson.name": {
+		type: String
+	},
+
+	"contactPerson.email": {
+		type: String
+	},
+
+	"contactPerson.phone": {
+		type: String
+	},
+
+	"brregRaw": {
+		type: Object,
+		blackbox: true,
+		optional: true
+	},
+
 	"roomBookingAgreements": {
-		type: [Object]
+		type: [Object],
+		optional: true
 	},
 
 	"roomBookingAgreements.$.type": {
@@ -62,37 +98,41 @@ const CustomerSchema = new SimpleSchema({
 	}
 });
 
-const PersonCustomerSchema = new SimpleSchema({
-	"email": {
-		type: String
-	},
-	"phone": {
-		type: String
-	}
-});
+// const PersonCustomerSchema = new SimpleSchema({
+// 	"email": {
+// 		type: String
+// 	},
+// 	"phone": {
+// 		type: String
+// 	}
+// });
 
-const CompanyCustomerSchema = new SimpleSchema({
-	"brregId": {
-		type: String
-	},
+// const CompanyCustomerSchema = new SimpleSchema({
+// 	"brregId": {
+// 		type: String
+// 	},
 
-	"contactPerson.name": {
-		type: String
-	},
+// 	"contactPerson.name": {
+// 		type: String
+// 	},
 
-	"contactPerson.email": {
-		type: String
-	},
+// 	"contactPerson.email": {
+// 		type: String
+// 	},
 
-	"contactPerson.phone": {
-		type: String
-	}
-});
+// 	"contactPerson.phone": {
+// 		type: String
+// 	},
+// 	"brregRaw": {
+// 		type: Object,
+// 		blackbox: true
+// 	}
+// });
 
 Customers.attachSchema(CustomerSchema);
 
 
-Customers.attachSchema(PersonCustomerSchema, {selector: {type: 'person'}});
-Customers.attachSchema(CompanyCustomerSchema, {selector: {type: 'company'}});
+// Customers.attachSchema(PersonCustomerSchema, {selector: {type: 'person'}});
+// Customers.attachSchema(CompanyCustomerSchema, {selector: {type: 'company'}});
 
 export default Customers;

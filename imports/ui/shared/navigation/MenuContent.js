@@ -9,6 +9,8 @@ class MenuContent extends Component {
 			<div>
 				<h1 className="hover" onClick={() => {this.props.onLinkClick('/secure/users')}}><a>Users</a></h1>
 				<br />
+				<h1 className="hover" onClick={() => {this.props.onLinkClick('/secure/customers')}}>Customers</h1>
+				<br />
 				<h1 className="hover" onClick={() => {this.props.onLinkClick('/secure/rooms')}}>Rooms</h1>
 				<br />
 				<h1 className="hover" onClick={() => {this.props.onLinkClick('/secure/codes')}}>Door Codes</h1>

@@ -160,7 +160,8 @@ input {
 	max-width: 100px;
 }
 
-.user-list .user-status p {
+.user-list .user-status p,
+.customer-list .customer-status p {
 	display: inline;
 	margin-right: 10px;
 	background-color: rgb(38, 84, 249);
@@ -208,6 +209,19 @@ input {
 	color: white;
 	text-transform: uppercase;
 	padding: 20px 0px;
+}
+
+.button-large {
+	background-color: rgb(38, 84, 249);
+	text-align: center;
+	color: white;
+	text-transform: uppercase;
+	padding: 20px 0px;
+}
+
+.customer-row .glyphicon,
+.customer-single .glyphicon {
+	padding: 13px;
 }
 
 /*==========  SECURE LAYOUT END ==========*/
@@ -352,6 +366,7 @@ input {
 #custom-nav h4,
 .glyphicon,
 a:hover,
+.customer-row:hover,
 #desktop-nav h4,
 .overlay-letter h4 {
 	color: rgb(38, 84, 249);

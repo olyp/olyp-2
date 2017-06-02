@@ -4,45 +4,7 @@ import swal from 'sweetalert2';
 
 import AwsImage from '../../../shared/files/awsImage.js';
 
-export default class UserRow extends Component {
-
-	constructor(props) {
-		super(props);
-		this.state = {
-			internalPrice: false,
-			manageUsers: false,
-			bookingAdmin: false
-		}
-	}
-
-	deleteUser () {
-		swal({
-			title: 'Are you sure?',
-			text: "You will not be able to recover this user!",
-			type: 'warning',
-			showCancelButton: true,
-			confirmButtonColor: '#3085d6',
-			cancelButtonColor: '#d33',
-			confirmButtonText: 'Yes, delete it!'
-		}).then(() => {
-			Meteor.call('deleteUser', this.props.user._id, (err, res) => {
-				if (err) {
-					console.log(err);
-				} else {
-					Bert.alert('User deleted', 'success', 'growl-bottom-right', 'fa-smile-o');
-				}
-			});
-		// Since this is a promise, we have to catch "cancel" and say it is ok
-		}).catch(swal.noop);
-	}
-
-	toggleManageUsers () {
-		Meteor.call('toggleManageUsers', this.props.user._id);
-	}
-
-	toggleBookingAdmin () {
-		Meteor.call('toggleBookingAdmin', this.props.user._id);
-	}
+class UserRow extends Component {
 
 	render () {
 		const user = this.props.user;
@@ -78,3 +40,5 @@ export default class UserRow extends Component {
 		);
 	}
 }
+
+export default UserRow;
