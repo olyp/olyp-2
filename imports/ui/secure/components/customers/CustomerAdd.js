@@ -1,117 +1,46 @@
 import React, { Component } from 'react';
-import { browserHistory } from 'react-router';
 
-import CustomerRow from './CustomerRow';
+import CustomerAddCompany from './CustomerAddCompany';
+import CustomerAddPerson from './CustomerAddPerson';
 
 class CustomerAdd extends Component {
 
 	constructor(props) {
 		super(props);
 		this.state = {
-			result: []
+			company: true
 		}
 	}
 
-	searchBrreg () {
-
-		if (this.refs.searchInput.value) {
-			const url = 'https://hotell.difi.no/api/json/brreg/enhetsregisteret' + '?' + 'query=' + this.refs.searchInput.value;
-
-			HTTP.get(url, (err, res) => {
-				if (err) {
-					console.log(err);
-				} else {
-					this.setState({
-						result: res.data.entries
-					});
-				}
-			});
-		} else {
-			this.setState({
-				result: []
-			});
-		}
-
-	}
-
-	addCustomer (customerRaw) {
-		this.refs.searchInput.value = '';
+	toggleCompanyAndPerson () {
 		this.setState({
-			result: []
-		});
-
-		const customer = {
-			type: 'company',
-			name: customerRaw.navn,
-			address: customerRaw.forretningsadr,
-			zip: customerRaw.forradrkommnr,
-			city: customerRaw.forradrpoststed,
-			brregId: customerRaw.orgnr,
-			brregRaw: customerRaw,
-			dateAdded: new Date(),
-			addedBy: Meteor.userId()
-		};
-
-		Meteor.call("customer.add", customer, (err, res) => {
-			if (err) {
-				console.log(err);
-			} else {
-
-				if (res && this.props.params.userId) {
-
-					Meteor.call('user.addCustomer', this.props.params.userId, res, (err, res) => {
-						if (err) {
-							console.log(err);
-						} else {
-							Bert.alert('Customer added to user', 'success', 'growl-bottom-right', 'fa-smile-o');
-							browserHistory.goBack();
-						}
-					});
-				} else {
-					Bert.alert('Customer added', 'success', 'growl-bottom-right', 'fa-smile-o');
-					browserHistory.goBack();
-				}
-			}
+			company: !this.state.company
 		});
 	}
 
 	render () {
 
+		const companyActiveClass = this.state.company ? 'room-selector-active' : '';
+		const personActiveClass = !this.state.company ? 'room-selector-active' : '';
+
+		const view = this.state.company ? <CustomerAddCompany userId={this.props.params.userId}/> : <CustomerAddPerson userId={this.props.params.userId} />;
+
 		return (
 			<div className="container">
 
 				<div className="row">
-					<div className="col-xs-10">
-						<input 
-							type="text" 
-							ref="searchInput" 
-							placeholder="Search Brønnøysundregistrene ..." 
-							className="search-bar"
-							onChange={this.searchBrreg.bind(this)}
-						/>
+					<div className={`col-xs-6 button-large hover room-selector ${companyActiveClass}`} onClick={this.toggleCompanyAndPerson.bind(this)}>
+						Bedrift
 					</div>
-					<div className="col-xs-2">
-						<div className="search-counter pull-right"> {this.state.result.length} </div>
+					<div className={`col-xs-6 button-large hover room-selector ${personActiveClass}`} onClick={this.toggleCompanyAndPerson.bind(this)}>
+						Privat
 					</div>
 				</div>
 
 				<hr />
 
-				{this.state.result.map((customer, i) => {
-
-					var formattedCustomer = {};
-
-					formattedCustomer.name = customer.navn;
-
-					let onClick = this.addCustomer.bind(this, customer);
-
-					return (
-						<div className="customer-list" key={i}>
-							<CustomerRow customer={formattedCustomer} onClick={onClick}/>
-							<hr />
-						</div>
-					);
-				})}
+				{view}
+				
 			</div>
 		);
 	}

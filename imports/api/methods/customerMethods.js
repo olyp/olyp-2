@@ -9,7 +9,13 @@ Meteor.methods({
 		}
 	},
 	"customer.add": (customer) => {
+
+		check(customer, Object);
+
 		const exists = Customers.findOne({name: customer.name});
+
+		customer.dateAdded = new Date();
+		customer.addedBy = Meteor.userId();
 
 		if (!exists) {
 			const newCustomer = Customers.insert(customer);

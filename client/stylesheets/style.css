@@ -23,9 +23,29 @@ input:-webkit-autofill {
 
 input {
 	width: 100%;
-	border: 1px solid black;
+	border: 1px solid rgb(38, 84, 249);
 	border-radius: 0px;
-	-webkit-appearance: none
+	-webkit-appearance: none;
+	padding: 3px 0px;
+	text-align: center;
+}
+
+#home-container a,
+#home-container h1,
+#home-container h4,
+#home-container p,
+#mobile-menu-content a,
+#mobile-menu-content h1,
+.login-layout h1,
+.login-layout h4,
+.login-layout h5,
+#custom-nav h4,
+.glyphicon,
+a:hover,
+.customer-row:hover,
+#desktop-nav h4,
+.overlay-letter h4 {
+	color: rgb(38, 84, 249);
 }
 
 .desktop {
@@ -352,24 +372,6 @@ input {
 
 #mobile-menu-content {
 	padding-top: 70px;
-}
-
-#home-container a,
-#home-container h1,
-#home-container h4,
-#home-container p,
-#mobile-menu-content a,
-#mobile-menu-content h1,
-.login-layout h1,
-.login-layout h4,
-.login-layout h5,
-#custom-nav h4,
-.glyphicon,
-a:hover,
-.customer-row:hover,
-#desktop-nav h4,
-.overlay-letter h4 {
-	color: rgb(38, 84, 249);
 }
 
 #home-container .container {
