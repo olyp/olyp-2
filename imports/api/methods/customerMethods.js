@@ -12,16 +12,28 @@ Meteor.methods({
 
 		check(customer, Object);
 
-		const exists = Customers.findOne({name: customer.name});
+		if (customer.type == 'company') {
+			var exists = Customers.findOne({name: customer.name});
+		};
+
+		if (customer.type == 'person') {
+			var exists = Customers.findOne({'contactPerson.email': customer.contactPerson.email});
+		};
 
 		customer.dateAdded = new Date();
 		customer.addedBy = Meteor.userId();
 
 		if (!exists) {
 			const newCustomer = Customers.insert(customer);
-			return newCustomer;
+			return {
+				customerId: newCustomer,
+				newCustomer: true
+			};
 		} else {
-			return exists._id;
+			return {
+				customerId: exists._id,
+				newCustomer: false
+			};
 		}
 	}
 });

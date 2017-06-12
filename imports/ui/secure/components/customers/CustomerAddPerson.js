@@ -52,18 +52,33 @@ class CustomerAddPerson extends Component {
 			if (err) {
 				console.log(err);
 			} else {
+
+				var customerResult = res;
+				
 				if (res && this.props.userId) {
 
-					Meteor.call('user.addCustomer', this.props.userId, res, (err, res) => {
+					Meteor.call('user.addCustomer', this.props.userId, res.customerId, (err, res) => {
 						if (err) {
 							console.log(err);
 						} else {
-							Bert.alert('Customer added to user', 'success', 'growl-bottom-right', 'fa-smile-o');
+
+							if (customerResult.newCustomer) {
+								Bert.alert('Customer created and added to user', 'success', 'growl-bottom-right', 'fa-smile-o');
+							} else {
+								Bert.alert('Existing customer added to user', 'success', 'growl-bottom-right', 'fa-smile-o');
+							}
+							
 							browserHistory.goBack();
 						}
 					});
 				} else {
-					Bert.alert('Customer added', 'success', 'growl-bottom-right', 'fa-smile-o');
+
+					if (res.newCustomer) {
+						Bert.alert('Customer created', 'success', 'growl-bottom-right', 'fa-smile-o');
+					} else {
+						Bert.alert('Customer already exists', 'info', 'growl-bottom-right', 'fa-smile-o');
+					}
+					
 					browserHistory.goBack();
 				}
 			}

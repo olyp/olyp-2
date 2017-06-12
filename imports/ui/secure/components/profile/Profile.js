@@ -1,13 +1,15 @@
 import React, {Component} from 'react';
-import { browserHistory } from 'react-router';
+import { browserHistory, Link } from 'react-router';
 import { createContainer } from 'meteor/react-meteor-data';
 import swal from 'sweetalert2';
 
-import DoorCodes from '../../../../api/collections/doorCodes.js';
-import Rooms from '../../../../api/collections/rooms.js';
+// import DoorCodes from '../../../../api/collections/doorCodes.js';
+import RoomsCollection from '../../../../api/collections/rooms.js';
+import CustomersCollection from '../../../../api/collections/customers.js';
 
 import AwsUpload from '../../../shared/files/awsUpload.js';
 import AwsImage from '../../../shared/files/awsImage.js';
+import CustomerRow from '../customers/CustomerRow';
 
 
 class Profile extends Component {
@@ -114,6 +116,7 @@ class Profile extends Component {
 		const user = this.props.user;
 		const name = (user && user.profile && user.profile.name);
 		const awsKey = (user && user.profile && user.profile.image && user.profile.image.awsKey);
+		const addCustomerUrl = '/secure/addCustomer/' + Meteor.userId();
 
 		const rooms = (this.props.rooms) ? this.props.rooms : [];
 		var canAccess = this.props.rooms.filter(
@@ -167,8 +170,16 @@ class Profile extends Component {
 
 				<hr />
 
+				{this.props.customers.map((customer) => {
+					return <CustomerRow customer={customer} key={customer._id} />
+				})}
+
+				<hr />
+
 				<div className="row">
-					{doorCode}
+					<Link to={addCustomerUrl}>
+						<div className="col-xs-12 button-large hover">Legg til fakturamottaker</div>
+					</Link>
 				</div>
 
 				<hr />
@@ -247,12 +258,14 @@ class Profile extends Component {
 
 export default createContainer(() => {
 	Meteor.subscribe('profile');
-	Meteor.subscribe('doorCode');
+	// Meteor.subscribe('doorCode');
 	Meteor.subscribe('userRooms');
+	Meteor.subscribe('userCustomers');
 
 	return {
-		doorCode: DoorCodes.find().fetch()[0],
+		// doorCode: DoorCodes.find().fetch()[0],
 		user: Meteor.users.find().fetch()[0],
-		rooms: Rooms.find().fetch()
+		rooms: RoomsCollection.find().fetch(),
+		customers: CustomersCollection.find().fetch()
 	};
 }, Profile);

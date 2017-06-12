@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import { browserHistory } from 'react-router';
+import { createContainer } from 'meteor/react-meteor-data';
 import swal from 'sweetalert2';
+
+import CustomersCollection from '../../../../api/collections/customers.js';
 
 import CustomerRow from './CustomerRow';
 
@@ -37,35 +40,65 @@ class CustomerAddCompany extends Component {
 
 	handleCustomerClick (customerRaw) {
 
-		swal.setDefaults({
-			input: 'text',
-			confirmButtonText: 'Next &rarr;',
-			showCancelButton: true,
-			animation: false,
-			progressSteps: ['1', '2', '3']
-		});
+		// Check if customer exists
+		var exists = false;
+		var existingCustomerId = '';
 
-		var steps = [
-			{
-				title: 'Navn',
-				text: 'På kontaktperson'
-			},
-			{
-				title: 'Epost',
-				text: 'Til kontaktperson'
-			},
-			{
-				title: 'Mobil',
-				text: 'Til kontaktperson'
+		for (var i = 0; i < this.props.customers.length; i++) {
+			if (this.props.customers[i].brregId == customerRaw.orgnr) {
+				exists = true;
+				existingCustomerId = this.props.customers[i]._id;
+				break;
 			}
-		];
+		};
 
-		swal.queue(steps).then((result) => {
-			swal.resetDefaults();
-			this.addCustomer(customerRaw, result)
-		}, () => {
-			swal.resetDefaults();
-		});
+		if (!exists) {
+
+			swal.setDefaults({
+				input: 'text',
+				confirmButtonText: 'Next &rarr;',
+				showCancelButton: true,
+				animation: false,
+				progressSteps: ['1', '2', '3']
+			});
+
+			var steps = [
+				{
+					title: 'Navn',
+					text: 'På kontaktperson'
+				},
+				{
+					title: 'Epost',
+					text: 'Til kontaktperson'
+				},
+				{
+					title: 'Mobil',
+					text: 'Til kontaktperson'
+				}
+			];
+
+			swal.queue(steps).then((result) => {
+				swal.resetDefaults();
+				this.addCustomer(customerRaw, result)
+			}, () => {
+				swal.resetDefaults();
+			});
+
+		} else {
+			if (this.props.userId) {
+				Meteor.call('user.addCustomer', this.props.userId, existingCustomerId, (err, res) => {
+					if (err) {
+						console.log(err);
+					} else {
+						Bert.alert('Existing customer added to user', 'success', 'growl-bottom-right', 'fa-smile-o');
+						browserHistory.goBack();
+					}
+				});
+			} else {
+				Bert.alert('Customer already exists', 'info', 'growl-bottom-right', 'fa-smile-o');
+				browserHistory.goBack();
+			}
+		}
 
 	}
 
@@ -95,18 +128,32 @@ class CustomerAddCompany extends Component {
 				console.log(err);
 			} else {
 
+				var customerResult = res;
+
 				if (res && this.props.userId) {
 
-					Meteor.call('user.addCustomer', this.props.userId, res, (err, res) => {
+					Meteor.call('user.addCustomer', this.props.userId, res.customerId, (err, res) => {
 						if (err) {
 							console.log(err);
 						} else {
-							Bert.alert('Customer added to user', 'success', 'growl-bottom-right', 'fa-smile-o');
+
+							if (customerResult.newCustomer) {
+								Bert.alert('Customer created and added to user', 'success', 'growl-bottom-right', 'fa-smile-o');
+							} else {
+								Bert.alert('Existing customer added to user', 'success', 'growl-bottom-right', 'fa-smile-o');
+							}
+							
 							browserHistory.goBack();
 						}
 					});
 				} else {
-					Bert.alert('Customer added', 'success', 'growl-bottom-right', 'fa-smile-o');
+
+					if (res.newCustomer) {
+						Bert.alert('Customer created', 'success', 'growl-bottom-right', 'fa-smile-o');
+					} else {
+						Bert.alert('Customer already exists', 'info', 'growl-bottom-right', 'fa-smile-o');
+					}
+					
 					browserHistory.goBack();
 				}
 			}
@@ -155,4 +202,10 @@ class CustomerAddCompany extends Component {
 	}
 }
 
-export default CustomerAddCompany;
+export default createContainer(() => {
+	Meteor.subscribe('allCustomers');
+
+	return {
+		customers: CustomersCollection.find().fetch()
+	};
+}, CustomerAddCompany);

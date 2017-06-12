@@ -82,5 +82,5 @@ Meteor.publish('userRooms', function () {
 
 Meteor.publish('userCustomers', function () {
 	const user = Meteor.users.findOne({_id: this.userId});
-	return Customers.find({"_id": {"$in": user.customers.map((it) => it.id)}});
+	return Customers.find({"_id": {"$in": user.customers.map((it) => it)}});
 });

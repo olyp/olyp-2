@@ -37,12 +37,13 @@ class CustomerSingle extends Component {
 
 	}
 
-	toggleBookingAccessToRoom(roomId) {
-		Meteor.call('room.toggleCustomerBookingAccess', roomId, this.props.customer._id, (err, res) => {
-			if (err) {
-				console.log(err);
-			} 
-		});
+	editRoomBookingAgreement(roomId) {
+
+		// Meteor.call('room.toggleCustomerBookingAccess', roomId, this.props.customer._id, (err, res) => {
+		// 	if (err) {
+		// 		console.log(err);
+		// 	} 
+		// });
 	}
 
 	// toggleAccessToRoom(roomId) {
@@ -106,7 +107,7 @@ class CustomerSingle extends Component {
 							<div 
 								key={room._id} 
 								className={`room-selector col-xs-4 hover ${activeClass}`}
-								onClick={() => {this.toggleBookingAccessToRoom(room._id)}}
+								onClick={() => {this.editRoomBookingAgreement(room._id)}}
 							>
 								{room.name}
 							</div>
