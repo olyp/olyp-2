@@ -33,9 +33,9 @@ class MenuContent extends Component {
 			<div>
 				<h1 className="hover" onClick={() => {this.props.onLinkClick('/')}}>About</h1>
 				<br />
-				<h1 className="hover" onClick={() => {this.props.onLinkClick('/secure')}}>Book Room</h1>
-				<br />
-				<h1 className="hover" onClick={() => {this.props.onLinkClick('/secure')}}>Log in</h1>
+				<a href="https://me.olyp.no">
+					<h1 className="hover">Book Room</h1>
+				</a>
 				<br />
 				<h1 className="hover" onClick={() => {this.props.onLinkClick('/')}}>Contact</h1>
 			</div>;

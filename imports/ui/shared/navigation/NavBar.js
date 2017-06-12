@@ -38,7 +38,9 @@ class NavBar extends Component {
 
 		const navClass = (pathArray[1] == 'secure') ? 'shadow' : '';
 
-		const link = Meteor.userId() ? '/secure' : '/';
+		// const link = Meteor.userId() ? '/secure' : '/';
+
+		const link = 'https://me.olyp.no';
 
 		return (
 			<div>
@@ -57,9 +59,9 @@ class NavBar extends Component {
 							</Link>
 						</div>
 						<div className="col-xs-4 text-right hover">
-							<Link to={link}>
+							<a href={link}>
 								{layout}
-							</Link>
+							</a>
 						</div>
 					</div>
 				</div>

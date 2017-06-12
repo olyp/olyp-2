@@ -135,9 +135,9 @@ class NavBarDesktop extends Component {
 
 								</div>
 								<div className="col-sm-3 text-right">
-									<Link to="/secure">
+									<a href="https://me.olyp.no">
 										<h4><span className="red-border">Book rom</span></h4>
-									</Link>
+									</a>
 								</div>
 								<div className="col-sm-3">
 									<h4>Kontakt</h4>
@@ -180,9 +180,9 @@ class NavBarDesktop extends Component {
 					<div className="row">
 						<div className="col-sm-6 text-center"><h4>Oslo Lydproduksjon</h4></div>
 						<div className="col-sm-3 text-right">
-							<Link to="/secure">
+							<a href="https://me.olyp.no">
 								<h4><span className="red-border">Book rom</span></h4>
-							</Link>
+							</a>
 						</div>
 						<div className="col-sm-3"><h4>Kontakt</h4></div>
 					</div>

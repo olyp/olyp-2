@@ -216,9 +216,9 @@ class Home extends Component {
 
 										<div className="container mobile">
 											<div id="book-room-button" className="text-center">
-												<Link to="/secure">
+												<a href="https://me.olyp.no">
 													<h1>Book Rom</h1>
-												</Link>
+												</a>
 											</div>
 										</div>
 
