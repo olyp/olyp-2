@@ -172,28 +172,55 @@ class Home extends Component {
 											<h4>
 												Jonas Barsten
 											<br />
-												<a to="mailto:jonas@olyp.no">
+												<a href="mailto:jonas@olyp.no">
 													jonas@olyp.no
 												</a>
 											<br />
-												<a to="tel:004741547798">
-													41 54 77 98
+												<a href="tel:004741547798">
+													415 47 798
 												</a>
 											</h4>
 										</div>
 										<div className="col-sm-6">
 											<h4><u>Bygg og utstyr</u></h4>
-											<h4>Haakon Mathisen<br />haakon@olyp.no</h4>
+											<h4>Haakon Mathisen
+											<br />
+												<a href="mailto:haakon@olyp.no">
+													haakon@olyp.no
+												</a>
+											<br />
+												<a href="tel:004795445314">
+													954 45 314
+												</a>
+											</h4>
 										</div>
 									</div>
 									<div className="row">
 										<div className="col-sm-6">
 											<h4><u>Kundeforhold</u></h4>
-											<h4>Simen Solli Schøien<br />simen@olyp.no</h4>
+											<h4>Simen Solli Schøien
+											<br />
+												<a href="mailto:simen@olyp.no">
+													simen@olyp.no
+												</a>
+											<br />
+												<a href="tel:004740881349">
+													408 81 349
+												</a>
+											</h4>
 										</div>
 										<div className="col-sm-6">
 											<h4><u>Økonomi</u></h4>
-											<h4>Alf Lund Godbolt<br />alf@olyp.no</h4>
+											<h4>Alf Lund Godbolt
+											<br />
+												<a href="mailto:alf@olyp.no">
+													alf@olyp.no
+												</a>
+											<br />
+												<a href="tel:004798428663">
+													984 28 663
+												</a>
+											</h4>
 										</div>
 									</div>
 								</div>
@@ -369,17 +396,63 @@ class Home extends Component {
 							</div>
 
 							<div className="container text-center">
+
 								<h4><u>Booking og leie</u></h4>
-								<h4>Jonas Barsten<br />jonas@olyp.no</h4>
+								<h4>
+									Jonas Barsten
 								<br />
+									<a href="mailto:jonas@olyp.no">
+										jonas@olyp.no
+									</a>
+								<br />
+									<a href="tel:004741547798">
+										415 47 798
+									</a>
+								</h4>
+
+								<br />
+
 								<h4><u>Bygg og utstyr</u></h4>
-								<h4>Haakon Mathisen<br />haakon@olyp.no</h4>
+								<h4>Haakon Mathisen
 								<br />
+									<a href="mailto:haakon@olyp.no">
+										haakon@olyp.no
+									</a>
+								<br />
+									<a href="tel:004795445314">
+										954 45 314
+									</a>
+								</h4>
+
+								<br />
+
 								<h4><u>Kundeforhold</u></h4>
-								<h4>Simen Solli Schøien<br />simen@olyp.no</h4>
+								<h4>Simen Solli Schøien
 								<br />
+									<a href="mailto:simen@olyp.no">
+										simen@olyp.no
+									</a>
+								<br />
+									<a href="tel:004740881349">
+										408 81 349
+									</a>
+								</h4>
+
+								<br />
+
 								<h4><u>Økonomi</u></h4>
-								<h4>Alf Lund Godbolt<br />alf@olyp.no</h4>
+								<h4>Alf Lund Godbolt
+								<br />
+									<a href="mailto:alf@olyp.no">
+										alf@olyp.no
+									</a>
+								<br />
+									<a href="tel:004798428663">
+										984 28 663
+									</a>
+								</h4>
+
+
 							</div>
 						</div>
 
