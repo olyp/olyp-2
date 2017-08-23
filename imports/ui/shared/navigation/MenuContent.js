@@ -28,7 +28,7 @@ class MenuContent extends Component {
 				<h1 className="hover" onClick={() => {this.props.onLinkClick('/secure/profile')}}>Profile</h1>
 				<hr />
 				{isOlypAdmin}
-				<h1 className="hover" onClick={() => {this.props.onLinkClick('/')}}>About OLYP</h1>
+				<h1 className="hover" onClick={() => {this.props.onLinkClick('/')}}>Front page</h1>
 				<hr />
 				<h1 className="hover" onClick={() => {this.props.onLinkClick('/#contact-mobile')}}>Contact</h1>
 				<br />
@@ -37,10 +37,10 @@ class MenuContent extends Component {
 
 			// Not logged in
 			<div>
-				<h1 className="hover" onClick={() => {this.props.onLinkClick('/')}}>About OLYP</h1>
+				<h1 className="hover" onClick={() => {this.props.onLinkClick('/')}}>Home</h1>
 				<br />
 				<a href="https://me.olyp.no">
-					<h1 className="hover">Book Room</h1>
+					<h1 className="hover">Book Rom</h1>
 				</a>
 				<br />
 				<h1 className="hover" onClick={() => {this.props.onLinkClick('/#contact-mobile')}}>Contact</h1>

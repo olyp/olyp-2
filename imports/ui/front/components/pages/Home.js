@@ -131,7 +131,9 @@ class Home extends Component {
 
 							<div className="row">
 								<div className="text-center">
-									<h4>Olaf Schous Vei 6</h4>
+									<a href="https://goo.gl/maps/6v3eMub7sTS2" target="blank">
+										<h4>Olaf Schous Vei 6</h4>
+									</a>
 								</div>
 							</div>
 

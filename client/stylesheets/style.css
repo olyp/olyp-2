@@ -5,6 +5,12 @@
     src: url(/fonts/Fugue-Regular.otf);
 }
 
+html {
+/*	So that the footer can be sticky: All the way down on little content, below content when alot content;*/
+	min-height: 100%;
+	position: relative;
+}
+
 h1, h2, h3, h4, h5, p, a, input {
 	font-family: Fugue;
 }
@@ -501,12 +507,15 @@ a:hover,
 	position: absolute;
 	width: 100%;
 	background-color: #F7F7F7;
-	z-index: -3;
+	z-index: 1;
 	text-align: left;
 	padding-top: 33px;
 	padding-bottom: 36px;
 	padding-left: 25px;
 	margin-top: 50px;
+	left: 0;
+	bottom: 0;
+	overflow: hidden;
 }
 
 #home-footer p {

@@ -10,7 +10,9 @@ export default class Footer extends Component {
 			<div id="home-footer" className="container-fluid">
 				<div className="text-center row">
 					<div className="col-xs-5">
-						<p>Olaf Schous Vei 6</p>
+						<a href="https://goo.gl/maps/6v3eMub7sTS2" target="blank">
+							<p>Olaf Schous Vei 6</p>
+						</a>
 					</div>
 					<div className="col-xs-2">
 						<img 
@@ -20,7 +22,9 @@ export default class Footer extends Component {
 						/>
 					</div>
 					<div className="col-xs-5">
-						<p>Rosenhoff</p>
+						<a href="https://goo.gl/maps/6v3eMub7sTS2" target="blank">
+							<p>Rosenhoff</p>
+						</a>
 					</div>
 				</div>
 			</div>

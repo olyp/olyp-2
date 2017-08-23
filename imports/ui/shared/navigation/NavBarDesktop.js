@@ -182,7 +182,11 @@ class NavBarDesktop extends Component {
 			<div id="desktop-nav">
 				<div id="desktop-nav-container" className="container">
 					<div className="row">
-						<div className="col-sm-6 text-center"><h4>Oslo Lydproduksjon</h4></div>
+						<div className="col-sm-6 text-center">
+							<Link to="/">
+								<h4>Oslo Lydproduksjon</h4>
+							</Link>
+						</div>
 						<div className="col-sm-3 text-right">
 							<a href="https://me.olyp.no">
 								<h4><span>Book rom</span></h4>
