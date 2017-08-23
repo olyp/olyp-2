@@ -161,14 +161,18 @@ class Home extends Component {
 								</div>
 							</div>
 
-							<div className="spacer-50"></div>
-							<div className="spacer-50"></div>
-							<div className="spacer-50"></div>
-							<div className="spacer-50"></div>
-							<div className="spacer-50"></div>
-							<div className="spacer-50"></div>
+							
 
 							<div id="contact" className="row">
+
+
+								<div className="spacer-50"></div>
+								<div className="spacer-50"></div>
+								<div className="spacer-50"></div>
+								<div className="spacer-50"></div>
+								<div className="spacer-50"></div>
+								<div className="spacer-50"></div>
+
 								<div className="col-sm-6">
 									<Link to="https://goo.gl/maps/6v3eMub7sTS2" target="blank">
 										<img src="/images/map.jpg" className="img-responsive" />
