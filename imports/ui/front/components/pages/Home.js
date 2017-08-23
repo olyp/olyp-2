@@ -245,9 +245,6 @@ class Home extends Component {
 							<div className="spacer-50"></div>
 							<div className="spacer-50"></div>
 							<div className="spacer-50"></div>
-							<div className="spacer-50"></div>
-							<div className="spacer-50"></div>
-							<div className="spacer-50"></div>
 
 						</div>
 

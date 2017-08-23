@@ -11,6 +11,11 @@ html {
 	position: relative;
 }
 
+body {
+	/*Compensate for footer*/
+	padding-bottom: 150px;
+}
+
 h1, h2, h3, h4, h5, p, a, input {
 	font-family: Fugue;
 }
@@ -136,7 +141,7 @@ a:hover,
 /*==========  LOGIN LAYOUT  ==========*/
 
 .login-layout {
-	margin-top: 150px;
+	margin-top: 65px;
 	margin-bottom: 50px;
 }
 
@@ -614,6 +619,10 @@ a:hover,
 
 	#home-container h1 {
 		font-size: 4em;
+	}
+
+	.login-layout {
+		margin-top: 150px;
 	}
 
 }
