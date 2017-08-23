@@ -4,7 +4,7 @@ import {Router, Route, IndexRoute, browserHistory} from 'react-router';
 
 // LAYOUTS
 import FrontLayout from '../imports/ui/front/components/FrontLayout.js';
-import LoginLayout from '../imports/ui/front/components/LoginLayout.js';
+// import LoginLayout from '../imports/ui/front/components/LoginLayout.js';
 import SecureLayout from '../imports/ui/secure/components/SecureLayout.js';
 
 // SECURE
@@ -50,7 +50,6 @@ const authenticateSecure = (nextState, replace, callback) => {
 		});
 	}
 	callback();
-	
 };
 
 const authenticateAdmin = (nextState, replace, callback) => {
@@ -99,34 +98,34 @@ const routes = (
 	<Router history={browserHistory} onUpdate={hashLinkScroll}>
 
 		<Route path="/" component={FrontLayout}>
-			<IndexRoute component={Home} />
+			<IndexRoute component={Home} name="HOME"/>
 
-			<Route path="/login" component={Login} onEnter={isLoggedIn}></Route>
-			<Route path="/forgot" component={Forgot}></Route>
-			<Route path="/signup" component={SignUp}></Route>
-			<Route path="/resetPassword/:token" component={ResetPassword}></Route>
+			<Route path="/login" name="LOGIN" component={Login} onEnter={isLoggedIn}></Route>
+			<Route path="/forgot" name="FORGOT" component={Forgot}></Route>
+			<Route path="/signup" name="SIGNUP" component={SignUp}></Route>
+			<Route path="/resetPassword/:token" name="RESET" component={ResetPassword}></Route>
 		</Route>
 
 		<Route path="/secure" component={SecureLayout} onEnter={authenticateSecure}>
-			<IndexRoute component={Dashboard} />
+			<IndexRoute component={Dashboard} name="SECURE" />
 
-			<Route path="booking" component={Booking} />		
-			<Route path="codes" component={DoorCodes} />
-			<Route path="profile" component={Profile} />
+			<Route path="booking" name="BOOKING" component={Booking} />		
+			<Route path="codes" name="CODES" component={DoorCodes} />
+			<Route path="profile" name="PROFILE" component={Profile} />
 
-			<Route path="users" component={Users} />
-			<Route path="users/:userId" component={UserSingle} />
+			<Route path="users" name="USERS" component={Users} />
+			<Route path="users/:userId" name="USER" component={UserSingle} />
 
-			<Route path="customers" component={Customers} />
-			<Route path="customers/:customerId" component={CustomerSingle} />
-			<Route path="addCustomer" component={CustomerAdd} />
-			<Route path="addCustomer/:userId" component={CustomerAdd} />
-			<Route path="editCustomerRoomAgreement/:customerId/:roomId" component={CustomerRoomAgreement} />
+			<Route path="customers" name="CUSTOMER" component={Customers} />
+			<Route path="customers/:customerId" name="CUSTOMER" component={CustomerSingle} />
+			<Route path="addCustomer" name="ADD CUSTOMER" component={CustomerAdd} />
+			<Route path="addCustomer/:userId" name="ADD CUSTOMER" component={CustomerAdd} />
+			<Route path="editCustomerRoomAgreement/:customerId/:roomId" name="EDIT CUSTOMER" component={CustomerRoomAgreement} />
 
-			<Route path="rooms" component={Rooms} />
-			<Route path="rooms/:roomId" component={RoomSingle} />
+			<Route path="rooms" name="ROOMS" component={Rooms} />
+			<Route path="rooms/:roomId" name="ROOM" component={RoomSingle} />
 
-			<Route path="upload" component={awsUpload} />
+			<Route path="upload" name="UPLOAD" component={awsUpload} />
 		</Route>
 
 	</Router>

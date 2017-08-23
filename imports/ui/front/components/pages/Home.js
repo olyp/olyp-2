@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { browserHistory, Link } from 'react-router';
 import Scroll from 'react-scroll';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
-import { Helmet } from 'react-helmet';
+// import { Helmet } from 'react-helmet';
 
 import VivusContainer from '../../../shared/floorplan/VivusContainer.js';
 
@@ -49,10 +49,6 @@ class Home extends Component {
 	render() {
 		return (
 			<div>
-
-				<Helmet>
-					<title>OLYP || HOME</title>
-				</Helmet>
 
 				<div id="home-container">
 
