@@ -143,10 +143,8 @@ class NavBarDesktop extends Component {
 					<div id="desktop-nav">
 						<div id="desktop-nav-container" className="container">
 							<div className="row">
-								<div className="col-sm-6">
 
-								</div>
-								<div className="col-sm-6 text-right">
+								<div className="col-sm-6 col-sm-offset-6 text-right">
 									<h4><a href="https://me.olyp.no">Book rom</a></h4>
 									<h4><Link to="/#contact">Kontakt</Link></h4>
 								</div>
