@@ -181,7 +181,7 @@ class NavBarDesktop extends Component {
 						<div className="col-sm-6 text-center"><h4>Oslo Lydproduksjon</h4></div>
 						<div className="col-sm-3 text-right">
 							<a href="https://me.olyp.no">
-								<h4><span className="red-border">Book rom</span></h4>
+								<h4><span>Book rom</span></h4>
 							</a>
 						</div>
 						<div className="col-sm-3"><h4>Kontakt</h4></div>
