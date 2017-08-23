@@ -176,6 +176,11 @@ a:hover,
 	background-color: #E6E6E6;
 }
 
+#desktop-nav-container h4 {
+	display: inline-block;
+	margin: 0 10px;
+}
+
 /*==========  FRONT LAYOUT END ==========*/
 
 /*==========  SECURE LAYOUT  ==========*/
@@ -260,7 +265,7 @@ a:hover,
 }
 
 #desktop-nav {
-	margin-top: 71px;
+	margin-top: 80px;
 	position: fixed;
 	top: 0;
 	width: 100%;

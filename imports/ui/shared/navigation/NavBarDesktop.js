@@ -71,15 +71,22 @@ class NavBarDesktop extends Component {
 		const overlayCenterX = this.state.window.width / 2;
 		const overlayContainerCenterX = this.state.window.containerWidth / 2;
 
+		const containerEdgeOffset = overlayCenterX - overlayContainerCenterX;
+
 		// Text logo
 
 		// Both digits are the ending top margin
-		const logoTextOsloOffsetTop = ((overlayCenterY - 89) * this.state.window.scrollRev) + 89;
-		const logoTextOsloOffsetLeft = ( ((overlayCenterX - 18) - (overlayCenterX - (overlayContainerCenterX / 2) - 75)) * this.state.window.scrollRev) + (overlayCenterX - (overlayContainerCenterX / 2) - 75);
+		const logoTextOsloOffsetTop = ((overlayCenterY - 90) * this.state.window.scrollRev) + 90;
+		// The first digit is the end top margin minus the y distance from "Oslo", the last digit is the end top margin
+		const logoTextLydproduksjonOffsetTop = ((overlayCenterY - 71) * this.state.window.scrollRev) + 90;
 
-		// Both digits are the ending top margin
-		const logoTextLydproduksjonOffsetTop = ((overlayCenterY - 70) * this.state.window.scrollRev) + 89;
-		const logoTextLydproduksjonOffsetLeft = ( ((overlayCenterX - 55) - (overlayCenterX - (overlayContainerCenterX / 2) - 34)) * this.state.window.scrollRev) + (overlayCenterX - (overlayContainerCenterX / 2) - 34);
+		const logoTextOsloOffsetLeftStart = overlayCenterX - 18;
+		const logoTextOsloOffsetLeftEnd = containerEdgeOffset + 10;
+		const logoTextOsloOffsetLeft = ((logoTextOsloOffsetLeftStart - logoTextOsloOffsetLeftEnd) * this.state.window.scrollRev) + logoTextOsloOffsetLeftEnd;
+		
+		const logoTextLydproduksjonOffsetLeftStart = overlayCenterX - 55;
+		const logoTextLydproduksjonOffsetLeftEnd = containerEdgeOffset + 50;
+		const logoTextLydproduksjonOffsetLeft = ((logoTextLydproduksjonOffsetLeftStart - logoTextLydproduksjonOffsetLeftEnd) * this.state.window.scrollRev) + logoTextLydproduksjonOffsetLeftEnd;
 
 		const logoTextOslo = {
 			top: logoTextOsloOffsetTop + 'px',
@@ -136,18 +143,12 @@ class NavBarDesktop extends Component {
 					<div id="desktop-nav">
 						<div id="desktop-nav-container" className="container">
 							<div className="row">
-								<div className="col-sm-6 text-center">
+								<div className="col-sm-6">
 
 								</div>
-								<div className="col-sm-3 text-right">
-									<a href="https://me.olyp.no">
-										<h4><span>Book rom</span></h4>
-									</a>
-								</div>
-								<div className="col-sm-3">
-									<Link to="/#contact">
-										<h4>Kontakt</h4>
-									</Link>
+								<div className="col-sm-6 text-right">
+									<h4><a href="https://me.olyp.no">Book rom</a></h4>
+									<h4><Link to="/#contact">Kontakt</Link></h4>
 								</div>
 							</div>
 						</div>
@@ -190,12 +191,10 @@ class NavBarDesktop extends Component {
 								<h4>Oslo Lydproduksjon</h4>
 							</Link>
 						</div>
-						<div className="col-sm-3 text-right">
+						<div className="col-sm-6">
 							<a href="https://me.olyp.no">
 								<h4><span>Book rom</span></h4>
 							</a>
-						</div>
-						<div className="col-sm-3">
 							<Link to="/#contact">
 								<h4>Kontakt</h4>
 							</Link>
