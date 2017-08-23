@@ -260,6 +260,7 @@ a:hover,
 }
 
 #desktop-nav {
+	margin-top: 71px;
 	position: fixed;
 	top: 0;
 	width: 100%;

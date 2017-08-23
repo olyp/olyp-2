@@ -72,10 +72,13 @@ class NavBarDesktop extends Component {
 		const overlayContainerCenterX = this.state.window.containerWidth / 2;
 
 		// Text logo
-		const logoTextOsloOffsetTop = ((overlayCenterY - 19) * this.state.window.scrollRev) + 19;
+
+		// Both digits are the ending top margin
+		const logoTextOsloOffsetTop = ((overlayCenterY - 89) * this.state.window.scrollRev) + 89;
 		const logoTextOsloOffsetLeft = ( ((overlayCenterX - 18) - (overlayCenterX - (overlayContainerCenterX / 2) - 75)) * this.state.window.scrollRev) + (overlayCenterX - (overlayContainerCenterX / 2) - 75);
 
-		const logoTextLydproduksjonOffsetTop = ((overlayCenterY) * this.state.window.scrollRev) + 19;
+		// Both digits are the ending top margin
+		const logoTextLydproduksjonOffsetTop = ((overlayCenterY - 70) * this.state.window.scrollRev) + 89;
 		const logoTextLydproduksjonOffsetLeft = ( ((overlayCenterX - 55) - (overlayCenterX - (overlayContainerCenterX / 2) - 34)) * this.state.window.scrollRev) + (overlayCenterX - (overlayContainerCenterX / 2) - 34);
 
 		const logoTextOslo = {
