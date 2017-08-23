@@ -136,7 +136,7 @@ a:hover,
 /*==========  LOGIN LAYOUT  ==========*/
 
 .login-layout {
-	margin-top: 90px;
+	margin-top: 150px;
 	margin-bottom: 50px;
 }
 
@@ -275,10 +275,13 @@ a:hover,
 }
 
 #desktop-nav {
-	margin-top: 64px;
 	position: fixed;
 	top: 0;
 	width: 100%;
+}
+
+#desktop-nav-homepage-margin {
+	height: 64px;
 }
 
 #custom-nav .nav-lock {
