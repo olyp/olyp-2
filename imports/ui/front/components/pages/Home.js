@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import { browserHistory, Link } from 'react-router';
 import Scroll from 'react-scroll';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
+import { Helmet } from 'react-helmet';
 
 import VivusContainer from '../../../shared/floorplan/VivusContainer.js';
 
@@ -47,7 +48,11 @@ class Home extends Component {
 
 	render() {
 		return (
-			<div>	
+			<div>
+
+				<Helmet>
+					<title>OLYP || HOME</title>
+				</Helmet>
 
 				<div id="home-container">
 
@@ -168,7 +173,17 @@ class Home extends Component {
 									<div className="row">
 										<div className="col-sm-6">
 											<h4><u>Booking og leie</u></h4>
-											<h4>Jonas Barsten<br />jonas@olyp.no</h4>
+											<h4>
+												Jonas Barsten
+											<br />
+												<a to="mailto:jonas@olyp.no">
+													jonas@olyp.no
+												</a>
+											<br />
+												<a to="tel:004741547798">
+													41 54 77 98
+												</a>
+											</h4>
 										</div>
 										<div className="col-sm-6">
 											<h4><u>Bygg og utstyr</u></h4>
@@ -351,7 +366,7 @@ class Home extends Component {
 								</div>
 							</div>
 
-							<div className="container">		
+							<div id="contact-mobile" className="container">		
 								<Link to="https://goo.gl/maps/6v3eMub7sTS2" target="blank">
 									<img src="/images/map.jpg" className="img-responsive" />
 								</Link>	

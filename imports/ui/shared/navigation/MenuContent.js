@@ -18,6 +18,8 @@ class MenuContent extends Component {
 			</div> : null;
 
 		const content = Meteor.userId() ?
+
+			// Logged in
 			<div>
 				<h1 className="hover" onClick={() => {this.props.onLinkClick('/secure')}}>Dashboard</h1>
 				<hr />
@@ -28,16 +30,20 @@ class MenuContent extends Component {
 				{isOlypAdmin}
 				<h1 className="hover" onClick={() => {this.props.onLinkClick('/')}}>About OLYP</h1>
 				<hr />
+				<h1 className="hover" onClick={() => {this.props.onLinkClick('/#contact-mobile')}}>Contact</h1>
+				<br />
 				<h1 className="hover" onClick={() => {Meteor.logout()}}>Log out</h1>
 			</div> :
+
+			// Not logged in
 			<div>
-				<h1 className="hover" onClick={() => {this.props.onLinkClick('/')}}>About</h1>
+				<h1 className="hover" onClick={() => {this.props.onLinkClick('/')}}>About OLYP</h1>
 				<br />
 				<a href="https://me.olyp.no">
 					<h1 className="hover">Book Room</h1>
 				</a>
 				<br />
-				<h1 className="hover" onClick={() => {this.props.onLinkClick('/')}}>Contact</h1>
+				<h1 className="hover" onClick={() => {this.props.onLinkClick('/#contact-mobile')}}>Contact</h1>
 			</div>;
 
 

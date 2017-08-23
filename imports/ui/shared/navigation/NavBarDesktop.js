@@ -91,15 +91,16 @@ class NavBarDesktop extends Component {
 
 		// Logo letters
 
-		// Follow the bootstrap container as outer border for the letters
-		const sideOffset = (this.state.window.width - this.state.window.containerWidth) / 2;
+		// Follow the bootstrap container as outer border for the letters, last digit pushes the end position of "O" and "Y" towards the center
+		const sideOffset = ((this.state.window.width - this.state.window.containerWidth) / 2) + 30;
 
 		// All images are square, but only the "O" goes all the way out to the sides
 		const oBuffer = 3;
 
-		const lOffsetTop = (overlayCenterY - 100) * this.state.window.scrollRev;
-		// To show P at bottom, change 0 to more than 100
-		const pOffsetTop = (overlayCenterY + 105) + (this.state.window.scroll * (overlayCenterY - 0));
+		// First digit is starting point + last digit, last digit is end margin top
+		const lOffsetTop = ((overlayCenterY - 170) * this.state.window.scrollRev) + 70;
+		// To show P at bottom, change last digit to more than 100
+		const pOffsetTop = (overlayCenterY + 105) + (this.state.window.scroll * (overlayCenterY - 230));
 
 		const oOffsetLeft = ((overlayCenterX - 158 - sideOffset) * this.state.window.scrollRev) + sideOffset - oBuffer;
 		const yOffsetLeft = (overlayCenterX + 108) + (this.state.window.scroll * (overlayCenterX - 154 - sideOffset));
@@ -120,7 +121,8 @@ class NavBarDesktop extends Component {
 			},
 			p: {
 				top: pOffsetTop + 'px',
-				left: (overlayCenterX - 25) + 'px'
+				left: (overlayCenterX - 25) + 'px',
+				zIndex: -2
 			}
 		}
 
@@ -136,11 +138,13 @@ class NavBarDesktop extends Component {
 								</div>
 								<div className="col-sm-3 text-right">
 									<a href="https://me.olyp.no">
-										<h4><span className="red-border">Book rom</span></h4>
+										<h4><span>Book rom</span></h4>
 									</a>
 								</div>
 								<div className="col-sm-3">
-									<h4>Kontakt</h4>
+									<Link to="/#contact">
+										<h4>Kontakt</h4>
+									</Link>
 								</div>
 							</div>
 						</div>
@@ -184,7 +188,11 @@ class NavBarDesktop extends Component {
 								<h4><span>Book rom</span></h4>
 							</a>
 						</div>
-						<div className="col-sm-3"><h4>Kontakt</h4></div>
+						<div className="col-sm-3">
+							<Link to="/#contact">
+								<h4>Kontakt</h4>
+							</Link>
+						</div>
 					</div>
 				</div>
 			</div>
