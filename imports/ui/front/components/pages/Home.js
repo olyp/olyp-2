@@ -140,6 +140,8 @@ class Home extends Component {
 							<div className="spacer-50"></div>
 							<div className="spacer-50"></div>
 							<div className="spacer-50"></div>
+							<div className="spacer-50"></div>
+							<div className="spacer-50"></div>
 
 							<div className="row">
 								<img className="img-responsive full-width" src="/images/art-christina.jpg" />
@@ -149,14 +151,19 @@ class Home extends Component {
 							<div className="spacer-50"></div>
 							<div className="spacer-50"></div>
 							<div className="spacer-50"></div>
+							<div className="spacer-50"></div>
+							<div className="spacer-50"></div>
 
 
 							<div className="row">
 								<div className="col-xs-8 col-xs-offset-2 text-center">
-									<h1>Vi holder til på Rosenhoff, mellom Carl Berner og Sinsen.<br />_</h1>
+									<h1>Vi holder til på Rosenhoff, mellom Carl Berner og Sinsen.<br /></h1>
 								</div>
 							</div>
 
+							<div className="spacer-50"></div>
+							<div className="spacer-50"></div>
+							<div className="spacer-50"></div>
 							<div className="spacer-50"></div>
 							<div className="spacer-50"></div>
 							<div className="spacer-50"></div>
@@ -228,6 +235,12 @@ class Home extends Component {
 								</div>
 							</div>
 
+							<div className="spacer-50"></div>
+							<div className="spacer-50"></div>
+							<div className="spacer-50"></div>
+							<div className="spacer-50"></div>
+							<div className="spacer-50"></div>
+							<div className="spacer-50"></div>
 							<div className="spacer-50"></div>
 							<div className="spacer-50"></div>
 							<div className="spacer-50"></div>
