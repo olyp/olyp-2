@@ -7,7 +7,7 @@ import Rooms from '../../../../api/collections/rooms.js'
 import DoorCodes from '../../../../api/collections/doorCodes.js'
 
 import Preloader from '../../../shared/preloader/Preloader.js';
-import AwsImage from '../../../shared/files/awsImage.js';
+// import AwsImage from '../../../shared/files/awsImage.js';
 
 class UserSingle extends Component {
 
@@ -67,11 +67,7 @@ class UserSingle extends Component {
 	render () {
 
 		const user = (this.props.user) ? this.props.user : null;
-		const name = (user && user.profile && user.profile.name);
-		const email = (user && user.emails && user.emails[0] && user.emails[0].address);
-		const doorCode = (this.props.doorCode) ? this.props.doorCode.code : 'Generate';
-		const isAdminClass = (user && Roles.userIsInRole(user._id, ['super-admin', 'admin'], 'olyp')) ? 'room-selector-active': '';
-		const awsKey = (user && user.profile && user.profile.image && user.profile.image.awsKey);
+
 
 		if (!user) {
 			return (
@@ -79,15 +75,29 @@ class UserSingle extends Component {
 			);
 		}
 
+		const name = (user && user.profile && user.profile.name);
+		const email = (user && user.emails && user.emails[0] && user.emails[0].address);
+		const doorCode = (this.props.doorCode) ? this.props.doorCode.code : 'Generate';
+		const isAdminClass = (user && Roles.userIsInRole(user._id, ['super-admin', 'admin'], 'olyp')) ? 'room-selector-active': '';
+		// const awsKey = (user && user.profile && user.profile.image && user.profile.image.awsKey);
+		const image = (user && user.profile && user.profile.image) ? 
+			<img 
+				src={`/images/${user.profile.image.localId}?size=100x100`}
+				className="img-responsive"
+			/> :
+			<img 
+				src="/images/default_avatar_100x100.jpg" 
+				className="img-responsive"
+			/>;
+
+
+
+
 		return (
 			<div className="container user-single">
 				<div className="row">
 					<div className="col-xs-4">
-						<AwsImage 
-							awsKey={awsKey}
-							className="img-responsive"
-							size='100x100'
-						/>
+						{image}
 					</div>
 					<div className="col-xs-8">
 						<h4>{name}</h4>

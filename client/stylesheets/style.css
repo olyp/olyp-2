@@ -200,13 +200,6 @@ a:hover,
 
 /*==========  SECURE LAYOUT  ==========*/
 
-.user-list img,
-.user-single img {
-	max-width: 100px;
-}
-
-
-
 .user-list .user-status p,
 .customer-list .customer-status p {
 	display: inline;
