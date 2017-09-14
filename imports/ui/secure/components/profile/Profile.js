@@ -124,6 +124,17 @@ class Profile extends Component {
 		// const awsKey = (user && user.profile && user.profile.image && user.profile.image.awsKey);
 		const addCustomerUrl = '/secure/addCustomer/' + Meteor.userId();
 
+		const image = (user && user.profile && user.profile.image) ?
+			<img 
+				src={`/images/${user.profile.image.localId}?size=100x100`}
+				onClick={() => {$('#uploadProfilePicture').trigger('click')}}
+				className="img-responsive"
+			/> :
+			<img 
+				src="/images/default_avatar_100x100.jpg"
+				className="img-responsive"
+			/>
+
 		// const image = (user && user.profile && user.profile.image);
 
 		const rooms = (this.props.rooms) ? this.props.rooms : [];
@@ -162,11 +173,7 @@ class Profile extends Component {
 				<div className="row">
 					<div className="col-xs-4">
 
-						<img 
-							src={`/images/${user.profile.image.localId}?size=100x100`}
-							onClick={() => {$('#uploadProfilePicture').trigger('click')}}
-							className="img-responsive"
-						/>
+						{image}
 
 					</div>
 					<div className="col-xs-8">

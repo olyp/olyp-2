@@ -117,12 +117,12 @@ const routes = (
 			<Route path="users" name="USERS" component={Users} />
 			<Route path="users/:userId" name="USER" component={UserSingle} />
 
-			<Route path="customers" name="CUSTOMER" component={Customers} />
-			<Route path="customers/:customerId" name="CUSTOMER" component={CustomerSingle} />
-			<Route path="invoices" name="INVOICE" component={Invoices} />
-			<Route path="addCustomer" name="ADD CUSTOMER" component={CustomerAdd} />
-			<Route path="addCustomer/:userId" name="ADD CUSTOMER" component={CustomerAdd} />
-			<Route path="editCustomerRoomAgreement/:customerId/:roomId" name="EDIT CUSTOMER" component={CustomerRoomAgreement} />
+			<Route path="customers" name="CUSTOMER" component={Customers} onEnter={authenticateAdmin} />
+			<Route path="customers/:customerId" name="CUSTOMER" component={CustomerSingle} onEnter={authenticateAdmin} />
+			<Route path="invoices" name="INVOICE" component={Invoices} onEnter={authenticateAdmin} />
+			<Route path="addCustomer" name="ADD CUSTOMER" component={CustomerAdd} onEnter={authenticateAdmin} />
+			<Route path="addCustomer/:userId" name="ADD CUSTOMER" component={CustomerAdd} onEnter={authenticateAdmin} />
+			<Route path="editCustomerRoomAgreement/:customerId/:roomId" name="EDIT CUSTOMER" component={CustomerRoomAgreement} onEnter={authenticateAdmin} />
 
 			<Route path="rooms" name="ROOMS" component={Rooms} />
 			<Route path="rooms/:roomId" name="ROOM" component={RoomSingle} />

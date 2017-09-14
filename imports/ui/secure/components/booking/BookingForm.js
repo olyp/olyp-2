@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import BookingFormDateTimeFields from "./BookingFormDateTimeFields"
 
 export default class BookingForm extends Component {
