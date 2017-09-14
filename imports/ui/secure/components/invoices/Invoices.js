@@ -27,7 +27,7 @@ export default class InvoicesComponent extends TrackerReact(React.Component) {
 	getCurrentInvoices() {
 		let start = this.state.currentMonth.clone();
 		let end = this.state.currentMonth.clone().add(1, "month");
-|
+
 		return Invoices.find(
 			{createdAt: {$gte: start.toDate(), $lt: end.toDate()}},
 			{$sort: {createdAt: "desc"}}).fetch()
