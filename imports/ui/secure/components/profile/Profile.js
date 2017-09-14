@@ -8,7 +8,6 @@ import RoomsCollection from '../../../../api/collections/rooms.js';
 import CustomersCollection from '../../../../api/collections/customers.js';
 
 import AwsUpload from '../../../shared/files/awsUpload.js';
-import AwsImage from '../../../shared/files/awsImage.js';
 import CustomerRow from '../customers/CustomerRow';
 
 
@@ -114,9 +113,18 @@ class Profile extends Component {
 	render () {
 
 		const user = this.props.user;
+
+		if (!user) {
+			return (
+				<h1>Loading ...</h1>
+			);	
+		}
+
 		const name = (user && user.profile && user.profile.name);
-		const awsKey = (user && user.profile && user.profile.image && user.profile.image.awsKey);
+		// const awsKey = (user && user.profile && user.profile.image && user.profile.image.awsKey);
 		const addCustomerUrl = '/secure/addCustomer/' + Meteor.userId();
+
+		// const image = (user && user.profile && user.profile.image);
 
 		const rooms = (this.props.rooms) ? this.props.rooms : [];
 		var canAccess = this.props.rooms.filter(
@@ -153,12 +161,11 @@ class Profile extends Component {
 
 				<div className="row">
 					<div className="col-xs-4">
-					
-						<AwsImage 
-							awsKey={awsKey}
+
+						<img 
+							src={`/images/${user.profile.image.localId}?size=100x100`}
 							onClick={() => {$('#uploadProfilePicture').trigger('click')}}
 							className="img-responsive"
-							size='100x100'
 						/>
 
 					</div>

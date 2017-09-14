@@ -2,6 +2,8 @@ import { WebApp } from 'meteor/webapp';
 import ConnectRoute from 'connect-route';
 import request from 'request';
 
+import Images from '../imports/api/collections/images';
+
 const url = '/images/:localImageId';
 
 function onRoute (req, res, next) {
