@@ -4,7 +4,7 @@ import moment from "moment-timezone";
 import Calendar from "./Calendar"
 import BookingForm from "./BookingForm"
 
-import Reservations from '../../../../api/collections/reservations.js';
+import Reservations from '../../../../api/collections/reservations';
 import Rooms from '../../../../api/collections/rooms'
 import Customers from '../../../../api/collections/customers'
 
@@ -95,7 +95,8 @@ export default class Booking extends TrackerReact(React.Component) {
     }
 
     submitBooking() {
-		this.setState({bookingForm: Object.assign({}, this.state.bookingForm, {isSubmitting: true})});
+
+		// this.setState({bookingForm: Object.assign({}, this.state.bookingForm, {isSubmitting: true})});
 		// TODO: Perform booking
 		const payload = {
 			bookingForm: this.state.bookingForm,
