@@ -25,7 +25,7 @@ Meteor.methods({
 		}
 
 
-		const key = uuid() + '-' + filename;
+		const key = uuid();
 		
 		return s3Credentials(key);
 
