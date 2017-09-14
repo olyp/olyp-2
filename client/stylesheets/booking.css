@@ -1,3 +1,7 @@
+.booking-form .input-group {
+    z-index: 1;
+}
+
 @media only screen and (min-width: 800px) {
     .calendar-grid-week { display: none; }
     
