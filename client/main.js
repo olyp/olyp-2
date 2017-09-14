@@ -18,6 +18,7 @@ import Customers from '../imports/ui/secure/components/customers/Customers.js';
 import CustomerSingle from '../imports/ui/secure/components/customers/CustomerSingle.js';
 import CustomerAdd from '../imports/ui/secure/components/customers/CustomerAdd.js';
 import CustomerRoomAgreement from '../imports/ui/secure/components/customers/CustomerRoomAgreement.js';
+import Invoices from '../imports/ui/secure/components/invoices/Invoices';
 import Rooms from '../imports/ui/secure/components/rooms/Rooms.js';
 import RoomSingle from '../imports/ui/secure/components/rooms/RoomSingle.js';
 
@@ -118,6 +119,7 @@ const routes = (
 
 			<Route path="customers" name="CUSTOMER" component={Customers} />
 			<Route path="customers/:customerId" name="CUSTOMER" component={CustomerSingle} />
+			<Route path="invoices" name="INVOICE" component={Invoices} />
 			<Route path="addCustomer" name="ADD CUSTOMER" component={CustomerAdd} />
 			<Route path="addCustomer/:userId" name="ADD CUSTOMER" component={CustomerAdd} />
 			<Route path="editCustomerRoomAgreement/:customerId/:roomId" name="EDIT CUSTOMER" component={CustomerRoomAgreement} />

@@ -3,6 +3,7 @@ import DoorCodes from '../imports/api/collections/doorCodes.js';
 import Reservations from '../imports/api/collections/reservations.js';
 import Rooms from '../imports/api/collections/rooms.js';
 import Customers from '../imports/api/collections/customers.js';
+import Invoices from "../imports/api/collections/invoices";
 
 Meteor.publish("rolesIsReady", function () {
 	return Meteor.roles.find({}, {reactive: false});
@@ -83,4 +84,15 @@ Meteor.publish('userRooms', function () {
 Meteor.publish('userCustomers', function () {
 	const user = Meteor.users.findOne({_id: this.userId});
 	return Customers.find({"_id": {"$in": user.customers.map((it) => it)}});
+});
+
+Meteor.publish('allInvoices', function () {
+
+	const isAdmin = Roles.userIsInRole(this.userId, ['admin', 'super-admin'], 'olyp');
+
+	if (isAdmin) {
+		return Invoices.find();
+	} else {
+		return null;
+	}
 });
