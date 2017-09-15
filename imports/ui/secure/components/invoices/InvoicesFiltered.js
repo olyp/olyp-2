@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { createContainer } from 'meteor/react-meteor-data';
-import big from "big.js";
+import big from 'big.js';
 
 import Invoices from '../../../../api/collections/invoices';
 import Customers from '../../../../api/collections/customers';
