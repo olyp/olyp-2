@@ -239,6 +239,10 @@ a:hover,
 	opacity: 0.3;
 }
 
+.room-selector .glyphicon {
+	color: white;
+}
+
 .room-selector-active {
 	opacity: 1;
 }

@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { createContainer } from 'meteor/react-meteor-data';
 import moment from 'moment-timezone';
 
-import InvoicesFiltered from './InvoicesFiltered';
+// import InvoicesFiltered from './InvoicesFiltered';
+import InvoicesTable from './InvoicesTable';
 
 class Invoices extends Component {
 	constructor() {
@@ -19,21 +19,31 @@ class Invoices extends Component {
 	render() {
 
 		return (
-			<div className="row">
-				<div className="col-xs-6">
-					<div className="btn-group">
-						<a className="btn btn-default" onClick={this.changeMonth.bind(this, -1)}>
-							<span className="glyphicon glyphicon-chevron-left"></span>
-						</a>
-						<a className="btn btn-default" onClick={this.changeMonth.bind(this, 1)}>
-							<span className="glyphicon glyphicon-chevron-right"></span>
-						</a>
+			<div>
+				<InvoicesTable />
+			</div>
+		);
+
+		return (
+			<div className="container">
+				<div className="row">
+					<div className="col-xs-6">
+						<div className="btn-group">
+							<div className="room-selector room-selector-active hover" onClick={this.changeMonth.bind(this, -1)}>
+								<span className="glyphicon glyphicon-chevron-left"></span>
+							</div>
+							<div className="room-selector room-selector-active hover" onClick={this.changeMonth.bind(this, 1)}>
+								<span className="glyphicon glyphicon-chevron-right"></span>
+							</div>
+						</div>
 					</div>
+					<div className="col-xs-6 text-right">
+						<div className="room-selector room-selector-active">
+							{this.state.currentMonth.format("MMMM 'YY")}
+						</div>
+					</div>
+					
 				</div>
-				<div className="col-xs-6 text-right">
-					{this.state.currentMonth.format("YYYY-MM-DD")}
-				</div>
-				<InvoicesFiltered currentMonth={this.state.currentMonth} />
 			</div>
 		);
 	}

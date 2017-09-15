@@ -25,6 +25,10 @@ const InvoicesSchema = new SimpleSchema({
 	"lines": {
 		type: [Object]
 	},
+	"paid": {
+		type: Boolean,
+		optional: true
+	},
 	"lines.$.note": {
 		type: String,
 		optional: true
