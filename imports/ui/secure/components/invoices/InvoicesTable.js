@@ -10,6 +10,8 @@ import Customers from '../../../../api/collections/customers';
 
 import 'react-table/react-table.css';
 
+// TODO: implement sorting
+
 class InvoicesTable extends Component {
 
 	constructor (props) {
@@ -32,7 +34,13 @@ class InvoicesTable extends Component {
 		});
 	}
 
+	reOrder (field) {
+		this.props.reOrder(field);
+	}
+
 	render () {
+
+		// this.props.reOrder('date');
 
 		const customers = this.props.customers;
 		const invoices = this.props.invoices;
@@ -56,7 +64,7 @@ class InvoicesTable extends Component {
 			},
 			{
 				Header: 'Invoiced',
-				accessor: 'invoiceDate',
+				accessor: 'createdAt',
 				headerClassName: 'room-selector room-selector-active hover',
 				headerStyle: {padding: '10px 0px'},
 				maxWidth: 100,
@@ -97,7 +105,7 @@ class InvoicesTable extends Component {
 
 			data.push({
 				customer: customer.name,
-				invoiceDate: moment(invoice.createdAt).format('YYYY-MM-DD'),
+				createdAt: moment(invoice.createdAt).format('YYYY-MM-DD'),
 				dueDate: '',
 				sum: sumWithTax,
 				paid: invoice.paid,
@@ -111,30 +119,15 @@ class InvoicesTable extends Component {
 				<ReactTable 
 					columns={columns}
 					data={data}
+					manual
+					showPagination={false}
+					defaultPageSize={this.props.pageSize}
 					getTdProps={(state, rowInfo, column, instance) => {
-
-						// console.log(column);
-
-						// if (rowInfo && rowInfo.original && rowInfo.original.paid) {
-						// 	return {
-						// 		style: {
-						// 		  background: rowInfo.original.paid ? 'green' : 'red'
-						// 		}
-						// 	}
-						// } else {
-						// 	return {
-						// 		style: {
-						// 		  background: 'yellow'
-						// 		}
-						// 	}
-						// }
 
 						let style = {};
 
 						if (rowInfo && column) {
 							if (column.id == 'paid') {
-								// style.background = 'yellow';
-
 								if (rowInfo.original.paid == undefined) {
 									style.background = 'yellow';
 								} else if (rowInfo.original.paid) {
@@ -149,22 +142,16 @@ class InvoicesTable extends Component {
 						return {
 							style,
 							onClick: (e, handleOriginal) => {
-
 								if (column.id == 'paid') {
-									// console.log('paid for invoice: ' + '??');
 									this.toggleInvoicePaid(rowInfo.original._id);
 								} else {
-									// console.log('go to invoice: ' + rowInfo.original)
 									this.goToInvoice(rowInfo.original._id);
 								}
-
-								console.log('A Td Element was clicked!')
-						        console.log('it produced this event:', e)
-						        console.log('It was in this column:', column)
-						        console.log('It was in this row:', rowInfo)
-						        console.log('It was in this table instance:', instance)
 							}
 						}
+					}}
+					onSortedChange={(newSorted, column, shiftKey) => {
+						this.reOrder(column.id);
 					}}
 				/>
 			</div>
@@ -177,8 +164,11 @@ export default createContainer((props) => {
 	Meteor.subscribe('allCustomers');
 	Meteor.subscribe('allInvoices');
 
+	var sort = {};
+	sort[props.sortField] = props.sortDirection;
+
 	return {
 		customers: Customers.find().fetch(),
-		invoices: Invoices.find().fetch()
+		invoices: Invoices.find({}, {sort: sort, skip: props.pageSize * (props.currentPage - 1), limit: props.pageSize}).fetch()
 	}
 }, InvoicesTable);
