@@ -96,3 +96,13 @@ Meteor.publish('allInvoices', function () {
 		return null;
 	}
 });
+
+Meteor.publish("allUnInvoicedBookings", function () {
+	const isAdmin = Roles.userIsInRole(this.userId, ['admin', 'super-admin'], 'olyp');
+
+	if (isAdmin) {
+		return Reservations.find({"type": "booking", "booking.isInvoiced": false});
+	} else {
+		return null;
+	}
+});

@@ -32,7 +32,9 @@ input:-webkit-autofill {
     -webkit-box-shadow: 0 0 0px 1000px white inset;
 }
 
-input {
+input[type=text],
+input[type=email],
+input[type=password] {
 	width: 100%;
 	border: 1px solid rgb(38, 84, 249);
 	border-radius: 0px;

@@ -19,6 +19,7 @@ import CustomerSingle from '../imports/ui/secure/components/customers/CustomerSi
 import CustomerAdd from '../imports/ui/secure/components/customers/CustomerAdd.js';
 import CustomerRoomAgreement from '../imports/ui/secure/components/customers/CustomerRoomAgreement.js';
 import Invoices from '../imports/ui/secure/components/invoices/Invoices';
+import UnInvoicedBookings from "../imports/ui/secure/components/invoices/UnInvoicedBookings"
 import Rooms from '../imports/ui/secure/components/rooms/Rooms.js';
 import RoomSingle from '../imports/ui/secure/components/rooms/RoomSingle.js';
 
@@ -120,6 +121,7 @@ const routes = (
 			<Route path="customers" name="CUSTOMER" component={Customers} onEnter={authenticateAdmin} />
 			<Route path="customers/:customerId" name="CUSTOMER" component={CustomerSingle} onEnter={authenticateAdmin} />
 			<Route path="invoices" name="INVOICE" component={Invoices} onEnter={authenticateAdmin} />
+			<Route path="uninvoiced_bookings" name="UNINVOICED_BOOKINGS" component={UnInvoicedBookings} onEnter={authenticateAdmin} />
 			<Route path="addCustomer" name="ADD CUSTOMER" component={CustomerAdd} onEnter={authenticateAdmin} />
 			<Route path="addCustomer/:userId" name="ADD CUSTOMER" component={CustomerAdd} onEnter={authenticateAdmin} />
 			<Route path="editCustomerRoomAgreement/:customerId/:roomId" name="EDIT CUSTOMER" component={CustomerRoomAgreement} onEnter={authenticateAdmin} />
