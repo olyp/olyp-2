@@ -93,7 +93,7 @@ Meteor.publish('allInvoices', function () {
 	if (isAdmin) {
 		return Invoices.find();
 	} else {
-		return null;
+		return this.ready();
 	}
 });
 
@@ -103,6 +103,6 @@ Meteor.publish("allUnInvoicedBookings", function () {
 	if (isAdmin) {
 		return Reservations.find({"type": "booking", "booking.isInvoiced": false});
 	} else {
-		return null;
+		return this.ready();
 	}
 });
