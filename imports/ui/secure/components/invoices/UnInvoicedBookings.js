@@ -203,6 +203,10 @@ class UninvoicedBookings extends Component {
 	}
 
 	render () {
+		if (!this.props.isReady) {
+			return <div>Loading...</div>
+		}
+
 		const reservationsByCustomer = {};
 		this.props.reservations.forEach((reservation) => {
 			const customerId = reservation.booking.customerId;
@@ -355,11 +359,12 @@ class UninvoicedBookings extends Component {
 }
 
 export default createContainer((props) => {
-	Meteor.subscribe("allUnInvoicedBookings");
-	Meteor.subscribe("allCustomers");
-	Meteor.subscribe("allRooms");
-
+	const allUnInvoicedBookingsHandle = Meteor.subscribe("allUnInvoicedBookings");
+	const allCustomersHandle = Meteor.subscribe("allCustomers");
+	const allRoomsHandle = Meteor.subscribe("allRooms");
+	
 	return {
+		isReady: allUnInvoicedBookingsHandle.ready() && allCustomersHandle.ready() && allRoomsHandle.ready(),
 		reservations: Reservations.find().fetch(),
 		customers: Customers.find().fetch(),
 		rooms: Rooms.find().fetch()
