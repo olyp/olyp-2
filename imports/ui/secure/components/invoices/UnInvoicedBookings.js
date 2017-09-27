@@ -203,9 +203,14 @@ class UninvoicedBookings extends Component {
 	}
 
 	render () {
+
+		console.log('lol');
+
 		if (!this.props.isReady) {
 			return <div>Loading...</div>
 		}
+
+		console.log(this.props.reservations);
 
 		const reservationsByCustomer = {};
 		this.props.reservations.forEach((reservation) => {
