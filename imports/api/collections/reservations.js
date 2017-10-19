@@ -28,6 +28,9 @@ const ReservationsSchema = new SimpleSchema({
     "booking.customerId": {
         type: String
     },
+	"booking.isInvoiced": {
+		type: String
+	},
 	"comment": {
 		type: String
 	},
