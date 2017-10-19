@@ -18,86 +18,102 @@ function dateRangeString(from, to) {
 	}
 }
 
-function isValidCurrency(text) {
-	let isValid = true;
-	try {
-		big(text)
-	} catch (e) {
-		isValid = false;
+function getQFromInvoiceForm(invoiceForm) {
+	const res = [];
+
+	for (const customerId in invoiceForm) {
+		const customerForm = invoiceForm[customerId];
+		const extraLines = customerForm.extraLines;
+		const reservations = customerForm.reservations;
+
+		if (!extraLines && !reservations) {
+			continue;
+		}
+
+		res.push({
+			customerId: customerId,
+			reservationIds: reservations ? Object.keys(reservations) : [],
+			extraLines: extraLines,
+			includeFreeHours: customerForm.includeFreeHours
+		});
 	}
 
-	return isValid;
+	return res;
 }
 
-function getRoomReservationTotalMinutes(roomReservation) {
-	return moment(roomReservation.to).diff(moment(roomReservation.from), "minutes", true);
-}
+function asyncKeepLast(fn, cb) {
+	let abortPrev = null;
 
-function roundMinutesDown(minutes, roundBy) {
-	return Math.max(roundBy, minutes - (minutes % roundBy));
-}
+	return (...args) => {
+		abortPrev && abortPrev();
 
-const big60 = big("60");
-const big0 = big("0");
-const bigNeg1 = big("-1");
+		let isAborted = false;
+		let abort = () => isAborted = true;
+		abortPrev = abort;
 
-function bigMax(a, b) {
-	return a.lt(b) ? b : a;
-}
-
-function bigMin(a, b) {
-	return a.lt(b) ? a : b;
-}
-
-function getInvoiceTotal(invoiceDataForRooms, invoiceLines) {
-	const validInvoiceLines = invoiceLines && invoiceLines
-		.filter((it) => isValidCurrency(it.sum))
-		.map((it) => big(it.sum));
-
-	if ((!invoiceDataForRooms || invoiceDataForRooms.length === 0) && (!validInvoiceLines || validInvoiceLines.length === 0)) {
-		return null;
+		fn.apply(null, [(...args) => {
+			if (!isAborted) {
+				cb.apply(null, args);
+			}
+		}].concat(args));
 	}
+}
 
-	let total = big0;
+function debounce(f, ms) {
+	let timeoutId = null;
 
-	if (validInvoiceLines) {
-		total = total.plus(validInvoiceLines.reduce(
-			(res, curr) => res.plus(curr),
-			big0));
+	return (...args) => {
+		clearTimeout(timeoutId);
+		timeoutId = setTimeout(() => {
+			timeoutId = null;
+			f.apply(null, args);
+		}, ms);
 	}
-
-	if (invoiceDataForRooms) {
-		total = total.plus(invoiceDataForRooms.reduce(
-			(res, curr) => {
-				if (curr.includeFreeHours) {
-					return res.plus(curr.baseSumWithoutTax).plus(curr.freeHoursSumWithoutTax);
-				} else {
-					return res.plus(curr.baseSumWithoutTax);
-				}
-			},
-			big0));
-	}
-
-	return total;
 }
 
 class UninvoicedBookings extends Component {
 	constructor() {
 		super();
 		this.state = {
-			invoiceForm: {}
+			invoiceForm: {},
+			invoiceDataByCustomerId: {}
 		};
+
+		this.fetchNewInvoiceData = asyncKeepLast(
+			(cb, q) => {
+				Meteor.call("invoice.generateData", q, cb);
+			},
+			(error, result) => {
+				if (error) {
+					console.error("An error ocurred when fetching new invoice data", error);
+					this.setState({invoiceDataByCustomerId: {}});
+				} else {
+					this.setState({invoiceDataByCustomerId: result});
+				}
+			});
+
+		this.fetchNewInvoiceDataDebounced = debounce(this.fetchNewInvoiceData, 300);
+	}
+
+	updateInvoiceForm (newInvoiceForm) {
+		this.setState({invoiceForm: newInvoiceForm});
+		const q = getQFromInvoiceForm(newInvoiceForm);
+		this.fetchNewInvoiceData(q);
+	}
+
+	updateInvoiceFormDebounced (newInvoiceForm) {
+		this.setState({invoiceForm: newInvoiceForm});
+		const q = getQFromInvoiceForm(newInvoiceForm);
+		this.fetchNewInvoiceDataDebounced(q);
 	}
 
 	onReservationCheckboxClicked (checked, customer, reservation) {
 		const customerId = customer["_id"];
 		const reservationId = reservation["_id"];
-		const roomId = reservation.roomId;
 
 		const newInvoiceForm = Object.assign({}, this.state.invoiceForm);
 		newInvoiceForm[customerId] = Object.assign({}, newInvoiceForm[customerId]);
 		newInvoiceForm[customerId].reservations = Object.assign({}, newInvoiceForm[customerId].reservations);
-		newInvoiceForm[customerId].invoiceForRoom = Object.assign({}, newInvoiceForm[customerId].invoiceForRoom);
 
 		if (checked) {
 			newInvoiceForm[customerId].reservations[reservationId] = reservation;
@@ -105,101 +121,65 @@ class UninvoicedBookings extends Component {
 			delete newInvoiceForm[customerId].reservations[reservationId];
 		}
 
-		if (Object.keys(newInvoiceForm[customerId].reservations).length === 0) {
-			delete newInvoiceForm[customerId].invoiceForRoom[roomId];
-		} else {
-			const roomBookingAgreement = customer.roomBookingAgreements.filter(
-				(roomBookingAgreement) => roomBookingAgreement.roomId === roomId)[0];
-
-			const roomReservations = Object.keys(newInvoiceForm[customerId].reservations).map((reservationId) =>
-				newInvoiceForm[customerId].reservations[reservationId]);
-
-			const totalMinutes = roomReservations.reduce((res, curr) => res + getRoomReservationTotalMinutes(curr), 0);
-			const totalMinutesRounded = roundMinutesDown(totalMinutes, 30);
-			const totalHours =  big(totalMinutesRounded).div(big60);
-			const freeHours = big(roomBookingAgreement.freeHours);
-			const numDiscountedHours = bigMin(freeHours, totalHours);
-			const pricePerHour = big(roomBookingAgreement.hourlyPrice);
-			const billableHours = bigMax(big0, totalHours.minus(freeHours));
-
-			const sumWithoutTax = pricePerHour.times(billableHours);
-			const baseSumWithoutTax = pricePerHour.times(totalHours);
-
-			newInvoiceForm[customerId].invoiceForRoom[roomId] = Object.assign(
-				{
-					includeFreeHours: true,
-					roomId: roomId
-				},
-				newInvoiceForm[customerId].invoiceForRoom[roomId],
-				{
-					hasFreeHours: !freeHours.eq(big0),
-					numDiscountedHours: numDiscountedHours,
-					freeHoursSumWithoutTax: pricePerHour.times(numDiscountedHours).times(bigNeg1),
-					sumWithoutTax: sumWithoutTax,
-					baseSumWithoutTax: baseSumWithoutTax
-				});
-		}
-
-		this.setState({invoiceForm: newInvoiceForm});
+		this.updateInvoiceForm(newInvoiceForm);
 	}
 
-	onRoomInvoiceIncludeFreeHoursChecked (includeFreeHours, customerId, roomId) {
+	onRoomInvoiceIncludeFreeHoursChecked (includeFreeHours, customerId, roomId, monthStr) {
 		const newInvoiceForm = Object.assign({}, this.state.invoiceForm);
 		newInvoiceForm[customerId] = Object.assign({}, newInvoiceForm[customerId]);
-		newInvoiceForm[customerId].invoiceForRoom = Object.assign({}, newInvoiceForm[customerId].invoiceForRoom);
+		newInvoiceForm[customerId].includeFreeHours = Object.assign({}, newInvoiceForm[customerId].includeFreeHours);
+		newInvoiceForm[customerId].includeFreeHours[roomId] = Object.assign({}, newInvoiceForm[customerId].includeFreeHours[roomId]);
+		newInvoiceForm[customerId].includeFreeHours[roomId][monthStr] = includeFreeHours
 
-		newInvoiceForm[customerId].invoiceForRoom[roomId].includeFreeHours = includeFreeHours;
-
-		this.setState({invoiceForm: newInvoiceForm});
+		this.updateInvoiceForm(newInvoiceForm);
 	}
-
 
 	onAddInvoiceLineClicked (customerId) {
 		const newInvoiceForm = Object.assign({}, this.state.invoiceForm);
 		newInvoiceForm[customerId] = Object.assign({}, newInvoiceForm[customerId]);
-		newInvoiceForm[customerId].invoiceLines = [].concat(newInvoiceForm[customerId].invoiceLines || []);
+		newInvoiceForm[customerId].extraLines = [].concat(newInvoiceForm[customerId].extraLines || []);
 
-		newInvoiceForm[customerId].invoiceLines.push({
+		newInvoiceForm[customerId].extraLines.push({
 			note: "",
 			sum: ""
 		});
 
-		this.setState({invoiceForm: newInvoiceForm});
+		this.updateInvoiceForm(newInvoiceForm);
 	}
 
-	onInvoiceLineNoteChange (value, customerId, invoiceLineIdx) {
+	onExtraLineNoteChange (value, customerId, invoiceLineIdx) {
 		const newInvoiceForm = Object.assign({}, this.state.invoiceForm);
 		this.setState({invoiceForm: newInvoiceForm});
 		newInvoiceForm[customerId] = Object.assign({}, newInvoiceForm[customerId]);
-		newInvoiceForm[customerId].invoiceLines = [].concat(newInvoiceForm[customerId].invoiceLines || []);
-		newInvoiceForm[customerId].invoiceLines[invoiceLineIdx] = Object.assign({}, newInvoiceForm[customerId].invoiceLines[invoiceLineIdx]);
+		newInvoiceForm[customerId].extraLines = [].concat(newInvoiceForm[customerId].extraLines || []);
+		newInvoiceForm[customerId].extraLines[invoiceLineIdx] = Object.assign({}, newInvoiceForm[customerId].extraLines[invoiceLineIdx]);
 
-		newInvoiceForm[customerId].invoiceLines[invoiceLineIdx]["note"] = value;
-
-		this.setState({invoiceForm: newInvoiceForm});
-	}
-
-	onInvoiceLineSumChange (value, customerId, invoiceLineIdx) {
-		const newInvoiceForm = Object.assign({}, this.state.invoiceForm);
-		this.setState({invoiceForm: newInvoiceForm});
-		newInvoiceForm[customerId] = Object.assign({}, newInvoiceForm[customerId]);
-		newInvoiceForm[customerId].invoiceLines = [].concat(newInvoiceForm[customerId].invoiceLines || []);
-		newInvoiceForm[customerId].invoiceLines[invoiceLineIdx] = Object.assign({}, newInvoiceForm[customerId].invoiceLines[invoiceLineIdx]);
-
-		newInvoiceForm[customerId].invoiceLines[invoiceLineIdx]["sum"] = value;
+		newInvoiceForm[customerId].extraLines[invoiceLineIdx]["note"] = value;
 
 		this.setState({invoiceForm: newInvoiceForm});
 	}
 
-	onInvoiceLineRemoveClicked (customerId, invoiceLineIdx) {
+	onExtraLinesumChange (value, customerId, invoiceLineIdx) {
 		const newInvoiceForm = Object.assign({}, this.state.invoiceForm);
 		this.setState({invoiceForm: newInvoiceForm});
 		newInvoiceForm[customerId] = Object.assign({}, newInvoiceForm[customerId]);
-		newInvoiceForm[customerId].invoiceLines = [].concat(newInvoiceForm[customerId].invoiceLines || []);
+		newInvoiceForm[customerId].extraLines = [].concat(newInvoiceForm[customerId].extraLines || []);
+		newInvoiceForm[customerId].extraLines[invoiceLineIdx] = Object.assign({}, newInvoiceForm[customerId].extraLines[invoiceLineIdx]);
 
-		newInvoiceForm[customerId].invoiceLines.splice(invoiceLineIdx, 1);
+		newInvoiceForm[customerId].extraLines[invoiceLineIdx]["sum"] = value;
 
+		this.updateInvoiceFormDebounced(newInvoiceForm);
+	}
+
+	onExtraLineRemoveClicked (customerId, invoiceLineIdx) {
+		const newInvoiceForm = Object.assign({}, this.state.invoiceForm);
 		this.setState({invoiceForm: newInvoiceForm});
+		newInvoiceForm[customerId] = Object.assign({}, newInvoiceForm[customerId]);
+		newInvoiceForm[customerId].extraLines = [].concat(newInvoiceForm[customerId].extraLines || []);
+
+		newInvoiceForm[customerId].extraLines.splice(invoiceLineIdx, 1);
+
+		this.updateInvoiceForm(newInvoiceForm);
 	}
 
 	render () {
@@ -232,10 +212,9 @@ class UninvoicedBookings extends Component {
 						.sort((a, b) => a.from.getTime() - b.from.getTime());
 					const customer = customersById[customerId];
 					const customerForm = this.state.invoiceForm[customerId];
-					const invoiceDataForRooms = customerForm && customerForm.invoiceForRoom && Object.keys(customerForm.invoiceForRoom).map((roomId) => customerForm.invoiceForRoom[roomId])
-					const invoiceLines = customerForm && customerForm.invoiceLines;
+					const extraLines = customerForm && customerForm.extraLines;
 
-					const total = getInvoiceTotal(invoiceDataForRooms, invoiceLines);
+					const invoiceData = this.state.invoiceDataByCustomerId[customerId];
 
 					return <div key={customerId}>
 						<h2>{customer && customer.name}</h2>
@@ -284,75 +263,71 @@ class UninvoicedBookings extends Component {
 
 						<p><a className="btn btn-default btn-sm" onClick={(e) => this.onAddInvoiceLineClicked(customerId)}>Legg til fakturalinje</a></p>
 
-						{total !== null && <div className="row" style={{fontWeight: "bold"}}>
-							<div className="col-xs-1"></div>
-							<div className="col-xs-3">Notat</div>
-							<div className="col-xs-3">Sum</div>
-
-						</div>}
-
-						{invoiceLines && invoiceLines.map((invoiceLine, idx) => {
+						{extraLines && extraLines.map((invoiceLine, idx) => {
 							return <div key={`invoice_line_${idx}`} className="row">
 								<div className="col-xs-1">
 									<a className="btn btn-danger btn-xs"
-									   onClick={(e) => this.onInvoiceLineRemoveClicked(customerId, idx)}>Fjern</a>
+									   onClick={(e) => this.onExtraLineRemoveClicked(customerId, idx)}>Fjern</a>
 								</div>
 								<div className="col-xs-3">
 									<input type="text"
 										   value={invoiceLine.note}
-										   onChange={(e) => this.onInvoiceLineNoteChange(e.target.value, customerId, idx)}/>
+										   onChange={(e) => this.onExtraLineNoteChange(e.target.value, customerId, idx)}/>
 								</div>
 
 								<div className="col-xs-3">
 									<input type="text"
 										   value={invoiceLine.sum}
-										   onChange={(e) => this.onInvoiceLineSumChange(e.target.value, customerId, idx)}/>
+										   onChange={(e) => this.onExtraLinesumChange(e.target.value, customerId, idx)}/>
 								</div>
 							</div>
 						})}
 
-						{invoiceDataForRooms && invoiceDataForRooms.map((invoiceData) => {
-							const {roomId} = invoiceData;
+						{invoiceData && invoiceData.lines.map((invoiceLine) => {
+							const roomId = invoiceLine.roomId;
+							const monthStr = invoiceLine.month;
 							const room = roomsById[roomId];
 
-							return <div key={`room_invoice_${roomId}`}>
+							return <div key={`room_booking_${roomId}_${monthStr}`}>
 								<div className="row">
-									<div className="col-xs-1"></div>
-									<div className="col-xs-3">
-										Booking, {room.name}
+									<div className="col-xs-1">
 									</div>
 									<div className="col-xs-3">
-										{invoiceData.baseSumWithoutTax.toFixed(2)}
+										Booking, {room.name}, {moment(monthStr, "YYYY-MM").format("MMMM, YYYY")}
+									</div>
+									<div className="col-xs-3">
+										{big(invoiceLine.baseSumWithoutTax).toFixed(2)}
 									</div>
 								</div>
-								{invoiceData.hasFreeHours && <div className="row">
+
+								{invoiceLine.hasFreeHours && <div className="row">
 									<div className="col-xs-1">
 										<input type="checkbox"
-											   checked={invoiceData.includeFreeHours}
-											   onChange={(e) => this.onRoomInvoiceIncludeFreeHoursChecked(e.target.checked, customerId, roomId)}/>
+											   checked={invoiceLine.includeFreeHours}
+											   onChange={(e) => this.onRoomInvoiceIncludeFreeHoursChecked(e.target.checked, customerId, roomId, monthStr)} />
 									</div>
 									<div className="col-xs-3">
-										Gratis timer, {room.name}
+										Gratis timer ({big(invoiceLine.numDiscountedHours).toFixed(1)}), {room.name}
 									</div>
 									<div className="col-xs-3">
-										{invoiceData.freeHoursSumWithoutTax.toFixed(2)}
+										{big(invoiceLine.freeHoursSumWithoutTax).toFixed(2)}
 									</div>
 								</div>}
-							</div>
+							</div>;
 						})}
 
-						{total !== null && <div className="row">
+						{invoiceData && <div className="row">
 							<div className="col-xs-1">
 							</div>
 							<div className="col-xs-3">
 							</div>
 							<div className="col-xs-3">
-								Total: {total.toFixed(2)}
+								Total: {big(invoiceData.total).toFixed(2)}
 							</div>
 						</div>}
 
 						<p>
-							<a className="btn btn-primary" disabled={total === null}>
+							<a className="btn btn-primary" disabled={!invoiceData}>
 								Opprett faktura for {customer && customer.name}
 							</a>
 						</p>
