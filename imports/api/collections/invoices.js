@@ -16,30 +16,72 @@ Invoices.deny({
 
 
 const InvoicesSchema = new SimpleSchema({
-	"sum": {
+	"sumWithTax": {
+		type: String
+	},
+	"sumWithoutTax": {
 		type: String
 	},
 	"customerId": {
 		type: "String"
 	},
-	"lines": {
-		type: [Object]
-	},
+
 	"paid": {
 		type: Boolean,
 		optional: true
 	},
-	"lines.$.note": {
+
+	"hourlyBookingLines": {
+		type: [Object]
+	},
+	"hourlyBookingLines.$.roomId": {
+		type: String,
+	},
+	"hourlyBookingLines.$.roomBookingAgreementId": {
+		type: String
+	},
+	"hourlyBookingLines.$.hourlyPrice": {
+		type: String
+	},
+	"hourlyBookingLines.$.tax": {
+		type: Boolean
+	},
+	"hourlyBookingLines.$.freeHours": {
+		type: String
+	},
+
+	"hourlyBookingLines.$.lines": {
+		type: [Object]
+	},
+	"hourlyBookingLines.$.lines.$.note": {
 		type: String,
 		optional: true
 	},
-	"line.$.tax": {
+	"hourlyBookingLines.$.lines.$.tax": {
 		type: Boolean
 	},
-	"line.$.sumWithoutTax": {
+	"hourlyBookingLines.$.lines.$.sumWithoutTax": {
 		type: String
 	},
-	"line.$.sumWithTax": {
+	"hourlyBookingLines.$.lines.$.sumWithTax": {
+		type: String
+	},
+
+
+	"otherLines": {
+		type: [Object]
+	},
+	"otherLines.$.note": {
+		type: String,
+		optional: true
+	},
+	"otherLines.$.tax": {
+		type: Boolean
+	},
+	"otherLines.$.sumWithoutTax": {
+		type: String
+	},
+	"otherLines.$.sumWithTax": {
 		type: String
 	}
 });

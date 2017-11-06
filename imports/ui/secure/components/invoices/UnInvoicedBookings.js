@@ -18,24 +18,32 @@ function dateRangeString(from, to) {
 	}
 }
 
+function getInvoiceFormForCustomer(customerId, customerForm) {
+	const extraLines = customerForm.extraLines;
+	const reservations = customerForm.reservations;
+
+	if (!extraLines && !reservations) {
+		return null;
+	}
+
+	return {
+		customerId: customerId,
+		reservationIds: reservations ? Object.keys(reservations) : [],
+		extraLines: extraLines,
+		includeFreeHours: customerForm.includeFreeHours
+	};
+}
+
 function getQFromInvoiceForm(invoiceForm) {
 	const res = [];
 
 	for (const customerId in invoiceForm) {
 		const customerForm = invoiceForm[customerId];
-		const extraLines = customerForm.extraLines;
-		const reservations = customerForm.reservations;
+		const invoiceFormForCustomer = getInvoiceFormForCustomer(customerId, customerForm);
 
-		if (!extraLines && !reservations) {
-			continue;
+		if (invoiceFormForCustomer !== null) {
+			res.push(invoiceFormForCustomer);
 		}
-
-		res.push({
-			customerId: customerId,
-			reservationIds: reservations ? Object.keys(reservations) : [],
-			extraLines: extraLines,
-			includeFreeHours: customerForm.includeFreeHours
-		});
 	}
 
 	return res;
@@ -68,6 +76,17 @@ function debounce(f, ms) {
 			timeoutId = null;
 			f.apply(null, args);
 		}, ms);
+	}
+}
+
+const big0 = big("0");
+
+function formatTime(t) {
+	const remainder = t.mod(1);
+	if (remainder.eq(big0)) {
+		return t.toFixed(0);
+	} else {
+		return t.toFixed(1);
 	}
 }
 
@@ -182,6 +201,27 @@ class UninvoicedBookings extends Component {
 		this.updateInvoiceForm(newInvoiceForm);
 	}
 
+	submitInvoice (customerId) {
+		this.setState({isSubmitting: true})
+
+		const invoiceForm = getInvoiceFormForCustomer(customerId, this.state.invoiceForm[customerId]);
+
+		Meteor.call("invoice.create", invoiceForm, (err, data) => {
+			this.setState({isSubmitting: false});
+			if (err) {
+				console.error(err);
+			} else {
+				const newInvoiceForm = Object.assign({}, this.state.invoiceForm);
+				delete newInvoiceForm[customerId];
+
+				const newInvoiceDataByCustomerId = Object.assign({}, this.state.invoiceDataByCustomerId);
+				delete newInvoiceDataByCustomerId[customerId];
+
+				this.setState({invoiceForm: newInvoiceForm, invoiceDataByCustomerId: newInvoiceDataByCustomerId});
+			}
+		})
+	}
+
 	render () {
 		if (!this.props.isReady) {
 			return <div>Loading...</div>
@@ -202,7 +242,7 @@ class UninvoicedBookings extends Component {
 
 		return (
 			<div>
-				{Object.keys(reservationsByCustomer).map((customerId) => {
+				{Object.keys(reservationsByCustomer).sort().map((customerId) => {
 					const reservations = reservationsByCustomer[customerId]
 						.sort((a, b) => a.from.getTime() - b.from.getTime());
 					const customer = customersById[customerId];
@@ -213,6 +253,25 @@ class UninvoicedBookings extends Component {
 
 					return <div key={customerId}>
 						<h2>{customer && customer.name}</h2>
+
+						<div style={{maxWidth: 600}} className="panel panel-default">
+							<div className="panel-body">
+								<div className='row' style={{fontWeight: "bold"}}>
+									<div className='col-xs-3'>Rom</div>
+									<div className='col-xs-3'>Timespris</div>
+									<div className='col-xs-3'>Antall gratistimer</div>
+								</div>
+								{customer.roomBookingAgreements.map((roomBookingAgreement) => {
+									const roomId = roomBookingAgreement.roomId;
+									const room = roomsById[roomId];
+									return <div key={`customer_${customerId}-agreement-${roomId}`} className='row' >
+										<div className='col-xs-3'>{room ? room.name : roomId}</div>
+										<div className='col-xs-3'>{big(roomBookingAgreement.hourlyPrice).toFixed(2)}</div>
+										<div className='col-xs-3'>{roomBookingAgreement.freeHours}</div>
+									</div>
+								})}
+							</div>
+						</div>
 						<div className="row" style={{fontWeight: "bold"}}>
 							<div className="col-xs-1">
 
@@ -288,7 +347,7 @@ class UninvoicedBookings extends Component {
 									<div className="col-xs-1">
 									</div>
 									<div className="col-xs-3">
-										Booking, {room.name}, {moment(monthStr, "YYYY-MM").format("MMMM, YYYY")}
+										Booking, {room.name}, {formatTime(big(invoiceLine.totalHours))} timer, {moment(monthStr, "YYYY-MM").format("MMMM, YYYY")}
 									</div>
 									<div className="col-xs-3">
 										{big(invoiceLine.baseSumWithoutTax).toFixed(2)}
@@ -302,7 +361,7 @@ class UninvoicedBookings extends Component {
 											   onChange={(e) => this.onRoomInvoiceIncludeFreeHoursChecked(e.target.checked, customerId, roomId, monthStr)} />
 									</div>
 									<div className="col-xs-3">
-										Gratis timer ({big(invoiceLine.numDiscountedHours).toFixed(1)}), {room.name}
+										Gratis timer ({formatTime(big(invoiceLine.numDiscountedHours))}), {room.name}
 									</div>
 									<div className="col-xs-3">
 										{big(invoiceLine.freeHoursSumWithoutTax).toFixed(2)}
@@ -322,7 +381,7 @@ class UninvoicedBookings extends Component {
 						</div>}
 
 						<p>
-							<a className="btn btn-primary" disabled={!invoiceData}>
+							<a className="btn btn-primary" disabled={this.state.isSubmitting || !invoiceData} onClick={() => { this.submitInvoice(customerId) }}>
 								Opprett faktura for {customer && customer.name}
 							</a>
 						</p>
