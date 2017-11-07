@@ -38,6 +38,7 @@ Meteor.methods({
 			booking: {
 				userId: userId,
 				customerId: customerId,
+				isInvoiced: false
 			},
 			comment: bookingForm.comment,
 			from: new Date(bookingForm.from),
