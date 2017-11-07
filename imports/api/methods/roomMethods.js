@@ -19,7 +19,7 @@ Meteor.methods({
 
 		Rooms.update({_id: roomId}, {$set: {name: name}});
 	},
-	'room.toggleCustomerBookingAccess': function (roomId, userId) {
+	'room.toggleUserBookingAccess': function (roomId, userId) {
 		check(roomId, String);
 		check(userId, String);
 
