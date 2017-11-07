@@ -19,25 +19,20 @@ export default class CalendarGridNav extends Component {
     render() {
         const props = this.props;
 
-        return React.DOM.div({style: {marginBottom: 14}, className: "calendar-grid-header"},
-            React.DOM.a({
-                className: "btn btn-default", onClick: props.gotoToday
-            }, "Today"),
-            " ",
-            React.DOM.div({className: "btn-group", style: {marginRight: 10}},
-                React.DOM.a({
-                    className: "btn btn-default",
-                    onClick: function () {
-                        props.gotoWeek(-1);
-                    }
-                }, React.DOM.span({className: "glyphicon glyphicon-chevron-left"})),
-                React.DOM.a({
-                    className: "btn btn-default",
-                    onClick: function () {
-                        props.gotoWeek(1);
-                    }
-                }, React.DOM.span({className: "glyphicon glyphicon-chevron-right"}))),
-            " ",
-            currentWeekSummary(props.baseDay, props.days[0], props.days[props.days.length - 1]))
+        return (
+        	<div className='calendar-grid-header' style={{marginBottom: 14}}>
+				<a className='btn btn-default' onClick={props.gotoToday}>Today</a>
+				{' '}
+				<div className='btn-group' style={{marginRight: 10}}>
+					<a className='btn btn-default' onClick={(e) => props.gotoWeek(-1)}>
+						<span className='glyphicon glyphicon-chevron-left' />
+					</a>
+					<a className='btn btn-default' onClick={(e) => props.gotoWeek(1)}>
+						<span className='glyphicon glyphicon-chevron-right' />
+					</a>
+				</div>
+				{currentWeekSummary(props.baseDay, props.days[0], props.days[props.days.length - 1])}
+			</div>
+		);
     }
 }

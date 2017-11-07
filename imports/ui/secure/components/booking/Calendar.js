@@ -7,26 +7,26 @@ export default class Calendar extends Component {
 	render() {
 		const props = this.props;
 
-		return React.DOM.div(null,
-			React.createElement(CalendarGridNav, {
-				baseDay: props.baseDay,
-				days: props.days,
-				gotoToday: props.gotoToday,
-				gotoWeek: props.gotoWeek
-			}),
-			React.createElement(CalendarGridAgenda, {
-				reservations: props.reservations,
-				days: props.days,
-				currentUserId: props.currentUserId,
-				getProfileNameById: props.getProfileNameById,
-				deleteReservation: props.deleteReservation
-			}),
-			React.createElement(CalendarGridWeek, {
-				reservations: props.reservations,
-				days: props.days,
-				currentUserId: props.currentUserId,
-				getProfileNameById: props.getProfileNameById,
-				deleteReservation: props.deleteReservation
-			}));
+		return (
+			<div>
+				<CalendarGridNav
+					baseDay={props.baseDay}
+					days={props.days}
+					gotoToday={props.gotoToday}
+					gotoWeek={props.gotoWeek}/>
+				<CalendarGridAgenda
+					reservations={props.reservations}
+					days={props.days}
+					currentUserId={props.currentUserId}
+					getProfileNameById={props.getProfileNameById}
+					deleteReservation={props.deleteReservation}/>
+				<CalendarGridWeek
+					reservations={props.reservations}
+					days={props.days}
+					currentUserId={props.currentUserId}
+					getProfileNameById={props.getProfileNameById}
+					deleteReservation={props.deleteReservation}/>
+			</div>
+		);
 	}
 }

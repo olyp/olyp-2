@@ -127,36 +127,34 @@ export default class Booking extends TrackerReact(React.Component) {
 	}
 
     render() {
-        return React.DOM.div(null,
-			React.DOM.div({className: "row booking-form-calendar-grid"},
-				React.DOM.div({className: "booking-form container"},
-					React.createElement(BookingForm, {
-						from: this.state.bookingForm.from,
-						to: this.state.bookingForm.to,
-						comment: this.state.bookingForm.comment,
-						onFromChange: function (val) { this.setState({bookingForm: updateBookingFormFrom(this.state.bookingForm, val)}); }.bind(this),
-						onToChange: function (val) { this.setState({bookingForm: updateBookingFormTo(this.state.bookingForm, val)})}.bind(this),
-						onCommentChange: function (val) { this.setState({bookingForm: Object.assign({}, this.state.bookingForm, {comment: val})}) }.bind(this),
-						onSubmit: function () { this.submitBooking() }.bind(this),
-						isSubmitting: this.state.bookingForm.isSubmitting
-					})),
-				React.DOM.hr({className: "booking-form-calendar-grid-separator"}),
-				React.DOM.div({className: "calendar-grid container"},
-					React.createElement(Calendar, {
-						baseDay: this.state.baseDay,
-						days: getDaysForBaseDay(this.state.baseDay),
-						reservations: this.getReservations(),
-						currentUserId: Meteor.userId(),
-						getProfileNameById: this.getProfileNameById,
-						gotoToday: function () {
-							this.setState({baseDay: getToday()})
-						}.bind(this),
-						gotoWeek: function (step) {
-							this.setState({baseDay: this.state.baseDay.clone().add(step * 7, "days").startOf("day")})
-						}.bind(this),
-						deleteReservation: function (reservationId) {
-							this.deleteReservation(reservationId);
-						}.bind(this)
-					}))));
+		return (<div>
+			<div className='row booking-form-calendar-grid'>
+				<div className='booking-form container'>
+					<BookingForm
+						from={this.state.bookingForm.from}
+						to={this.state.bookingForm.to}
+						comment={this.state.bookingForm.comment}
+						onFromChange={(val) => this.setState({bookingForm: updateBookingFormFrom(this.state.bookingForm, val)})}
+						onToChange={(val) => this.setState({bookingForm: updateBookingFormTo(this.state.bookingForm, val)}) }
+						onCommentChange={(val) => this.setState({bookingForm: Object.assign({}, this.state.bookingForm, {comment: val})}) }
+						onSubmit={() => this.submitBooking() }
+						isSubmitting={this.state.bookingForm.isSubmitting}
+					 />
+				</div>
+				<hr className='booking-form-calendar-grid-separator' />
+				<div className='calendar-grid container'>
+					<Calendar
+						baseDay={this.state.baseDay}
+						days={getDaysForBaseDay(this.state.baseDay)}
+						reservations={this.getReservations()}
+						currentUserId={Meteor.userId()}
+						getProfileNameById={this.getProfileNameById}
+						gotoToday={() => this.setState({baseDay: getToday()})}
+						gotoWeek={(step) => this.setState({baseDay: this.state.baseDay.clone().add(step * 7, "days").startOf("day")})}
+						deleteReservation={(reservationId) => this.deleteReservation(reservationId)}
+					/>
+				</div>
+			</div>
+		</div>);
     }
 }

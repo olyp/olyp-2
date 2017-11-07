@@ -90,30 +90,69 @@ export default class BookingFormDateTimeFields extends React.Component {
 	render () {
 		var date = moment(this.props.value);
 
-		return React.DOM.div(null,
-			React.DOM.div({className: "form-group"},
-				React.DOM.div({className: "input-group input-group-lg"},
-					React.DOM.div({className: "input-group-btn"},
-						React.DOM.a({className: "btn btn-default", disabled: this.props.disabled, onClick: this.decrementTime.bind(this), onTouchEnd: function (e) { e.preventDefault(); this.decrementTime(); }.bind(this)},
-							React.DOM.span({className: "glyphicon glyphicon-minus"}))),
-					React.DOM.select({className: "form-control", value: date.format("HH:mm"), ref: "hourSelect", onChange: this.onHourSelectChange, disabled: this.props.disabled},
-						hours.map(function (hour) {
-							return [
-								React.DOM.option({key: "hour-" + hour + "-0"}, padNum(hour) + ":00"),
-								React.DOM.option({key: "hour-" + hour + "-30"}, padNum(hour) + ":30")
-							];
-						})),
-					React.DOM.div({className: "input-group-btn"},
-						React.DOM.a({className: "btn btn-default", disabled: this.props.disabled, onClick: this.incrementTime.bind(this), onTouchEnd: function (e) { e.preventDefault(); this.incrementTime(); }.bind(this)},
-							React.DOM.span({className: "glyphicon glyphicon-plus"}))))),
-			React.DOM.div({className: "form-group"},
-				React.DOM.div({className: "input-group input-group-lg"},
-					React.DOM.div({className: "input-group-btn"},
-						React.DOM.a({className: "btn btn-default", disabled: this.props.disabled, onClick: this.decrementDate.bind(this), onTouchEnd: function (e) { e.preventDefault(); this.decrementDate(); }.bind(this)},
-							React.DOM.span({className: "glyphicon glyphicon-minus"}))),
-					React.DOM.input({ref: "calendarInput", type: "text", className: "form-control", readOnly: true, size: 10, disabled: this.props.disabled}),
-					React.DOM.div({className: "input-group-btn"},
-						React.DOM.a({className: "btn btn-default", disabled: this.props.disabled, onClick: this.incrementDate.bind(this), onTouchEnd: function (e) { e.preventDefault(); this.incrementDate(); }.bind(this)},
-							React.DOM.span({className: "glyphicon glyphicon-plus"}))))));
+		return (
+			<div>
+				<div className='form-group'>
+					<div className='input-group input-group-lg'>
+						<div className='input-group-btn'>
+							<a className='btn btn-default'
+							   disabled={this.props.disabled}
+							   onClick={(e) => this.decrementTime()}
+							   onTouchEnd={(e) => { e.preventDefault(); this.decrementTime() }}>
+								<span className='glyphicon glyphicon-minus' />
+							</a>
+						</div>
+						<select className='form-control'
+								value={date.format("HH:mm")}
+								ref='hourSelect'
+								onChange={(e) => this.onHourSelectChange()}>
+							{hours.map((hour) => {
+								return [
+									<option key={"hour-" + hour + "-0"}>{padNum(hour) + ":00"}</option>,
+									<option key={"hour-" + hour + "-30"}>{padNum(hour) + ":30"}</option>
+								]
+							})}
+						</select>
+						<div className='input-group-btn'>
+							<a className='btn btn-default'
+							   disabled={this.props.disabled}
+							   onClick={(e) => this.incrementTime()}
+							   onTouchEnd={(e) => { e.preventDefault(); this.incrementTime() }}>
+								<span className='glyphicon glyphicon-plus' />
+							</a>
+						</div>
+					</div>
+				</div>
+
+				<div className='form-group'>
+					<div className='input-group input-group-lg'>
+						<div className='input-group-btn'>
+							<a className='btn btn-default'
+							   disabled={this.props.disabled}
+							   onClick={(e) => this.decrementDate() }
+							   onTouchEnd={(e) => { e.preventDefault(); this.decrementDate(); }}
+							>
+								<span className='glyphicon glyphicon-minus' />
+							</a>
+						</div>
+						<input className='form-control'
+							   ref='calendarInput'
+							   type='text'
+							   readOnly={true}
+							   size={10}
+							   disabled={this.props.disabled}/>
+						<div className='input-group-btn'>
+							<a className='btn btn-default'
+							   disabled={this.props.disabled}
+							   onClick={(e) => this.incrementDate() }
+							   onTouchEnd={(e) => { e.preventDefault(); this.incrementDate(); }}
+							>
+								<span className='glyphicon glyphicon-plus' />
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		);
 	}
 }
