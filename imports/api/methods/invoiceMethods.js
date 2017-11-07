@@ -266,6 +266,7 @@ Meteor.methods({
 
 				return {
 					roomId: line.roomId,
+					roomReservationIds: line.roomReservationIds,
 					roomBookingAgreementId: roomBookingAgreement["_id"],
 					hourlyPrice: roomBookingAgreement["hourlyPrice"],
 					tax: roomBookingAgreement["tax"],
