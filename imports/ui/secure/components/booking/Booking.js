@@ -95,9 +95,6 @@ export default class Booking extends TrackerReact(React.Component) {
     }
 
     submitBooking() {
-
-		// this.setState({bookingForm: Object.assign({}, this.state.bookingForm, {isSubmitting: true})});
-		// TODO: Perform booking
 		const payload = {
 			bookingForm: this.state.bookingForm,
 			roomId: this.getRoom()["_id"],
