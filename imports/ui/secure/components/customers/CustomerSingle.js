@@ -1,14 +1,12 @@
 import React, { Component } from 'react';
 import { createContainer } from 'meteor/react-meteor-data';
-import { browserHistory } from 'react-router';
+import { browserHistory, Link } from 'react-router';
 import swal from 'sweetalert2';
 
-import RoomsCollection from '../../../../api/collections/rooms.js'
 import CustomersCollection from '../../../../api/collections/customers.js'
-// import DoorCodes from '../../../../api/collections/doorCodes.js'
+import Invoices from '../../../../api/collections/invoices.js'
 
 import Preloader from '../../../shared/preloader/Preloader.js';
-import AwsImage from '../../../shared/files/awsImage.js';
 
 class CustomerSingle extends Component {
 
@@ -34,52 +32,20 @@ class CustomerSingle extends Component {
 			});
 		// Since this is a promise, we have to catch "cancel" and say it is ok
 		}).catch(swal.noop);
-
 	}
-
-	editRoomBookingAgreement(roomId) {
-
-		// Meteor.call('room.toggleCustomerBookingAccess', roomId, this.props.customer._id, (err, res) => {
-		// 	if (err) {
-		// 		console.log(err);
-		// 	} 
-		// });
-	}
-
-	// toggleAccessToRoom(roomId) {
-	// 	Meteor.call('room.toggleUserAccess', roomId, this.props.user._id, (err, res) => {
-	// 		if (err) {
-	// 			console.log(err);
-	// 		} 
-	// 	});
-	// }
-
-	// toggleIsAdmin() {
-	// 	Meteor.call('user.toggleIsAdmin', this.props.user._id, (err, res) => {
-	// 		if (err) {
-	// 			console.log(err);
-	// 		} 
-	// 	});
-	// }
-
-	// editDoorCode () {
-	// 	console.log('Editing door code ...');
-	// }
 
 	render () {
 
-		const customer = (this.props.customer) ? this.props.customer : null;
-		const name = (customer && customer.name);
-		// const email = (user && user.emails && user.emails[0] && user.emails[0].address);
-		// const doorCode = (this.props.doorCode) ? this.props.doorCode.code : 'Generate';
-		// const isAdminClass = (user && Roles.userIsInRole(user._id, ['super-admin', 'admin'], 'olyp')) ? 'room-selector-active': '';
-		// const awsKey = (user && user.profile && user.profile.image && user.profile.image.awsKey);
+		const customer = this.props.customer;
+		const invoices = this.props.invoices;
 
 		if (!customer) {
 			return (
 				<Preloader />
 			);
 		}
+
+		console.log(invoices);
 
 		return (
 			<div className="container customer-single">
@@ -88,34 +54,23 @@ class CustomerSingle extends Component {
 						<span className="glyphicon glyphicon-briefcase"></span>
 					</div>
 					<div className="col-xs-8">
-						<h4>{name}</h4>
+						<h4>{customer.name}</h4>
 					</div>
 				</div>
-
 				<hr />
-
-				<h4>Can Book:</h4>
-
 				<div className="row">
-
-					{this.props.rooms.map((room) => {
-
-						const customerId = customer._id;
-						const activeClass = (room.canBook && room.canBook.indexOf(customerId) != -1) ? 'room-selector-active' : '';
-
-						return (
-							<div 
-								key={room._id} 
-								className={`room-selector col-xs-4 hover ${activeClass}`}
-								onClick={() => {this.editRoomBookingAgreement(room._id)}}
-							>
-								{room.name}
-							</div>
-						);
-					})}
-			
+					<div className="text-right">
+						<div className="col-xs-12">
+							{customer.contactPerson.name}
+						</div>
+						<div className="col-xs-12">
+							<a style={{textDecoration: 'underline'}} href={`mailto:${customer.contactPerson.email}`}>{customer.contactPerson.email}</a>
+						</div>
+						<div className="col-xs-12">
+							<a style={{textDecoration: 'underline'}} href={`tel:${customer.contactPerson.phone}`}>{customer.contactPerson.phone}</a>
+						</div>
+					</div>
 				</div>
-
 				<hr />
 
 				<div className="row">
@@ -132,14 +87,11 @@ class CustomerSingle extends Component {
 }
 
 export default createContainer((props) => {
-	Meteor.subscribe('allUsers');
-	Meteor.subscribe('allRooms');
 	Meteor.subscribe('allCustomers');
-
-	const customer = CustomersCollection.find({_id: props.params.customerId}).fetch();
+	Meteor.subscribe('customerInvoices', props.params.customerId);
 
 	return {
-		customer: customer[0],
-		rooms: RoomsCollection.find().fetch()
+		customer: CustomersCollection.find({_id: props.params.customerId}).fetch()[0],
+		invoices: Invoices.find().fetch()
 	};
 }, CustomerSingle);
