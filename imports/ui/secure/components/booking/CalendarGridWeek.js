@@ -34,88 +34,90 @@ export default class CalendarGridWeek extends Component {
             calendarGridClassNames.push("calendar-grid-week-content-no-data");
         }
 
-        return React.DOM.div({className: "calendar-grid-week"},
-            React.DOM.div({className: "calendar-grid-week-hours"},
-                React.DOM.div({className: "calendar-grid-week-hours-header"}),
-                hours.map(function (hour) {
-                    var classNames = ["calendar-grid-week-hour-cell"];
-                    if (hour % 2 === 0)
-                        classNames.push("calendar-grid-week-hour-cell-colored-row");
+        return (
+        	<div className='calendar-grid-week'>
+				<div className='calendar-grid-week-hours'>
+					<div className='calendar-grid-week-hours-header'></div>
+					{hours.map((hour) => {
+						var classNames = ["calendar-grid-week-hour-cell"];
+						if (hour % 2 === 0)
+							classNames.push("calendar-grid-week-hour-cell-colored-row");
 
+						return <div key={"hour-" + hour} className={classNames.join(" ")}>{formatHour(hour)}</div>
+					})}
+				</div>
 
-                    return React.DOM.div({
-                        key: "hour-" + hour, className: classNames.join(" ")
-                    }, formatHour(hour));
-                })),
-            React.DOM.div({className: calendarGridClassNames.join(" ")},
-                props.days.map(function (dayValue) {
-                    var day = moment(dayValue).tz("Europe/Oslo");
-                    var dayStart = day.clone();
-                    var dayEnd = day.clone().endOf("day");
-                    var label = day.format("ddd");
+				<div className='calendar-grid-week'>
+					<div className={calendarGridClassNames.join(" ")}>
+						{props.days.map((dayValue) => {
+							var day = moment(dayValue).tz("Europe/Oslo");
+							var dayStart = day.clone();
+							var dayEnd = day.clone().endOf("day");
+							var label = day.format("ddd");
 
-                    var dayStartVal = dayStart.valueOf();
-                    var dayEndVal = dayEnd.valueOf();
+							var dayStartVal = dayStart.valueOf();
+							var dayEndVal = dayEnd.valueOf();
 
-                    var reservationsForDay = props.reservations
-                        .filter((reservation) => {
-                            var reservationFromVal = moment(reservation.from).valueOf();
-                            var reservationToVal = moment(reservation.to).valueOf();
+							var reservationsForDay = props.reservations
+								.filter((reservation) => {
+									var reservationFromVal = moment(reservation.from).valueOf();
+									var reservationToVal = moment(reservation.to).valueOf();
 
-                            return reservationFromVal < dayEndVal && reservationToVal > dayStartVal;
-                        });
+									return reservationFromVal < dayEndVal && reservationToVal > dayStartVal;
+								});
 
-                    return React.DOM.div({key: "day-" + label, className: "calendar-grid-week-column"},
-                        React.DOM.div({className: "calendar-grid-week-day-header"}, label + " " + day.format("DD.MM")),
-                        React.DOM.div({className: "calendar-grid-week-day-reservations"},
-                            hours.map(function (hour) {
-                                var classNames = ["calendar-grid-week-hour-cell"];
-                                if (hour % 2 === 0)
-                                    classNames.push("calendar-grid-week-hour-cell-colored-row");
+							return <div key={"day-" + label} className='calendar-grid-week-column'>
+								<div className='calendar-grid-week-day-header'>{label + " " + day.format("DD.MM")}</div>
+								<div className='calendar-grid-week-day-reservations'>
+									{hours.map((hour) => {
+										var classNames = ["calendar-grid-week-hour-cell"];
+										if (hour % 2 === 0)
+											classNames.push("calendar-grid-week-hour-cell-colored-row");
 
-                                return React.DOM.div({key: "hour-" + hour, className: classNames.join(" ")});
-                            }),
-                            reservationsForDay.map(function (reservation) {
-                                var dayStartHourOffsetMinutes = (reservation.from.valueOf() - dayStartVal) / 1000 / 60;
-                                var reservationLengthOffsetMinutes = (reservation.to.valueOf() - reservation.from.valueOf()) / 1000 / 60;
-                                var classNames = ["calendar-grid-week-reservation"];
+										return <div key={"hour-" + hour} className={classNames.join(" ")} />
+									})}
+									{reservationsForDay.map((reservation) => {
+										var dayStartHourOffsetMinutes = (reservation.from.valueOf() - dayStartVal) / 1000 / 60;
+										var reservationLengthOffsetMinutes = (reservation.to.valueOf() - reservation.from.valueOf()) / 1000 / 60;
+										var classNames = ["calendar-grid-week-reservation"];
 
-                                var topOffset = getOffset(dayStartHourOffsetMinutes);
-                                var bottomOffset = topOffset + getOffset(reservationLengthOffsetMinutes);
+										var topOffset = getOffset(dayStartHourOffsetMinutes);
+										var bottomOffset = topOffset + getOffset(reservationLengthOffsetMinutes);
 
-                                if (topOffset < 0) {
-                                    classNames.push("calendar-grid-week-reservation-overlaps-previous");
-                                }
+										if (topOffset < 0) {
+											classNames.push("calendar-grid-week-reservation-overlaps-previous");
+										}
 
-                                if (bottomOffset > (HOUR_HEIGHT * 24)) {
-                                    classNames.push("calendar-grid-week-reservation-overlaps-next");
-                                }
+										if (bottomOffset > (HOUR_HEIGHT * 24)) {
+											classNames.push("calendar-grid-week-reservation-overlaps-next");
+										}
 
-                                const userId = reservation.booking.userId;
-                                const profileName = props.getProfileNameById(userId);
+										const userId = reservation.booking.userId;
+										const profileName = props.getProfileNameById(userId);
 
-                                return React.DOM.div(
-                                    {
-                                        key: "reservation-" + topOffset + "-" + bottomOffset,
-                                        className: classNames.join(" "),
-                                        title: reservation.comment,
-                                        style: {
-                                            top: Math.max(topOffset, 0) + "px",
-                                            bottom: ((HOUR_HEIGHT * 24) - bottomOffset) + "px"
-                                        }
-                                    },
-                                    React.DOM.div({className: "calendar-grid-week-reservation-user-name"}, profileName),
-                                    React.DOM.div({className: "calendar-grid-week-reservation-comment"}, reservation.comment),
-                                    props.currentUserId === userId && React.DOM.span(
-                                        {className: "calendar-grid-week-reservation-buttons"},
-                                        React.DOM.a({
-                                        	style: {cursor: "pointer"},
-                                            onClick: function () { props.deleteReservation(reservation["_id"]) }
-                                        }, React.DOM.span({className: "glyphicon glyphicon-trash"})))
-                                );
-                            })
-                        ));
-                })));
-
+										return <div key={"reservation-" + topOffset + "-" + bottomOffset}
+													className={classNames.join(" ")}
+													title={reservation.comment}
+													style={{
+														top: Math.max(topOffset, 0) + "px",
+														bottom: ((HOUR_HEIGHT * 24) - bottomOffset) + "px"
+													}
+													}>
+											<div className='calendar-grid-week-reservation-user-name'>{profileName}</div>
+											<div className='calendar-grid-week-reservation-comment'>{reservation.comment}</div>
+											{props.currentUserId === userId && <span className='calendar-grid-week-reservation-buttons'>
+												<a style={{cursor: "pointer"}} onClick={() => props.deleteReservation(reservation["_id"])}>
+													<span className='glyphicon glyphicon-trash' />
+												</a>
+											</span>}
+										</div>
+									})}
+								</div>
+							</div>
+						})}
+					</div>
+				</div>
+			</div>
+		);
     }
 }
