@@ -29,7 +29,7 @@ const ReservationsSchema = new SimpleSchema({
         type: String
     },
 	"booking.isInvoiced": {
-		type: String
+		type: Boolean
 	},
 	"comment": {
 		type: String
