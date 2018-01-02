@@ -208,6 +208,21 @@ Meteor.methods({
 		}
 	},
 
+	'invoice.delete': function (invoiceId) {
+		const invoice = Invoices.findOne({_id: invoiceId});
+
+		if (invoice.paid) {
+			throw new Error("Cannot delete paid invoice");
+		}
+
+		const roomReservationIds = invoice.hourlyBookingLines.reduce((res, curr) => {
+			return res.concat(curr.roomReservationIds);
+		}, []);
+
+		Invoices.remove({_id: invoiceId});
+		Reservations.update({"_id": {"$in": roomReservationIds}}, {"$set": {"booking.isInvoiced": false}}, {multi: true});
+	},
+
 	"invoice.generateData": function (queries) {
 		return queries.reduce((res, query) => {
 			const customerId = query.customerId;
