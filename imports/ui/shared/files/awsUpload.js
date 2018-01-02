@@ -57,8 +57,6 @@ class awsUpload extends Component {
 					data.url = res.endpoint_url;
 					data.formData = res.params;
 
-					console.log(data);
-
 					// Upload file
 					data.submit();
 				}

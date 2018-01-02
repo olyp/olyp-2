@@ -82,10 +82,11 @@ Meteor.methods({
 
 	},
 
-	'user.changeName' (name) {
-		check(name, String);
+	'user.changeName' (firstName, lastName) {
+		check(firstName, String);
+		check(lastName, String);
 
-		Meteor.users.update({_id: Meteor.userId()}, {$set: {'profile.name': name}});
+		Meteor.users.update({_id: Meteor.userId()}, {$set: {'profile.firstName': firstName, 'profile.lastName': lastName}});
 	},
 	'user.addProfilePicture' (file) {
 		check(file, Object);

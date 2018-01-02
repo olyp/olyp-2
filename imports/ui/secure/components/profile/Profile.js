@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import { browserHistory, Link } from 'react-router';
 import { createContainer } from 'meteor/react-meteor-data';
 import swal from 'sweetalert2';
+import { Glyphicon } from 'react-bootstrap';
 
 // import DoorCodes from '../../../../api/collections/doorCodes.js';
 import RoomsCollection from '../../../../api/collections/rooms.js';
@@ -21,25 +22,27 @@ class Profile extends Component {
 
 		swal({
 			title: 'Change name',
-			input: 'text',
-			showCancelButton: true,
-			inputValidator: function (value) {
-				return new Promise(function (resolve, reject) {
-					if (value) {
-						resolve()
-					} else {
-						reject('You need to write something!')
-					}
-				})
-			}
+			html:
+			    '<input id="swal-firstname" class="swal2-input" placeholder="First name">' +
+			    '<input id="swal-lastname" class="swal2-input" placeholder="Last name">',
+			showCancelButton: true
 		}).then((result) => {
-			Meteor.call('user.changeName', result, (err, res) => {
-				if (err) {
-					console.log(err);
-				} else {
-					Bert.alert('Name changed', 'success', 'growl-bottom-right', 'fa-smile-o');
-				}
-			});
+
+			const firstName = $('#swal-firstname').val();
+			const lastName = $('#swal-lastname').val();
+
+			if (firstName == '' || lastName == '') {
+				Bert.alert('Enter both first and last name', 'danger', 'growl-bottom-right', 'fa-frown-o');
+			} else {
+				Meteor.call('user.changeName', firstName, lastName, (err, res) => {
+					if (err) {
+						console.log(err);
+					} else {
+						Bert.alert('Name changed', 'success', 'growl-bottom-right', 'fa-smile-o');
+					}
+				});
+			}
+
 		}).catch(swal.noop);
 	}
 
@@ -120,9 +123,8 @@ class Profile extends Component {
 			);	
 		}
 
-		console.log(this.props.customers);
 
-		const name = (user && user.profile && user.profile.name);
+		const name = (user && user.profile && user.profile.firstName && user.profile.lastName) ? user.profile.firstName + ' ' + user.profile.lastName : null;
 		// const awsKey = (user && user.profile && user.profile.image && user.profile.image.awsKey);
 		const addCustomerUrl = '/secure/addCustomer/' + Meteor.userId();
 
@@ -134,6 +136,7 @@ class Profile extends Component {
 			/> :
 			<img 
 				src="/images/default_avatar_100x100.jpg"
+				onClick={() => {$('#uploadProfilePicture').trigger('click')}}
 				className="img-responsive"
 			/>
 
@@ -161,7 +164,7 @@ class Profile extends Component {
 		const doorCode = (canAccess.length != 0 && this.props.doorCode && this.props.doorCode.code) ? this.props.doorCode.code : '';
 
 		const email = (user && user.emails[0]) ? user.emails[0].address : null;
-		const verifiedEmail = (user && user.emails[0] && user.emails[0].verified) ? <p>Verified</p> : <p onClick={this.sendVerificationEmail}>click to send verification email</p>;
+		const verifiedEmail = (user && user.emails[0] && user.emails[0].verified) ? <Glyphicon glyph="ok" /> : <p onClick={this.sendVerificationEmail}>click to send verification email</p>;
 
 		return (
 			<div className="container user-profile">
@@ -193,9 +196,11 @@ class Profile extends Component {
 				<hr />
 
 				<div className="row">
-					<Link to={addCustomerUrl}>
-						<div className="col-xs-12 button-large hover">Legg til fakturamottaker</div>
-					</Link>
+					<div className="col-xs-12">
+						<Link to={addCustomerUrl}>
+							<div className="button-large hover">Legg til fakturamottaker</div>
+						</Link>
+					</div>
 				</div>
 
 				<hr />
@@ -236,24 +241,41 @@ class Profile extends Component {
 
 				<hr />
 
-				{email}
-				{verifiedEmail}
+				{email} - {verifiedEmail}
 
 				<hr />
 
-				<input
-					type="password"
-					ref="oldPassword"
-					placeholder="Old password ... "
-				/>
+				<div className="row">
 
-				<input
-					type="password"
-					ref="newPassword"
-					placeholder="New password ... "
-				/>
+					<div className="col-xs-12">
 
-				<button onClick={this.changePassword.bind(this)}>Change</button>
+						<input
+							type="password"
+							ref="oldPassword"
+							placeholder="Old password ... "
+						/>
+					</div>
+				</div>
+
+				<br />
+				<div className="row">
+
+					<div className="col-xs-12">
+						<input
+							type="password"
+							ref="newPassword"
+							placeholder="New password ... "
+						/>
+					</div>
+				</div>
+
+				<br />
+
+				<div className="row">
+					<div className="col-xs-12">
+						<div className="button-large hover" onClick={this.changePassword.bind(this)}>Change</div>
+					</div>
+				</div>
 
 				<hr />
 
