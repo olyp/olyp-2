@@ -1,3 +1,4 @@
 node_modules/
 .deploy/
 settings.json
+.DS_Store
