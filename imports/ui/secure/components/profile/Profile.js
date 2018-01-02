@@ -120,6 +120,8 @@ class Profile extends Component {
 			);	
 		}
 
+		console.log(this.props.customers);
+
 		const name = (user && user.profile && user.profile.name);
 		// const awsKey = (user && user.profile && user.profile.image && user.profile.image.awsKey);
 		const addCustomerUrl = '/secure/addCustomer/' + Meteor.userId();

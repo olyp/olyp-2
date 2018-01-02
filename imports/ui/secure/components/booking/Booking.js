@@ -1,12 +1,12 @@
 import React, {Component} from 'react';
 import TrackerReact from 'meteor/ultimatejs:tracker-react';
 import moment from "moment-timezone";
-import Calendar from "./Calendar"
-import BookingForm from "./BookingForm"
+import Calendar from "./Calendar";
+import BookingForm from "./BookingForm";
 
 import Reservations from '../../../../api/collections/reservations';
-import Rooms from '../../../../api/collections/rooms'
-import Customers from '../../../../api/collections/customers'
+import Rooms from '../../../../api/collections/rooms';
+import Customers from '../../../../api/collections/customers';
 
 function getDaysForBaseDay(baseDay) {
     return [

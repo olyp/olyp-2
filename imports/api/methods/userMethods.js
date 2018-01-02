@@ -116,9 +116,10 @@ Meteor.methods({
 	'user.addCustomer': (userId, customerId) => {
 		check(userId, String);
 		check(customerId, String);
+		const customer = {id: customerId};
 
 		if (userId == Meteor.userId() || Roles.userIsInRole(Meteor.userId(), ['super-admin', 'admin'], 'olyp')) {
-			Meteor.users.update({_id: userId}, {$addToSet: {customers: customerId}});
+			Meteor.users.update({_id: userId}, {$push: {customers: customer}});
 		};
 	}
 });
