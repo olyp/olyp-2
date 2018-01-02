@@ -112,6 +112,28 @@ class Profile extends Component {
 
 	// }
 
+	removeCustomerFromUser (customerId) {
+
+		swal({
+			title: 'Are you sure?',
+			text: "You can always add this customer again later",
+			type: 'warning',
+			showCancelButton: true,
+			confirmButtonColor: '#3085d6',
+			cancelButtonColor: '#d33',
+			confirmButtonText: 'Yes, remove this customer!'
+		}).then(() => {
+			Meteor.call('user.removeCustomer', Meteor.userId(), customerId, (err, res) => {
+				if (err) {
+					console.log(err);
+				} else {
+					Bert.alert('Customer removed', 'success', 'growl-bottom-right', 'fa-smile-o');
+				}
+			});
+		// Since this is a promise, we have to catch "cancel" and say it is ok
+		}).catch(swal.noop);
+	}
+
 
 	render () {
 
@@ -122,7 +144,6 @@ class Profile extends Component {
 				<h1>Loading ...</h1>
 			);	
 		}
-
 
 		const name = (user && user.profile && user.profile.firstName && user.profile.lastName) ? user.profile.firstName + ' ' + user.profile.lastName : null;
 		// const awsKey = (user && user.profile && user.profile.image && user.profile.image.awsKey);
@@ -190,7 +211,7 @@ class Profile extends Component {
 				<hr />
 
 				{this.props.customers.map((customer) => {
-					return <CustomerRow customer={customer} key={customer._id} />
+					return <CustomerRow customer={customer} key={customer._id} onClick={this.removeCustomerFromUser.bind(this, customer._id) } />
 				})}
 
 				<hr />

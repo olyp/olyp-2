@@ -85,7 +85,15 @@ class CustomerAddCompany extends Component {
 			});
 
 		} else {
-			if (this.props.userId) {
+
+			let customerAlreadyAttatched = this.props.userData.customers.filter((customer) => {
+				return customer.id == existingCustomerId
+			});
+
+			if (customerAlreadyAttatched) {
+				Bert.alert('Customer already exists', 'info', 'growl-bottom-right', 'fa-smile-o');
+				browserHistory.goBack();
+			} else {
 				Meteor.call('user.addCustomer', this.props.userId, existingCustomerId, (err, res) => {
 					if (err) {
 						console.log(err);
@@ -94,10 +102,7 @@ class CustomerAddCompany extends Component {
 						browserHistory.goBack();
 					}
 				});
-			} else {
-				Bert.alert('Customer already exists', 'info', 'growl-bottom-right', 'fa-smile-o');
-				browserHistory.goBack();
-			}
+			} 
 		}
 
 	}
@@ -162,6 +167,7 @@ class CustomerAddCompany extends Component {
 
 
 	render () {
+
 		return (
 			<div>
 
@@ -203,9 +209,12 @@ class CustomerAddCompany extends Component {
 }
 
 export default createContainer(() => {
+
 	Meteor.subscribe('allCustomers');
+	Meteor.subscribe('userData');
 
 	return {
-		customers: CustomersCollection.find().fetch()
+		customers: CustomersCollection.find().fetch(),
+		userData: Meteor.users.find().fetch()[0]
 	};
 }, CustomerAddCompany);

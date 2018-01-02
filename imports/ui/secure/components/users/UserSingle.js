@@ -75,7 +75,7 @@ class UserSingle extends Component {
 			);
 		}
 
-		const name = (user && user.profile && user.profile.name);
+		const name = (user && user.profile && user.profile.firstName && user.profile.lastName) ? user.profile.firstName + ' ' + user.profile.lastName : null;
 		const email = (user && user.emails && user.emails[0] && user.emails[0].address);
 		const doorCode = (this.props.doorCode) ? this.props.doorCode.code : 'Generate';
 		const isAdminClass = (user && Roles.userIsInRole(user._id, ['super-admin', 'admin'], 'olyp')) ? 'room-selector-active': '';
@@ -89,10 +89,7 @@ class UserSingle extends Component {
 				src="/images/default_avatar_100x100.jpg" 
 				className="img-responsive"
 			/>;
-
-
-
-
+			
 		return (
 			<div className="container user-single">
 				<div className="row">

@@ -117,3 +117,8 @@ Meteor.publish("allUnInvoicedBookings", function () {
 		return this.ready();
 	}
 });
+
+Meteor.publish("userData", function () {
+    return Meteor.users.find({_id: this.userId},
+        {fields: {'customers': 1}});
+});

@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import { browserHistory } from 'react-router';
 
+
+// TODO: Do not let user add same customer twice
+
 class CustomerAddPerson extends Component {
 
 	constructor(props) {

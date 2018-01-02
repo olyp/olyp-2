@@ -27,7 +27,7 @@ class Users extends Component {
 			(user) => {
 
 				const query = this.state.query.toLowerCase();
-				const userName = (user.profile && user.profile.name) ? user.profile.name.toLowerCase() : '';
+				const userName = (user.profile && user.profile.firstName && user.profile.lastName) ? user.profile.firstName.toLowerCase() + ' ' + user.profile.lastName.toLowerCase() : '';
 				const email = (user.emails && user.emails[0] && user.emails[0].address) ? user.emails[0].address : '';
 
 				const userNameMatch = userName.indexOf(query) !== -1;

@@ -9,6 +9,8 @@ class UserRow extends Component {
 		const profile = user.profile;
 		const email = (user && user.emails && user.emails[0]) ? user.emails[0].address : '';
 		const url = '/secure/users/' + user._id;
+		const name = (user && user.profile && user.profile.firstName && user.profile.lastName) ? user.profile.firstName + ' ' + user.profile.lastName : null;
+
 		// const awsKey = (user && user.profile && user.profile.image && user.profile.image.awsKey);
 
 		const image = (user && user.profile && user.profile.image) ? 
@@ -34,7 +36,7 @@ class UserRow extends Component {
 
 					</div>
 					<div className="col-xs-8">
-						<h4>{profile.name}</h4>
+						<h4>{name}</h4>
 						<p>{email}</p>
 						<div className="user-status">
 							{isOnline}
