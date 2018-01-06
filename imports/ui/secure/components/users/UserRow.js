@@ -1,16 +1,27 @@
 import React, {Component} from 'react';
 import { Link } from 'react-router';
+import { Glyphicon } from 'react-bootstrap';
+import { createContainer } from 'meteor/react-meteor-data';
 import swal from 'sweetalert2';
+
+import DoorCodes from '../../../../api/collections/doorCodes.js'
 
 class UserRow extends Component {
 
 	render () {
+
+		
+
 		const user = this.props.user;
 		const profile = user.profile;
 		const email = (user && user.emails && user.emails[0]) ? user.emails[0].address : '';
 		const url = '/secure/users/' + user._id;
-		const name = (user && user.profile && user.profile.firstName && user.profile.lastName) ? user.profile.firstName + ' ' + user.profile.lastName : null;
+		const doorCode = this.props.doorCode ? <p>code</p> : null;
+		let name = (user && user.profile && user.profile.firstName && user.profile.lastName) ? user.profile.firstName + ' ' + user.profile.lastName : null;
 
+		if (name == null && email) {
+			name = email;
+		};
 		// const awsKey = (user && user.profile && user.profile.image && user.profile.image.awsKey);
 
 		const image = (user && user.profile && user.profile.image) ? 
@@ -37,8 +48,8 @@ class UserRow extends Component {
 					</div>
 					<div className="col-xs-8">
 						<h4>{name}</h4>
-						<p>{email}</p>
 						<div className="user-status">
+							{doorCode}
 							{isOnline}
 							{isAdmin}
 						</div>
@@ -50,4 +61,11 @@ class UserRow extends Component {
 	}
 }
 
-export default UserRow;
+export default createContainer((props) => {
+	Meteor.subscribe('allDoorCodes');
+	const doorCode = DoorCodes.find({userId: props.user._id}, {fields: {_id: 1}}).fetch()
+
+	return {
+		doorCode: doorCode[0]
+	};
+}, UserRow);

@@ -4,7 +4,7 @@ import { createContainer } from 'meteor/react-meteor-data';
 import swal from 'sweetalert2';
 import { Glyphicon, Button } from 'react-bootstrap';
 
-// import DoorCodes from '../../../../api/collections/doorCodes.js';
+import DoorCodes from '../../../../api/collections/doorCodes.js';
 import RoomsCollection from '../../../../api/collections/rooms.js';
 import CustomersCollection from '../../../../api/collections/customers.js';
 
@@ -257,7 +257,9 @@ class Profile extends Component {
 			}
 		);
 
-		const doorCode = (canAccess.length != 0 && this.props.doorCode && this.props.doorCode.code) ? this.props.doorCode.code : '';
+		const doorCode = (canAccess.length != 0 && this.props.doorCode && this.props.doorCode.code) ? 
+			<div><h4><Glyphicon glyph="lock" /> {this.props.doorCode.code}</h4></div> : 
+			null;
 
 		const email = (user && user.emails[0]) ? user.emails[0].address : null;
 		const verifiedEmail = (user && user.emails[0] && user.emails[0].verified) ? <Glyphicon glyph="ok" /> : <p onClick={this.sendVerificationEmail}>click to send verification email</p>;
@@ -288,6 +290,7 @@ class Profile extends Component {
 					<div className="col-xs-8">
 						<h4 onClick={this.renameUser.bind(this)}><u>{name}</u></h4>
 						<p onClick={this.newEmail.bind(this)}><u>{email}</u></p>
+						{doorCode}
 					</div>
 				</div>
 
@@ -409,12 +412,12 @@ class Profile extends Component {
 
 export default createContainer(() => {
 	Meteor.subscribe('profile');
-	// Meteor.subscribe('doorCode');
+	Meteor.subscribe('doorCode');
 	Meteor.subscribe('userRooms');
 	Meteor.subscribe('userCustomers');
 
 	return {
-		// doorCode: DoorCodes.find().fetch()[0],
+		doorCode: DoorCodes.find().fetch()[0],
 		user: Meteor.users.find().fetch()[0],
 		rooms: RoomsCollection.find().fetch(),
 		customers: CustomersCollection.find().fetch()

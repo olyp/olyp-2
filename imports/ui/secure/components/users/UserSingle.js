@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { createContainer } from 'meteor/react-meteor-data';
 import { browserHistory } from 'react-router';
 import swal from 'sweetalert2';
+import { Glyphicon } from 'react-bootstrap';
 
 import Rooms from '../../../../api/collections/rooms.js'
 import DoorCodes from '../../../../api/collections/doorCodes.js'
@@ -14,7 +15,7 @@ class UserSingle extends Component {
 	deleteUser () {
 
 		swal({
-			title: 'Are you sure?',
+			title: 'Delete user?',
 			text: "You will not be able to recover this user!",
 			type: 'warning',
 			showCancelButton: true,
@@ -60,8 +61,36 @@ class UserSingle extends Component {
 		});
 	}
 
-	editDoorCode () {
-		console.log('Editing door code ...');
+	revokeDoorCode () {
+		swal({
+			title: 'Revoke door code?',
+			text: "You will not be able to recover this door code!",
+			type: 'warning',
+			showCancelButton: true,
+			confirmButtonColor: '#3085d6',
+			cancelButtonColor: '#d33',
+			confirmButtonText: 'Yes, revoke it!'
+		}).then(() => {
+			Meteor.call('doorCode.deleteById', this.props.doorCode._id, (err, res) => {
+				if (err) {
+					console.log(err);
+				} else {
+					Bert.alert('Door code revoked', 'success', 'growl-bottom-right', 'fa-smile-o');
+				}
+			});
+		// Since this is a promise, we have to catch "cancel" and say it is ok
+		}).catch(swal.noop);
+	}
+
+	generateDoorCode () {
+		// console.log(this.props.user._id);
+		Meteor.call('doorCode.add', this.props.user._id, (err, res) => {
+			if (err) {
+				console.log(err);
+			} else {
+				Bert.alert('Door code generated', 'success', 'growl-bottom-right', 'fa-smile-o');
+			}
+		})
 	}
 
 	render () {
@@ -77,7 +106,10 @@ class UserSingle extends Component {
 
 		const name = (user && user.profile && user.profile.firstName && user.profile.lastName) ? user.profile.firstName + ' ' + user.profile.lastName : null;
 		const email = (user && user.emails && user.emails[0] && user.emails[0].address);
-		const doorCode = (this.props.doorCode) ? this.props.doorCode.code : 'Generate';
+		const doorCode = (this.props.doorCode) ? 
+			<div onClick={this.revokeDoorCode.bind(this)} className="room-selector col-xs-4 hover room-selector-active">{this.props.doorCode.code}</div> : 
+			<div onClick={this.generateDoorCode.bind(this)} className="room-selector col-xs-4 hover room-selector-active">Generate</div>;
+
 		const isAdminClass = (user && Roles.userIsInRole(user._id, ['super-admin', 'admin'], 'olyp')) ? 'room-selector-active': '';
 		// const awsKey = (user && user.profile && user.profile.image && user.profile.image.awsKey);
 		const image = (user && user.profile && user.profile.image) ? 
@@ -98,7 +130,7 @@ class UserSingle extends Component {
 					</div>
 					<div className="col-xs-8">
 						<h4>{name}</h4>
-						<p>{email}</p>
+						<a href={`mailto:${email}`}><Glyphicon glyph="envelope" /> Send email</a>
 					</div>
 				</div>
 
@@ -107,14 +139,7 @@ class UserSingle extends Component {
 				<h4>Code:</h4>
 
 				<div className="row">
-
-					<div 
-						className="room-selector col-xs-4 hover room-selector-active"
-						onClick={this.editDoorCode.bind(this)}
-					>
-						{doorCode}
-					</div>
-
+					{doorCode}
 				</div>
 
 				<hr />

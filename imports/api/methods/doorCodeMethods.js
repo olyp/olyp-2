@@ -36,18 +36,23 @@ Meteor.methods({
 	'doorCode.add': function (userId) {
 		check(userId, String);
 
-		const randomCode = Math.floor(Math.random() * (999999 - 100000 + 1)) + 100000;
-		const addedBy = Meteor.userId() ? Meteor.userId() : userId;
+		const isAdmin = Roles.userIsInRole(Meteor.userId(), ['super-admin', 'admin'], 'olyp');
 
-		const newCode = {
-			code: randomCode,
-			userId: userId,
-			dateCreated: new Date,
-			addedBy: addedBy,
-			temporary: false
+		if (isAdmin) {
+			const randomCode = Math.floor(Math.random() * (999999 - 100000 + 1)) + 100000;
+			// const addedBy = Meteor.userId() ? Meteor.userId() : userId;
+
+			const newCode = {
+				code: randomCode,
+				userId: userId,
+				dateCreated: new Date,
+				addedBy: Meteor.userId(),
+				temporary: false
+			}
+
+			DoorCodes.insert(newCode);
 		}
 
-		DoorCodes.insert(newCode);
 	},
 	'doorCode.deleteById': function (codeId) {
 		check(codeId, String);
