@@ -24,7 +24,7 @@ Meteor.methods({
 			Roles.addUsersToRoles( userId, 'user', 'olyp' );
 
 			// Generate user door code
-			Meteor.call('doorCode.add', userId);
+			// Meteor.call('doorCode.add', userId);
 
 			// Send verification mail
 			Accounts.sendVerificationEmail(userId);
@@ -128,5 +128,12 @@ Meteor.methods({
 		const customer = {id: customerId};
 
 		Meteor.users.update({_id: userId}, {$pull: {customers: customer}});
-	}
+	},
+	'user.removeFacebookConnection': () => {
+		Meteor.users.update({_id: Meteor.userId()}, {$unset: {'services.facebook': true}});
+	},
+	'user.removeGoogleConnection': () => {
+		Meteor.users.update({_id: Meteor.userId()}, {$unset: {'services.google': true}});
+	},
+
 });

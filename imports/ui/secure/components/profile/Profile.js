@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import { browserHistory, Link } from 'react-router';
 import { createContainer } from 'meteor/react-meteor-data';
 import swal from 'sweetalert2';
-import { Glyphicon } from 'react-bootstrap';
+import { Glyphicon, Button } from 'react-bootstrap';
 
 // import DoorCodes from '../../../../api/collections/doorCodes.js';
 import RoomsCollection from '../../../../api/collections/rooms.js';
@@ -81,7 +81,7 @@ class Profile extends Component {
 	deleteUser () {
 
 		swal({
-			title: 'Are you sure?',
+			title: 'Delete your user?',
 			text: "You will not be able to recover this!",
 			type: 'warning',
 			showCancelButton: true,
@@ -115,7 +115,7 @@ class Profile extends Component {
 	removeCustomerFromUser (customerId) {
 
 		swal({
-			title: 'Are you sure?',
+			title: 'Remove customer?',
 			text: "You can always add this customer again later",
 			type: 'warning',
 			showCancelButton: true,
@@ -134,6 +134,72 @@ class Profile extends Component {
 		}).catch(swal.noop);
 	}
 
+	removeFacebookConnection () {
+		swal({
+			title: 'Disconnect Facebook account?',
+			text: "You can always reconnect your Facebook account later",
+			type: 'warning',
+			showCancelButton: true,
+			confirmButtonColor: '#3085d6',
+			cancelButtonColor: '#d33',
+			confirmButtonText: 'Yes, disconnect!'
+		}).then(() => {
+			Meteor.call('user.removeFacebookConnection', (err, res) => {
+				if (err) {
+					console.log(err);
+				} else {
+					Bert.alert('Facebook disconnected', 'success', 'growl-bottom-right', 'fa-smile-o');
+				}
+			});
+		// Since this is a promise, we have to catch "cancel" and say it is ok
+		}).catch(swal.noop);
+	}
+
+	addFacebookConnection () {
+		Meteor.loginWithFacebook({
+			requestPermissions: ['public_profile', 'email']
+			}, (err) => {
+				if (err) {
+					console.log(err);
+				} else {
+					Bert.alert('Facebook connected', 'success', 'growl-bottom-right', 'fa-smile-o');
+				}
+		});
+	}
+
+	removeGoogleConnection () {
+		swal({
+			title: 'Disconnect Google account?',
+			text: "You can always reconnect your Google account later",
+			type: 'warning',
+			showCancelButton: true,
+			confirmButtonColor: '#3085d6',
+			cancelButtonColor: '#d33',
+			confirmButtonText: 'Yes, disconnect!'
+		}).then(() => {
+			Meteor.call('user.removeGoogleConnection', (err, res) => {
+				if (err) {
+					console.log(err);
+				} else {
+					Bert.alert('Google disconnected', 'success', 'growl-bottom-right', 'fa-smile-o');
+				}
+			});
+		// Since this is a promise, we have to catch "cancel" and say it is ok
+		}).catch(swal.noop);
+	}
+
+	addGoogleConnection () {
+		Meteor.loginWithGoogle({
+			requestPermissions: ['email']
+			}, (err) => {
+				if (err) {
+					console.log(err);
+				} else {
+					Bert.alert('Google connected', 'success', 'growl-bottom-right', 'fa-smile-o');
+				}
+		});
+	}
+
 
 	render () {
 
@@ -149,19 +215,28 @@ class Profile extends Component {
 		// const awsKey = (user && user.profile && user.profile.image && user.profile.image.awsKey);
 		const addCustomerUrl = '/secure/addCustomer/' + Meteor.userId();
 
-		const image = (user && user.profile && user.profile.image) ?
-			<img 
-				src={`/images/${user.profile.image.localId}?size=100x100`}
-				onClick={() => {$('#uploadProfilePicture').trigger('click')}}
-				className="img-responsive"
-			/> :
-			<img 
-				src="/images/default_avatar_100x100.jpg"
+		let imageSource = "/images/default_avatar_100x100.jpg"
+
+		if (user.services && user.services.google) {
+			imageSource = user.services.google.picture;
+		}
+
+
+		if (user.services && user.services.facebook) {
+			imageSource = `http://graph.facebook.com/${user.services.facebook.id}/picture?type=square`;
+				
+		}
+
+		if (user.profile && user.profile.image) {
+			imageSource = `/images/${user.profile.image.localId}?size=100x100`;
+				
+		}
+
+		const image = <img 
+				src={imageSource}
 				onClick={() => {$('#uploadProfilePicture').trigger('click')}}
 				className="img-responsive"
 			/>
-
-		// const image = (user && user.profile && user.profile.image);
 
 		const rooms = (this.props.rooms) ? this.props.rooms : [];
 		var canAccess = this.props.rooms.filter(
@@ -187,6 +262,14 @@ class Profile extends Component {
 		const email = (user && user.emails[0]) ? user.emails[0].address : null;
 		const verifiedEmail = (user && user.emails[0] && user.emails[0].verified) ? <Glyphicon glyph="ok" /> : <p onClick={this.sendVerificationEmail}>click to send verification email</p>;
 
+		const facebook = (user.services && user.services.facebook) ? 
+			<div onClick={this.removeFacebookConnection.bind(this)} className="col-xs-6 room-selector room-selector-active">Facebook  <Glyphicon glyph="ok" /></div> :
+			<div onClick={this.addFacebookConnection.bind(this)} className="col-xs-6 room-selector room-selector-active" style={{backgroundColor: '#EA2427'}}>Connect Facebook</div>
+
+		const google = (user.services && user.services.google) ? 
+			<div onClick={this.removeGoogleConnection.bind(this)} className="col-xs-6 room-selector room-selector-active">Google  <Glyphicon glyph="ok" /></div> :
+			<div onClick={this.addGoogleConnection.bind(this)} className="col-xs-6 room-selector room-selector-active" style={{backgroundColor: '#EA2427'}}>Connect Google</div>
+
 		return (
 			<div className="container user-profile">
 
@@ -205,6 +288,15 @@ class Profile extends Component {
 					<div className="col-xs-8">
 						<h4 onClick={this.renameUser.bind(this)}><u>{name}</u></h4>
 						<p onClick={this.newEmail.bind(this)}><u>{email}</u></p>
+					</div>
+				</div>
+
+				<hr />
+
+				<div className="row">
+					<div className="col-xs-12">
+						{facebook}
+						{google}
 					</div>
 				</div>
 

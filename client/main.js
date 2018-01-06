@@ -114,6 +114,7 @@ const routes = (
 			<Route path="booking" name="BOOKING" component={Booking} />		
 			<Route path="codes" name="CODES" component={DoorCodes} />
 			<Route path="profile" name="PROFILE" component={Profile} />
+			<Route path="addCustomer/:userId" name="ADD CUSTOMER" component={CustomerAdd} />
 
 			<Route path="users" name="USERS" component={Users} />
 			<Route path="users/:userId" name="USER" component={UserSingle} />
@@ -123,7 +124,6 @@ const routes = (
 			<Route path="invoices" name="INVOICE" component={Invoices} onEnter={authenticateAdmin} />
 			<Route path="uninvoiced_bookings" name="UNINVOICED BOOKINGS" component={UnInvoicedBookings} onEnter={authenticateAdmin} />
 			<Route path="addCustomer" name="ADD CUSTOMER" component={CustomerAdd} onEnter={authenticateAdmin} />
-			<Route path="addCustomer/:userId" name="ADD CUSTOMER" component={CustomerAdd} onEnter={authenticateAdmin} />
 			<Route path="editCustomerRoomAgreement/:customerId/:roomId" name="EDIT CUSTOMER" component={CustomerRoomAgreement} onEnter={authenticateAdmin} />
 
 			<Route path="rooms" name="ROOMS" component={Rooms} />
