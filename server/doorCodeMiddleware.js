@@ -13,7 +13,7 @@ var openDoorUrl = 'http://maindoor.olyp.no/enu/trigger/' + Meteor.settings.priva
 function onRoute (req, res, next) {
 
 	const numberCode = req.params.code;
-	var existingCode = DoorCodes.findOne({code: numberCode});
+	const existingCode = DoorCodes.findOne({code: numberCode});
 
 	const openDoor = function () {
 
@@ -37,19 +37,25 @@ function onRoute (req, res, next) {
 				}
 
 				DoorCodeAttempts.insert(attempt);
+			} else {
+				openDoor();
 			}
 		}
 
-		// TODO: add photo
+		if (existingCode.temporary == false) {
+			// TODO: add photo
 
-		const logEntry = {
-			date: new Date(),
-			code: numberCode,
-			userId: existingCode.userId,
-			photo: ''
+			const logEntry = {
+				date: new Date(),
+				code: numberCode,
+				userId: existingCode.userId,
+				photo: ''
+			}
+
+			DoorCodeLog.insert(logEntry);
+
+			openDoor();
 		}
-
-		DoorCodeLog.insert(logEntry);
 
 	} else {
 
