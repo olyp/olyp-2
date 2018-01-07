@@ -2,14 +2,19 @@ import React, { Component } from 'react';
 import { withTracker } from 'meteor/react-meteor-data'
 import moment from 'moment-timezone';
 import big from 'big.js';
+import _ from 'lodash';
+import { Label, Checkbox } from 'react-bootstrap';
+import { Link } from 'react-router';
 
 import Reservations from '../../../../api/collections/reservations';
 import Customers from '../../../../api/collections/customers';
 import Rooms from '../../../../api/collections/rooms';
 
+import Preloader from '../../../shared/preloader/Preloader';
+
 function dateRangeString(from, to) {
-	const fromYmd = from.format("YYYY.MM.DD");
-	const toYmd = to.format("YYYY.MM.DD");
+	const fromYmd = from.format("DD/MM-YY");
+	const toYmd = to.format("DD/MM-YY");
 
 	if (fromYmd === toYmd) {
 		return `${fromYmd}, ${from.format("HH:mm")}-${to.format("HH:mm")}`
@@ -223,22 +228,32 @@ class UninvoicedBookings extends Component {
 	}
 
 	render () {
-		if (!this.props.isReady) {
-			return <div>Loading...</div>
+
+		if (this.props.loading) {
+			return <Preloader />
 		}
 
+		const reservations = this.props.reservations;
+		const customers = this.props.customers;
+		const rooms = this.props.rooms;
+
 		const reservationsByCustomer = {};
-		this.props.reservations.forEach((reservation) => {
+
+		reservations.forEach((reservation) => {
 			const customerId = reservation.booking.customerId;
 			reservationsByCustomer[customerId] = reservationsByCustomer[customerId] || [];
 			reservationsByCustomer[customerId].push(reservation)
 		});
 
 		const customersById = {};
-		this.props.customers.forEach((customer) => customersById[customer["_id"]] = customer);
+		customers.forEach((customer) => customersById[customer["_id"]] = customer);
 
 		const roomsById = {};
-		this.props.rooms.forEach((room) => roomsById[room["_id"]] = room);
+		rooms.forEach((room) => roomsById[room["_id"]] = room);
+
+		if (_.isEmpty(reservationsByCustomer) || _.isEmpty(customersById) || _.isEmpty(roomsById)) {
+			return <Preloader />
+		}
 
 		return (
 			<div>
@@ -252,67 +267,65 @@ class UninvoicedBookings extends Component {
 					const invoiceData = this.state.invoiceDataByCustomerId[customerId];
 
 					return <div key={customerId}>
-						<h2>{customer && customer.name}</h2>
+						<h4>{customer && customer.name}</h4>
 
-						<div style={{maxWidth: 600}} className="panel panel-default">
+						<div style={{maxWidth: 288}} className="panel panel-default">
 							<div className="panel-body">
-								<div className='row' style={{fontWeight: "bold"}}>
-									<div className='col-xs-3'>Rom</div>
-									<div className='col-xs-3'>Timespris</div>
-									<div className='col-xs-3'>Antall gratistimer</div>
-								</div>
 								{customer.roomBookingAgreements.map((roomBookingAgreement) => {
 									const roomId = roomBookingAgreement.roomId;
 									const room = roomsById[roomId];
 									return <div key={`customer_${customerId}-agreement-${roomId}`} className='row' >
-										<div className='col-xs-3'>{room ? room.name : roomId}</div>
-										<div className='col-xs-3'>{big(roomBookingAgreement.hourlyPrice).toFixed(2)}</div>
-										<div className='col-xs-3'>{roomBookingAgreement.freeHours}</div>
+										<div className='col-xs-4'>{room ? room.name : roomId}</div>
+										<div className='col-xs-4'>{big(roomBookingAgreement.hourlyPrice).toFixed(0)}kr/t</div>
+										<div className='col-xs-4'>{roomBookingAgreement.freeHours}t inkl</div>
 									</div>
 								})}
 							</div>
 						</div>
-						<div className="row" style={{fontWeight: "bold"}}>
-							<div className="col-xs-1">
-
-							</div>
-							<div className="col-xs-4">
-								Fra/til
-							</div>
-							<div className="col-xs-3">
-								Kommentar
-							</div>
-							<div className="col-xs-1">
-								Rom
-							</div>
-							<div className="col-xs-3">
-								Opprettet
-							</div>
-						</div>
+						<hr />
 						{reservations.map((reservation) => {
 							const reservationId = reservation._id;
 							const formReservations = customerForm && customerForm.reservations;
 							const room = roomsById[reservation.roomId];
+							const user = Meteor.users.findOne({_id: reservation.booking.userId});
+							let userName = (user && user.profile) ? user.profile.firstName + ' ' + user.profile.lastName : null;
 
-							return <div key={reservation._id} className="row">
-								<div className="col-xs-1">
-									<input type="checkbox"
-										   checked={formReservations ? formReservations.hasOwnProperty(reservationId) : false}
-										   onClick={(e) => this.onReservationCheckboxClicked(e.target.checked, customer, reservation)} />
+							if (userName) {
+								userName = userName.substring(0, 15);
+							}
+							
+							return (
+								<div key={reservation._id}>
+									<div className="row uninvoiced-booking-line">		
+										<div className="col-xs-2">
+											<Checkbox
+												   checked={formReservations ? formReservations.hasOwnProperty(reservationId) : false}
+												   onClick={(e) => this.onReservationCheckboxClicked(e.target.checked, customer, reservation)} />
+										</div>
+										<div className="col-xs-5">
+											{reservation.comment}
+										</div>
+										<div className="col-xs-5 text-right">
+											<Link to={`/secure/rooms/${room._id}`}>
+												<Label bsStyle="primary">{room && room.name}</Label>
+											</Link>
+											<br />
+											<Link to={`/secure/users/${user._id}`}>
+												<Label bsStyle="primary">{userName}</Label>
+											</Link>
+											<br />
+											<Link>
+												<Label bsStyle="primary">{moment(reservation.createdAt).format("DD/MM-YY, HH:mm")}</Label>
+											</Link>
+										</div>
+										<div className="col-xs-10 col-xs-offset-2 text-right">
+											<Label bsStyle="success">{dateRangeString(moment(reservation.from), moment(reservation.to))}</Label>
+										</div>
+									</div>
+
+									<hr />
 								</div>
-								<div className="col-xs-4">
-									{dateRangeString(moment(reservation.from), moment(reservation.to))}
-								</div>
-								<div className="col-xs-3">
-									{reservation.comment}
-								</div>
-								<div className="col-xs-1">
-									{room && room.name}
-								</div>
-								<div className="col-xs-3">
-									{moment(reservation.createdAt).format("YYYY.MM.DD, HH:mm")}
-								</div>
-							</div>
+							);
 						})}
 
 						<p><a className="btn btn-default btn-sm" onClick={(e) => this.onAddInvoiceLineClicked(customerId)}>Legg til fakturalinje</a></p>
@@ -396,11 +409,15 @@ export default withTracker((props) => {
 	const allUnInvoicedBookingsHandle = Meteor.subscribe("allUnInvoicedBookings");
 	const allCustomersHandle = Meteor.subscribe("allCustomers");
 	const allRoomsHandle = Meteor.subscribe("allRooms");
+	const allProfilesHandle = Meteor.subscribe("allProfiles");
+
+	const loading = !allUnInvoicedBookingsHandle.ready() && !allCustomersHandle.ready() && !allRoomsHandle.ready();
 	
 	return {
-		isReady: allUnInvoicedBookingsHandle.ready() && allCustomersHandle.ready() && allRoomsHandle.ready(),
+		loading,
 		reservations: Reservations.find().fetch(),
 		customers: Customers.find().fetch(),
-		rooms: Rooms.find().fetch()
+		rooms: Rooms.find().fetch(),
+		profiles: Meteor.users.find().fetch()
 	}
 })(UninvoicedBookings);
