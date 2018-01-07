@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
-import TrackerReact from 'meteor/ultimatejs:tracker-react';
+// import TrackerReact from 'meteor/ultimatejs:tracker-react';
+import { createContainer } from 'meteor/react-meteor-data';
 import moment from "moment-timezone";
 import Calendar from "./Calendar";
 import BookingForm from "./BookingForm";
@@ -52,28 +53,14 @@ function updateBookingFormTo(bookingForm, toVal) {
 	return {from: fromVal, to: toVal};
 }
 
-export default class Booking extends TrackerReact(React.Component) {
+class Booking extends Component {
     constructor() {
         super();
         this.state = {
-            subscription: {
-                reservations: Meteor.subscribe('reservations'),
-                allProfiles: Meteor.subscribe("allProfiles"),
-				rooms: Meteor.subscribe("allRooms"),
-				userCustomers: Meteor.subscribe("userCustomers")
-			},
             baseDay: getToday(),
 			bookingForm: createBookingForm()
         }
     }
-
-    componentWillUnmount() {
-        this.state.subscription.reservations.stop();
-        this.state.subscription.allProfiles.stop();
-		this.state.subscription.rooms.stop();
-		this.state.subscription.userCustomers.stop();
-
-	}
 
     getReservations() {
         const start = this.state.baseDay;
@@ -158,3 +145,18 @@ export default class Booking extends TrackerReact(React.Component) {
 		</div>);
     }
 }
+
+export default createContainer (() => {
+		Meteor.subscribe('reservations');
+		Meteor.subscribe("allProfiles");
+		Meteor.subscribe("allRooms");
+		Meteor.subscribe("userCustomers");
+
+		return {
+			reservations: Reservations.find().fetch(),
+			allProfiles: Meteor.users.find().fetch(),
+			allRooms: Rooms.find().fetch(),
+			userCustomers: Customers.find().fetch()
+		}
+
+}, Booking);
