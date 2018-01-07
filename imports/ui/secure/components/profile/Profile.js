@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import { browserHistory, Link } from 'react-router';
-import { createContainer } from 'meteor/react-meteor-data';
+import { withTracker } from 'meteor/react-meteor-data';
 import swal from 'sweetalert2';
 import { Glyphicon, Button } from 'react-bootstrap';
 
@@ -410,7 +410,7 @@ class Profile extends Component {
 	}
 }
 
-export default createContainer(() => {
+export default withTracker(() => {
 	Meteor.subscribe('profile');
 	Meteor.subscribe('doorCode');
 	Meteor.subscribe('userRooms');
@@ -422,4 +422,4 @@ export default createContainer(() => {
 		rooms: RoomsCollection.find().fetch(),
 		customers: CustomersCollection.find().fetch()
 	};
-}, Profile);
+})(Profile);

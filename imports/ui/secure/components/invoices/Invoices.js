@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import moment from 'moment-timezone';
-import { createContainer } from 'meteor/react-meteor-data';
+import { withTracker } from 'meteor/react-meteor-data';
 
 import InvoicesCollection from '../../../../api/collections/invoices';
 // import InvoicesFiltered from './InvoicesFiltered';
@@ -97,11 +97,11 @@ class Invoices extends Component {
 	}
 }
 
-export default createContainer(() => {
+export default withTracker(() => {
 
 	Meteor.subscribe('allInvoices');
 
 	return {
 		numberOfInvoices: InvoicesCollection.find().count()
 	}
-}, Invoices);
+})(Invoices);

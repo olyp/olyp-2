@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { createContainer } from 'meteor/react-meteor-data';
+import { withTracker } from 'meteor/react-meteor-data';
 import { Glyphicon } from 'react-bootstrap';
 
 import DoorCodes from '../../../api/collections/doorCodes';
@@ -37,10 +37,10 @@ class Dashboard extends Component {
 	}
 }
 
-export default createContainer(() => {
+export default withTracker(() => {
 	Meteor.subscribe('doorCode');
 
 	return {
 		doorCode: DoorCodes.find().fetch()[0]
 	}
-}, Dashboard);
+})(Dashboard);

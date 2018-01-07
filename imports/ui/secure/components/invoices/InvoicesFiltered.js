@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { createContainer } from 'meteor/react-meteor-data';
+import { withTracker } from 'meteor/react-meteor-data';
 import big from 'big.js';
 
 import Invoices from '../../../../api/collections/invoices';
@@ -67,7 +67,7 @@ class InvoicesFiltered extends Component {
 	}
 };
 
-export default createContainer((props) => {
+export default withTracker((props) => {
 
 	Meteor.subscribe("allInvoices");
 	Meteor.subscribe("allCustomers");
@@ -81,4 +81,4 @@ export default createContainer((props) => {
 			{ $sort: {createdAt: "desc"} }).fetch(),
 		customers: Customers.find().fetch()
 	}
-}, InvoicesFiltered);
+})(InvoicesFiltered);

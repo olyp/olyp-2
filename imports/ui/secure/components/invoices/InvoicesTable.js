@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { createContainer } from 'meteor/react-meteor-data';
+import { withTracker } from 'meteor/react-meteor-data';
 import { browserHistory } from 'react-router';
 import moment from 'moment-timezone';
 import ReactTable from 'react-table';
@@ -159,7 +159,7 @@ class InvoicesTable extends Component {
 	}
 };
 
-export default createContainer((props) => {
+export default withTracker((props) => {
 
 	Meteor.subscribe('allCustomers');
 	Meteor.subscribe('allInvoices');
@@ -171,4 +171,4 @@ export default createContainer((props) => {
 		customers: Customers.find().fetch(),
 		invoices: Invoices.find({}, {sort: sort, skip: props.pageSize * (props.currentPage - 1), limit: props.pageSize}).fetch()
 	}
-}, InvoicesTable);
+})(InvoicesTable);

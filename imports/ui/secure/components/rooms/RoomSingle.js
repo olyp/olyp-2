@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { createContainer } from 'meteor/react-meteor-data';
+import { withTracker } from 'meteor/react-meteor-data';
 import { browserHistory } from 'react-router';
 import swal from 'sweetalert2';
 
@@ -124,7 +124,7 @@ class RoomSingle extends Component {
 	}
 }
 
-export default createContainer((props) => {
+export default withTracker((props) => {
 	Meteor.subscribe('allRooms');
 	Meteor.subscribe('allUsers');
 
@@ -134,4 +134,4 @@ export default createContainer((props) => {
 		room: room[0],
 		users: Meteor.users.find().fetch()
 	};
-}, RoomSingle);
+})(RoomSingle);

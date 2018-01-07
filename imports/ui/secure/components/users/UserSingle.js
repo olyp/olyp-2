@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { createContainer } from 'meteor/react-meteor-data';
+import { withTracker } from 'meteor/react-meteor-data';
 import { browserHistory } from 'react-router';
 import swal from 'sweetalert2';
 import { Glyphicon } from 'react-bootstrap';
@@ -220,7 +220,7 @@ class UserSingle extends Component {
 	}
 }
 
-export default createContainer((props) => {
+export default withTracker((props) => {
 	Meteor.subscribe('allUsers');
 	Meteor.subscribe('allRooms');
 	Meteor.subscribe('allDoorCodes');
@@ -233,4 +233,4 @@ export default createContainer((props) => {
 		rooms: Rooms.find().fetch(),
 		doorCode: doorCode[0]
 	};
-}, UserSingle);
+})(UserSingle);

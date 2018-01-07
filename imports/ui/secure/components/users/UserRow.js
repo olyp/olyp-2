@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import { Link } from 'react-router';
 import { Glyphicon } from 'react-bootstrap';
-import { createContainer } from 'meteor/react-meteor-data';
+import { withTracker } from 'meteor/react-meteor-data';
 import swal from 'sweetalert2';
 
 import DoorCodes from '../../../../api/collections/doorCodes.js'
@@ -61,11 +61,11 @@ class UserRow extends Component {
 	}
 }
 
-export default createContainer((props) => {
+export default withTracker((props) => {
 	Meteor.subscribe('allDoorCodes');
 	const doorCode = DoorCodes.find({userId: props.user._id}, {fields: {_id: 1}}).fetch()
 
 	return {
 		doorCode: doorCode[0]
 	};
-}, UserRow);
+})(UserRow);

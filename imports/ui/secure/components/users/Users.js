@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { createContainer } from 'meteor/react-meteor-data';
+import { withTracker } from 'meteor/react-meteor-data';
 
 import Preloader from '../../../shared/preloader/Preloader.js';
 
@@ -85,10 +85,10 @@ class Users extends Component {
 	}
 }
 
-export default createContainer(() => {
+export default withTracker(() => {
 	Meteor.subscribe('allUsers');
 
 	return {
 		users: Meteor.users.find().fetch()
 	};
-}, Users);
+})(Users);

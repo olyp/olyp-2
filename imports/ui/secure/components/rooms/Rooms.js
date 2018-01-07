@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router';
-import { createContainer } from 'meteor/react-meteor-data';
+import { withTracker } from 'meteor/react-meteor-data';
 import swal from 'sweetalert2';
 
 // import Preloader from '../../../shared/preloader/Preloader.js';
@@ -104,11 +104,11 @@ class Rooms extends Component {
 	}
 }
 
-export default createContainer(() => {
+export default withTracker(() => {
 	Meteor.subscribe('allRooms');
 
 	return {
 		rooms: RoomsCollection.find().fetch()
 	};
-}, Rooms);
+})(Rooms);
 

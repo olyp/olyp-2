@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { createContainer } from 'meteor/react-meteor-data';
+import { withTracker } from 'meteor/react-meteor-data';
 import { browserHistory, Link } from 'react-router';
 
 import CustomersCollection from '../../../../api/collections/customers.js';
@@ -93,10 +93,10 @@ class Customers extends Component {
 	}
 }
 
-export default createContainer(() => {
+export default withTracker(() => {
 	Meteor.subscribe('allCustomers');
 
 	return {
 		customers: CustomersCollection.find().fetch()
 	};
-}, Customers);
+})(Customers);

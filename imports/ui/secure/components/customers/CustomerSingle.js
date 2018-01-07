@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { createContainer } from 'meteor/react-meteor-data';
+import { withTracker } from 'meteor/react-meteor-data';
 import { browserHistory, Link } from 'react-router';
 import swal from 'sweetalert2';
 
@@ -86,7 +86,7 @@ class CustomerSingle extends Component {
 	}
 }
 
-export default createContainer((props) => {
+export default withTracker((props) => {
 	Meteor.subscribe('allCustomers');
 	Meteor.subscribe('customerInvoices', props.params.customerId);
 
@@ -94,4 +94,4 @@ export default createContainer((props) => {
 		customer: CustomersCollection.find({_id: props.params.customerId}).fetch()[0],
 		invoices: Invoices.find().fetch()
 	};
-}, CustomerSingle);
+})(CustomerSingle);

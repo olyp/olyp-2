@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { createContainer } from 'meteor/react-meteor-data';
+import { withTracker } from 'meteor/react-meteor-data';
 
 import DoorCodes from '../../../../api/collections/doorCodes.js';
 
@@ -58,11 +58,11 @@ class CodeList extends Component {
 	}
 }
 
-export default createContainer(() => {
+export default withTracker(() => {
 	Meteor.subscribe('allProfiles');
 	Meteor.subscribe('allDoorCodes');
 
 	return {
 		doorCodes: DoorCodes.find().fetch()
 	};
-}, CodeList);
+})(CodeList);

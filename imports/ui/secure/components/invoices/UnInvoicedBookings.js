@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { createContainer } from 'meteor/react-meteor-data'
+import { withTracker } from 'meteor/react-meteor-data'
 import moment from 'moment-timezone';
 import big from 'big.js';
 
@@ -392,7 +392,7 @@ class UninvoicedBookings extends Component {
 	}
 }
 
-export default createContainer((props) => {
+export default withTracker((props) => {
 	const allUnInvoicedBookingsHandle = Meteor.subscribe("allUnInvoicedBookings");
 	const allCustomersHandle = Meteor.subscribe("allCustomers");
 	const allRoomsHandle = Meteor.subscribe("allRooms");
@@ -403,4 +403,4 @@ export default createContainer((props) => {
 		customers: Customers.find().fetch(),
 		rooms: Rooms.find().fetch()
 	}
-}, UninvoicedBookings);
+})(UninvoicedBookings);

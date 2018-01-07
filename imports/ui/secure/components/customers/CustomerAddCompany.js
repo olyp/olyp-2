@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { browserHistory } from 'react-router';
-import { createContainer } from 'meteor/react-meteor-data';
+import { withTracker } from 'meteor/react-meteor-data';
 import swal from 'sweetalert2';
 
 import CustomersCollection from '../../../../api/collections/customers.js';
@@ -208,7 +208,7 @@ class CustomerAddCompany extends Component {
 	}
 }
 
-export default createContainer(() => {
+export default withTracker(() => {
 
 	Meteor.subscribe('allCustomers');
 	Meteor.subscribe('userData');
@@ -217,4 +217,4 @@ export default createContainer(() => {
 		customers: CustomersCollection.find().fetch(),
 		userData: Meteor.users.find().fetch()[0]
 	};
-}, CustomerAddCompany);
+})(CustomerAddCompany);
