@@ -1,6 +1,6 @@
-import {WebApp} from 'meteor/webapp';
+import { WebApp } from 'meteor/webapp';
 import ConnectRoute from 'connect-route';
-import {http} from 'meteor/http';
+import { http } from 'meteor/http';
 
 import DoorCodes from '../imports/api/collections/doorCodes.js';
 import DoorCodeLog from '../imports/api/collections/doorCodeLog.js';
