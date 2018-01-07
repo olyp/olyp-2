@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import moment from "moment-timezone";
+import { Glyphicon } from 'react-bootstrap';
 
 const hours = [];
 for (let i = 0; i < 24; i++) {
@@ -107,7 +108,7 @@ export default class CalendarGridWeek extends Component {
 											<div className='calendar-grid-week-reservation-comment'>{reservation.comment}</div>
 											{props.currentUserId === userId && <span className='calendar-grid-week-reservation-buttons'>
 												<a style={{cursor: "pointer"}} onClick={() => props.deleteReservation(reservation["_id"])}>
-													<span className='glyphicon glyphicon-trash' />
+													<Glyphicon glyph="remove" />
 												</a>
 											</span>}
 										</div>

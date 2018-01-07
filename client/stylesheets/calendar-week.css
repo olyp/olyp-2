@@ -50,10 +50,15 @@
     position: absolute;
     left: -1px;
     right: -1px;
-    border: 2px solid rgb(200, 45, 15);
+    border: 1px solid white;
     padding: 3px;
-    background: rgb(241, 85, 35);
+    background: rgb(38, 84, 249);
     overflow: hidden;
+    color: white;
+}
+
+.calendar-grid-week-reservation .glyphicon-remove {
+    color: white;
 }
 
 .calendar-grid-week-reservation-overlaps-previous {
@@ -90,5 +95,5 @@
 
 .calendar-grid-week-reservation-comment {
     overflow: hidden;
-    white-space: nowrap;
+    /*white-space: nowrap;*/
 }

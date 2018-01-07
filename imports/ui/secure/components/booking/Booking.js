@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 // import TrackerReact from 'meteor/ultimatejs:tracker-react';
-import { createContainer } from 'meteor/react-meteor-data';
+import { withTracker } from 'meteor/react-meteor-data';
 import moment from "moment-timezone";
 import Calendar from "./Calendar";
 import BookingForm from "./BookingForm";
@@ -91,10 +91,10 @@ class Booking extends Component {
 
 			if (err) {
 				console.error(err);
-				Bert.alert(err.reason, 'danger', 'growl-top-right', 'fa-warning');
+				Bert.alert(err.reason, 'danger', 'growl-bottom-right', 'fa-warning');
 				this.setState({bookingForm: Object.assign({}, this.state.bookingForm, {isSubmitting: false})});
 			} else {
-				Bert.alert('Booking confirmed', 'success', 'growl-top-right', 'fa-smile-o');
+				Bert.alert('Booking confirmed', 'success', 'growl-bottom-right', 'fa-smile-o');
 				this.setState({bookingForm: createBookingForm()})
 			}
 		});
@@ -105,9 +105,9 @@ class Booking extends Component {
 			Meteor.call("booking.delete", {id: reservationId}, (err, res) => {
 				if (err) {
 					console.error(err);
-					Bert.alert(err.reason, 'danger', 'growl-top-right', 'fa-warning');
+					Bert.alert(err.reason, 'danger', 'growl-bottom-right', 'fa-warning');
 				} else {
-					Bert.alert('Booking deleted', 'success', 'growl-top-right', 'fa-smile-o');
+					Bert.alert('Booking deleted', 'success', 'growl-bottom-right', 'fa-smile-o');
 				}
 			});
 		}
@@ -146,7 +146,7 @@ class Booking extends Component {
     }
 }
 
-export default createContainer (() => {
+export default withTracker (() => {
 		Meteor.subscribe('reservations');
 		Meteor.subscribe("allProfiles");
 		Meteor.subscribe("allRooms");
@@ -159,4 +159,4 @@ export default createContainer (() => {
 			userCustomers: Customers.find().fetch()
 		}
 
-}, Booking);
+})(Booking);

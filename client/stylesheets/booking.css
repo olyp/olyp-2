@@ -2,6 +2,18 @@
     z-index: 1;
 }
 
+.calendar-grid .glyphicon-remove {
+    color: #EA2427;
+    margin-right: 5px;
+    margin-bottom: 8px;
+    margin-top: 14px;
+}
+
+.calendar-grid .btn-danger {
+    background: none;
+    border: none;
+}
+
 @media only screen and (min-width: 800px) {
     .calendar-grid-week { display: none; }
     

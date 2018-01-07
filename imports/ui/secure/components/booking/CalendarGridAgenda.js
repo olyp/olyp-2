@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import moment from "moment-timezone";
+import { Glyphicon } from 'react-bootstrap';
 
 export default class CalendarGridAgenda extends Component {
     render() {
@@ -40,6 +41,7 @@ export default class CalendarGridAgenda extends Component {
 						var to = moment(Math.min(moment(reservation.to).valueOf(), dayEndVal + 1000));
 						const userId = reservation.booking.userId;
 						const profileName = props.getProfileNameById(userId);
+						const deleteButton = (props.currentUserId == userId) ? <Glyphicon glyph="remove" onClick={() => props.deleteReservation(reservation["_id"])}/> : null;
 
 						return (
 							<div key={"reservation-" + reservation["_id"]}
@@ -49,22 +51,14 @@ export default class CalendarGridAgenda extends Component {
 									<div>{from.format("HH:mm")}</div>
 									<div>{to.format("HH:mm")}</div>
 								</div>
-								<div className='col-xs-9'>
+								<div className='col-xs-7'>
 									<div style={{fontWeight: "bold", fontSize: 16, lineHeight: 1.2}}>{profileName}</div>
-									<div style={{
-										fontStyle: "italic",
-										color: "#666",
-										fontSize: 11
-									}
-									}>{reservation.comment}</div>
-									{props.currentUserId === userId && <a
-										onClick={(e) => props.deleteReservation(reservation["_id"])}
-										className='btn btn-danger'
-										style={{marginTop: "1em"}}
-									>
-										<span className='glyphicon glyphicon-trash' />
-									</a>}
+									<div style={{ fontStyle: "italic", color: "#666", fontSize: 11}}>{reservation.comment}</div>
 								</div>
+								<div className="col-xs-2">
+									{deleteButton}
+								</div>
+
 							</div>
 						)
 					})}
