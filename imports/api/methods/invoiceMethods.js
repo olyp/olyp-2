@@ -163,7 +163,7 @@ function getRoomLines(includeFreeHours, customerId, roomId, allRoomReservations,
 	});
 
 	return Object.keys(roomReservationsByMonth).sort().map((monthStr) => {
-		return getRoomLineForMonth(includeFreeHours ? includeFreeHours[monthStr] : true, customerId, roomId, roomReservationsByMonth[monthStr], roomBookingAgreement, monthStr);
+		return getRoomLineForMonth(includeFreeHours ? (includeFreeHours.hasOwnProperty(monthStr) ? includeFreeHours[monthStr] : true) : true, customerId, roomId, roomReservationsByMonth[monthStr], roomBookingAgreement, monthStr);
 	});
 }
 
