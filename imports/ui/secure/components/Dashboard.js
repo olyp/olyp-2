@@ -23,7 +23,7 @@ class Dashboard extends Component {
 		return (
 			<div className="container">
 				<div className="row">
-					<h4 className="col-xs-12">Hei {user.profile.firstName}</h4>
+					<h4 className="col-xs-12">Hei, {user.profile.firstName}</h4>
 				</div>
 				<hr />
 				<div className="row">
