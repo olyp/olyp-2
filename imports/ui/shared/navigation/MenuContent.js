@@ -54,7 +54,7 @@ class MenuContent extends Component {
 		return (
 
 			// 121 = footer height
-			<div id="mobile-menu-content" style={{minHeight: document.body.scrollHeight + 121}}>
+			<div id="mobile-menu-content" style={{minHeight: '200%'}}>
 				<div className="container">
 					{content}
 				</div>
