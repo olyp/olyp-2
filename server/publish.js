@@ -86,6 +86,18 @@ Meteor.publish('userCustomers', function () {
 	return Customers.find({"_id": {"$in": user.customers.map((it) => it.id )}});
 });
 
+Meteor.publish('customerUsers', function (customerId) {
+	// const customer = Customers.findOne({_id: customerId});
+	const isAdmin = Roles.userIsInRole(this.userId, ['admin', 'super-admin'], 'olyp');
+
+	if (isAdmin) {
+		return Meteor.users.find({"customers.id": customerId}, {fields: {"profile": 1, "emails": 1, "createdAt": 1, "roles": 1, "status": 1, "customers": 1}});
+	} else {
+		return null;
+	}
+	
+});
+
 Meteor.publish('allInvoices', function () {
 
 	const isAdmin = Roles.userIsInRole(this.userId, ['admin', 'super-admin'], 'olyp');
@@ -102,7 +114,7 @@ Meteor.publish('customerInvoices', function (customerId) {
 	const isAdmin = Roles.userIsInRole(this.userId, ['admin', 'super-admin'], 'olyp');
 
 	if (isAdmin) {
-		return Invoices.find({customerId: customerId});
+		return Invoices.find({customerId: ObjectID(customerId)});
 	} else {
 		return this.ready();
 	}

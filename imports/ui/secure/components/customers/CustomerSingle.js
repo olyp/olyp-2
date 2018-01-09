@@ -37,7 +37,8 @@ class CustomerSingle extends Component {
 	render () {
 
 		const customer = this.props.customer;
-		const invoices = this.props.invoices;
+		// const invoices = this.props.invoices;
+		const users = this.props.users;
 
 		if (!customer) {
 			return (
@@ -45,7 +46,7 @@ class CustomerSingle extends Component {
 			);
 		}
 
-		console.log(invoices);
+		console.log(users);
 
 		return (
 			<div className="container customer-single">
@@ -72,7 +73,11 @@ class CustomerSingle extends Component {
 					</div>
 				</div>
 				<hr />
-
+				<div className="row">
+					<div className="col-xs-12">
+						<h4>Room booking agreements</h4>
+					</div>
+				</div>
 				<div className="row">
 					<div className="col-xs-12">
 						<div className="delete-large hover" onClick={this.deleteCustomer.bind(this)}>
@@ -88,10 +93,13 @@ class CustomerSingle extends Component {
 
 export default withTracker((props) => {
 	Meteor.subscribe('allCustomers');
-	Meteor.subscribe('customerInvoices', props.params.customerId);
+	// Meteor.subscribe('customerInvoices', props.params.customerId);
+	Meteor.subscribe('customerUsers', props.params.customerId);
 
 	return {
 		customer: CustomersCollection.find({_id: props.params.customerId}).fetch()[0],
-		invoices: Invoices.find().fetch()
+		// invoices: Invoices.find().fetch(),
+		// Restricting again here, in addidtion to in publish since Meteor.userId is already published and logged in user might not be a user of this customer if he/she is an admin
+		users: Meteor.users.find({"customers.id": props.params.customerId}).fetch()
 	};
 })(CustomerSingle);
