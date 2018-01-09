@@ -114,7 +114,7 @@ Meteor.publish('customerInvoices', function (customerId) {
 	const isAdmin = Roles.userIsInRole(this.userId, ['admin', 'super-admin'], 'olyp');
 
 	if (isAdmin) {
-		return Invoices.find({customerId: ObjectID(customerId)});
+		return Invoices.find({customerId: customerId});
 	} else {
 		return this.ready();
 	}

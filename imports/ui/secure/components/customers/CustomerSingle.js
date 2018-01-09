@@ -37,7 +37,7 @@ class CustomerSingle extends Component {
 	render () {
 
 		const customer = this.props.customer;
-		// const invoices = this.props.invoices;
+		const invoices = this.props.invoices;
 		const users = this.props.users;
 
 		if (!customer) {
@@ -93,7 +93,7 @@ class CustomerSingle extends Component {
 
 export default withTracker((props) => {
 	Meteor.subscribe('allCustomers');
-	// Meteor.subscribe('customerInvoices', props.params.customerId);
+	Meteor.subscribe('customerInvoices', props.params.customerId);
 	Meteor.subscribe('customerUsers', props.params.customerId);
 
 	return {
