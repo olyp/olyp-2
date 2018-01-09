@@ -266,6 +266,11 @@ class UninvoicedBookings extends Component {
 
 					const invoiceData = this.state.invoiceDataByCustomerId[customerId];
 
+					// Filter out customers with no roombooking-agreement
+					if (!customer.roomBookingAgreements || customer.roomBookingAgreements.length == 0) {
+						return null;
+					}
+
 					return <div key={customerId}>
 						<h4>{customer && customer.name}</h4>
 
