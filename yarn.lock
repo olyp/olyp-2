@@ -440,10 +440,6 @@ encoding@^0.1.11:
   dependencies:
     iconv-lite "~0.4.13"
 
-es6-promise@^4.0.5:
-  version "4.0.5"
-  resolved "https://registry.yarnpkg.com/es6-promise/-/es6-promise-4.0.5.tgz#7882f30adde5b240ccfa7f7d78c548330951ae42"
-
 events@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/events/-/events-1.1.1.tgz#9ebdb7635ad099c70dcc4c2a1f5004288e8bd924"
@@ -1522,11 +1518,9 @@ strip-json-comments@~2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/strip-json-comments/-/strip-json-comments-2.0.1.tgz#3c531942e908c2697c0ec344858c286c7ca0a60a"
 
-sweetalert2@^6.4.2:
-  version "6.4.2"
-  resolved "https://registry.yarnpkg.com/sweetalert2/-/sweetalert2-6.4.2.tgz#0505b3acaf812af1ad04f00980a83625508e3d61"
-  dependencies:
-    es6-promise "^4.0.5"
+sweetalert2@^7.3.5:
+  version "7.3.5"
+  resolved "https://registry.yarnpkg.com/sweetalert2/-/sweetalert2-7.3.5.tgz#fc900404660aa107dccd0ca4c9c8e918187ec5aa"
 
 tar-pack@^3.4.0:
   version "3.4.0"

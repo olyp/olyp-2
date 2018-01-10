@@ -40,14 +40,16 @@ class Rooms extends Component {
 				})
 			}
 		}).then((result) => {
-			Meteor.call('room.add', result, (err, res) => {
-				if (err) {
-					console.log(err);
-				} else {
-					Bert.alert('Room added', 'success', 'growl-bottom-right', 'fa-smile-o');
-				}
-			});
-		}).catch(swal.noop);
+			if (result.value) {
+				Meteor.call('room.add', result, (err, res) => {
+					if (err) {
+						console.log(err);
+					} else {
+						Bert.alert('Room added', 'success', 'growl-bottom-right', 'fa-smile-o');
+					}
+				});
+			}
+		});
 	}
 
 	render () {

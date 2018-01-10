@@ -31,22 +31,23 @@ class Profile extends Component {
 			showCancelButton: true
 		}).then((result) => {
 
-			const firstName = $('#swal-firstname').val();
-			const lastName = $('#swal-lastname').val();
+			if (result.value) {
+				const firstName = $('#swal-firstname').val();
+				const lastName = $('#swal-lastname').val();
 
-			if (firstName == '' || lastName == '') {
-				Bert.alert('Enter both first and last name', 'danger', 'growl-bottom-right', 'fa-frown-o');
-			} else {
-				Meteor.call('user.changeName', firstName, lastName, (err, res) => {
-					if (err) {
-						console.log(err);
-					} else {
-						Bert.alert('Name changed', 'success', 'growl-bottom-right', 'fa-smile-o');
-					}
-				});
+				if (firstName == '' || lastName == '') {
+					Bert.alert('Enter both first and last name', 'danger', 'growl-bottom-right', 'fa-frown-o');
+				} else {
+					Meteor.call('user.changeName', firstName, lastName, (err, res) => {
+						if (err) {
+							console.log(err);
+						} else {
+							Bert.alert('Name changed', 'success', 'growl-bottom-right', 'fa-smile-o');
+						}
+					});
+				}
 			}
-
-		}).catch(swal.noop);
+		});
 	}
 
 	changePassword () {
@@ -91,16 +92,17 @@ class Profile extends Component {
 			confirmButtonColor: '#3085d6',
 			cancelButtonColor: '#d33',
 			confirmButtonText: 'Yes, delete my user!'
-		}).then(() => {
-			Meteor.call('deleteUser', Meteor.userId(), (err, res) => {
-				if (err) {
-					console.log(err);
-				} else {
-					browserHistory.push('/login');
-				}
-			});
-		// Since this is a promise, we have to catch "cancel" and say it is ok
-		}).catch(swal.noop);
+		}).then((result) => {
+			if (result.value) {
+				Meteor.call('deleteUser', Meteor.userId(), (err, res) => {
+					if (err) {
+						console.log(err);
+					} else {
+						browserHistory.push('/login');
+					}
+				});
+			}
+		});
 	}
 
 	// generateDoorCode () {
@@ -125,16 +127,17 @@ class Profile extends Component {
 			confirmButtonColor: '#3085d6',
 			cancelButtonColor: '#d33',
 			confirmButtonText: 'Yes, remove this customer!'
-		}).then(() => {
-			Meteor.call('user.removeCustomer', Meteor.userId(), customerId, (err, res) => {
-				if (err) {
-					console.log(err);
-				} else {
-					Bert.alert('Customer removed', 'success', 'growl-bottom-right', 'fa-smile-o');
-				}
-			});
-		// Since this is a promise, we have to catch "cancel" and say it is ok
-		}).catch(swal.noop);
+		}).then((result) => {
+			if (result.value) {
+				Meteor.call('user.removeCustomer', Meteor.userId(), customerId, (err, res) => {
+					if (err) {
+						console.log(err);
+					} else {
+						Bert.alert('Customer removed', 'success', 'growl-bottom-right', 'fa-smile-o');
+					}
+				});
+			}
+		});
 	}
 
 	removeFacebookConnection () {
@@ -146,16 +149,17 @@ class Profile extends Component {
 			confirmButtonColor: '#3085d6',
 			cancelButtonColor: '#d33',
 			confirmButtonText: 'Yes, disconnect!'
-		}).then(() => {
-			Meteor.call('user.removeFacebookConnection', (err, res) => {
-				if (err) {
-					console.log(err);
-				} else {
-					Bert.alert('Facebook disconnected', 'success', 'growl-bottom-right', 'fa-smile-o');
-				}
-			});
-		// Since this is a promise, we have to catch "cancel" and say it is ok
-		}).catch(swal.noop);
+		}).then((result) => {
+			if (result.value) {
+				Meteor.call('user.removeFacebookConnection', (err, res) => {
+					if (err) {
+						console.log(err);
+					} else {
+						Bert.alert('Facebook disconnected', 'success', 'growl-bottom-right', 'fa-smile-o');
+					}
+				});
+			}
+		});
 	}
 
 	addFacebookConnection () {
@@ -179,16 +183,17 @@ class Profile extends Component {
 			confirmButtonColor: '#3085d6',
 			cancelButtonColor: '#d33',
 			confirmButtonText: 'Yes, disconnect!'
-		}).then(() => {
-			Meteor.call('user.removeGoogleConnection', (err, res) => {
-				if (err) {
-					console.log(err);
-				} else {
-					Bert.alert('Google disconnected', 'success', 'growl-bottom-right', 'fa-smile-o');
-				}
-			});
-		// Since this is a promise, we have to catch "cancel" and say it is ok
-		}).catch(swal.noop);
+		}).then((result) => {
+			if (result.value) {
+				Meteor.call('user.removeGoogleConnection', (err, res) => {
+					if (err) {
+						console.log(err);
+					} else {
+						Bert.alert('Google disconnected', 'success', 'growl-bottom-right', 'fa-smile-o');
+					}
+				});	
+			}
+		});
 	}
 
 	addGoogleConnection () {

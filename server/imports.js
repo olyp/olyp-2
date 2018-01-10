@@ -8,6 +8,7 @@ import '../imports/api/collections/doorCodeLog.js';
 import '../imports/api/collections/deletedUsers.js';
 import '../imports/api/collections/images.js';
 import '../imports/api/collections/files.js';
+import '../imports/api/collections/deletedRoomBookingAgreements.js';
 
 // Methods
 import '../imports/api/methods/doorCodeMethods.js';

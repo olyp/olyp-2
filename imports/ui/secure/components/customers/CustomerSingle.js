@@ -2,37 +2,90 @@ import React, { Component } from 'react';
 import { withTracker } from 'meteor/react-meteor-data';
 import { browserHistory, Link } from 'react-router';
 import swal from 'sweetalert2';
+import { Glyphicon } from 'react-bootstrap';
 
-import CustomersCollection from '../../../../api/collections/customers.js'
-import Invoices from '../../../../api/collections/invoices.js'
+import CustomersCollection from '../../../../api/collections/customers';
+import Invoices from '../../../../api/collections/invoices';
 
-import Preloader from '../../../shared/preloader/Preloader.js';
+import Preloader from '../../../shared/preloader/Preloader';
 import UserRow from '../users/UserRow';
+import RoomBookingAgreementRow from '../booking/RoomBookingAgreementRow';
 
 class CustomerSingle extends Component {
 
 	deleteCustomer () {
 
 		swal({
-			title: 'Are you sure?',
+			title: 'Delete customer?',
 			text: "You will not be able to recover this customer!",
 			type: 'warning',
 			showCancelButton: true,
 			confirmButtonColor: '#3085d6',
 			cancelButtonColor: '#d33',
 			confirmButtonText: 'Yes, delete it!'
+		}).then((result) => {
+			if (result.value) {
+				Meteor.call('customer.delete', this.props.customer._id, (err, res) => {
+					if (err) {
+						console.log(err);
+					} else {
+						browserHistory.goBack();
+						Bert.alert('Customer deleted', 'success', 'growl-bottom-right', 'fa-smile-o');
+					}
+				});
+			}
+		});
+	}
+
+	addRoomBookingAgreement () {
+
+		swal({
+			title: 'Create agreement',
+			html:
+				'<input id="swal-input1" class="swal2-input">' +
+				'<input id="swal-input2" class="swal2-input">',
+			focusConfirm: true,
+			showCancelButton: true,
+			preConfirm: () => {
+				return [
+					$('#swal-input1').val(),
+					$('#swal-input2').val()
+				]
+			}
 		}).then(() => {
-			Meteor.call('customer.delete', this.props.customer._id, (err, res) => {
-				if (err) {
-					console.log(err);
-					swal("Failed", "The customer cound not be deleted.", "warning");
-				} else {
-					browserHistory.goBack();
-					Bert.alert('Customer deleted', 'success', 'growl-bottom-right', 'fa-smile-o');
-				}
-			});
-		// Since this is a promise, we have to catch "cancel" and say it is ok
-		}).catch(swal.noop);
+			console.log('done');
+		});
+
+		
+		// Meteor.call('customer.addRoomBookingAgreement', this.props.customer._id, agreement, (err, res) => {
+		// 	if (err) {
+		// 		console.log(err);
+		// 	} else {
+		// 		Bert.alert('Agreement added', 'success', 'growl-bottom-right', 'fa-smile-o');
+		// 	}
+		// });
+	}
+
+	removeRoomBookingAgreement (agreementId) {
+		swal({
+			title: 'Remove agreement?',
+			text: "You can always add a new one :)",
+			type: 'warning',
+			showCancelButton: true,
+			confirmButtonColor: '#3085d6',
+			cancelButtonColor: '#d33',
+			confirmButtonText: 'Yes, remove it!'
+		}).then((result) => {
+			if (result.value) {
+				Meteor.call('customer.removeRoomBookingAgreement', this.props.customer._id, agreementId, (err, res) => {
+					if (err) {
+						console.log(err);
+					} else {
+						Bert.alert('Agreement removed', 'success', 'growl-bottom-right', 'fa-smile-o');
+					}
+				});
+			}
+		});
 	}
 
 	render () {
@@ -47,36 +100,81 @@ class CustomerSingle extends Component {
 			);
 		}
 
+		let contactPerson = {
+			name: (customer.contactPerson && customer.contactPerson.name),
+			email: (customer.contactPerson && customer.contactPerson.email),
+			phone: (customer.contactPerson && customer.contactPerson.phone)
+		}
+
+		if (customer.type == "person") {
+			contactPerson = {
+				name: customer.name,
+				email: customer.email,
+				phone: customer.phone
+			}
+		}
+
+		const type = (customer && customer.type) ? <p>{customer.type}</p> : null;
+
+		const roomBookingAgreements = (customer.roomBookingAgreements) ? customer.roomBookingAgreements : [];
+
 		return (
 			<div className="container customer-single">
 				<div className="row">
-					<div className="col-xs-4">
-						<span className="glyphicon glyphicon-briefcase"></span>
+					<div className="col-xs-4 text-center">
+						<Glyphicon 
+							glyph="briefcase" 
+							style={{fontSize: 'xx-large', marginTop: '16px'}}
+						/>
 					</div>
 					<div className="col-xs-8">
 						<h4>{customer.name}</h4>
+						<div className="customer-status">
+							{type}
+						</div>
 					</div>
 				</div>
 				<hr />
 				<div className="row">
 					<div className="text-right">
 						<div className="col-xs-12">
-							{customer.contactPerson.name}
+							{contactPerson.name}
 						</div>
 						<div className="col-xs-12">
-							<a style={{textDecoration: 'underline'}} href={`mailto:${customer.contactPerson.email}`}>{customer.contactPerson.email}</a>
+							<a style={{textDecoration: 'underline'}} href={`mailto:${contactPerson.email}`}>{contactPerson.email}</a>
 						</div>
 						<div className="col-xs-12">
-							<a style={{textDecoration: 'underline'}} href={`tel:${customer.contactPerson.phone}`}>{customer.contactPerson.phone}</a>
+							<a style={{textDecoration: 'underline'}} href={`tel:${contactPerson.phone}`}>{contactPerson.phone}</a>
 						</div>
 					</div>
 				</div>
 				<hr />
 				<div className="row">
-					<div className="col-xs-12">
+					<div className="col-xs-10">
 						<h4>Room booking agreements</h4>
 					</div>
+					<div className="col-xs-2 text-right">
+						<Glyphicon 
+							onClick={this.addRoomBookingAgreement.bind(this)}
+							glyph="plus"
+							className="plus hover"
+							style={{marginTop: '12px'}}
+						/>
+					</div>
 				</div>
+
+				<div className="spacer-10"></div>
+
+				{roomBookingAgreements.map((agreement) => {
+					return (
+						<div key={agreement._id}>
+							<RoomBookingAgreementRow agreement={agreement} onClick={this.removeRoomBookingAgreement.bind(this, agreement._id)} />
+						</div>
+					);
+				})}
+
+				<hr />
+
 				<div className="row">
 					<div className="col-xs-12">
 						<h4>Users</h4>
@@ -93,8 +191,8 @@ class CustomerSingle extends Component {
 				<div className="row">
 					<div className="col-xs-12">
 						<div className="delete-large hover" onClick={this.deleteCustomer.bind(this)}>
-      						Delete Customer
-    					</div>
+									Delete Customer
+							</div>
 					</div>
 				</div>
 	

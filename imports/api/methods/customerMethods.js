@@ -1,6 +1,7 @@
 import uuid from 'uuid/v4';
 
-import Customers from '../collections/customers.js';
+import Customers from '../collections/customers';
+import DeletedRoomBookingAgreements from '../collections/deletedRoomBookingAgreements';
 
 Meteor.methods({
 	"customer.delete": (customerId) => {
@@ -49,5 +50,31 @@ Meteor.methods({
 				newCustomer: false
 			};
 		}
+	},
+	"customer.removeRoomBookingAgreement": (customerId, agreementId) => {
+
+		const customer = Customers.findOne({_id: customerId});
+		const agreement = customer.roomBookingAgreements.map((agreement) => {
+			if (agreement._id == agreementId) {
+				return agreement;
+			}
+		});
+
+		const payload = {
+			customer: customer,
+			agreement: agreement[0],
+			deletedDate: new Date(),
+			deletedBy: Meteor.userId()
+		}
+
+		DeletedRoomBookingAgreements.insert(payload);
+
+		Customers.update({_id: customerId}, {$pull: {roomBookingAgreements: {_id: agreementId}}});
+	},
+	"customer.addRoomBookingAgreement": (customerId, agreement) => {
+		agreement._id = uuid();
+
+		console.log(agreement);
+
 	}
 });

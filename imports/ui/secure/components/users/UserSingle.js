@@ -23,18 +23,19 @@ class UserSingle extends Component {
 			confirmButtonColor: '#3085d6',
 			cancelButtonColor: '#d33',
 			confirmButtonText: 'Yes, delete it!'
-		}).then(() => {
-			Meteor.call('user.delete', this.props.user._id, (err, res) => {
-				if (err) {
-					console.log(err);
-					swal("Failed", "The user cound not be deleted.", "warning");
-				} else {
-					browserHistory.goBack();
-					Bert.alert('User deleted', 'success', 'growl-bottom-right', 'fa-smile-o');
-				}
-			});
-		// Since this is a promise, we have to catch "cancel" and say it is ok
-		}).catch(swal.noop);
+		}).then((result) => {
+			if (result.value) {
+				Meteor.call('user.delete', this.props.user._id, (err, res) => {
+					if (err) {
+						console.log(err);
+						swal("Failed", "The user cound not be deleted.", "warning");
+					} else {
+						browserHistory.goBack();
+						Bert.alert('User deleted', 'success', 'growl-bottom-right', 'fa-smile-o');
+					}
+				});
+			}
+		});
 
 	}
 
@@ -71,16 +72,17 @@ class UserSingle extends Component {
 			confirmButtonColor: '#3085d6',
 			cancelButtonColor: '#d33',
 			confirmButtonText: 'Yes, revoke it!'
-		}).then(() => {
-			Meteor.call('doorCode.deleteById', this.props.doorCode._id, (err, res) => {
-				if (err) {
-					console.log(err);
-				} else {
-					Bert.alert('Door code revoked', 'success', 'growl-bottom-right', 'fa-smile-o');
-				}
-			});
-		// Since this is a promise, we have to catch "cancel" and say it is ok
-		}).catch(swal.noop);
+		}).then((result) => {
+			if (result.value) {
+				Meteor.call('doorCode.deleteById', this.props.doorCode._id, (err, res) => {
+					if (err) {
+						console.log(err);
+					} else {
+						Bert.alert('Door code revoked', 'success', 'growl-bottom-right', 'fa-smile-o');
+					}
+				});
+			}
+		});
 	}
 
 	generateDoorCode () {

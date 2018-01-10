@@ -19,18 +19,19 @@ class RoomSingle extends Component {
 			confirmButtonColor: '#3085d6',
 			cancelButtonColor: '#d33',
 			confirmButtonText: 'Yes, delete it!'
-		}).then(() => {
-			Meteor.call('room.delete', this.props.room._id, (err, res) => {
-				if (err) {
-					console.log(err);
-					swal("Failed", "The room cound not be deleted.", "warning");
-				} else {
-					browserHistory.goBack();
-					Bert.alert('Room deleted', 'success', 'growl-bottom-right', 'fa-smile-o');
-				}
-			});
-		// Since this is a promise, we have to catch "cancel" and say it is ok
-		}).catch(swal.noop);
+		}).then((result) => {
+			if (result.value) {
+				Meteor.call('room.delete', this.props.room._id, (err, res) => {
+					if (err) {
+						console.log(err);
+						swal("Failed", "The room cound not be deleted.", "warning");
+					} else {
+						browserHistory.goBack();
+						Bert.alert('Room deleted', 'success', 'growl-bottom-right', 'fa-smile-o');
+					}
+				});
+			}
+		});
 	}
 
 	renameRoom () {
@@ -50,14 +51,16 @@ class RoomSingle extends Component {
 				})
 			}
 		}).then((result) => {
-			Meteor.call('room.rename', this.props.room._id, result, (err, res) => {
-				if (err) {
-					console.log(err);
-				} else {
-					Bert.alert('Room renamed', 'success', 'growl-bottom-right', 'fa-smile-o');
-				}
-			});
-		}).catch(swal.noop);
+			if (result.value) {
+				Meteor.call('room.rename', this.props.room._id, result, (err, res) => {
+					if (err) {
+						console.log(err);
+					} else {
+						Bert.alert('Room renamed', 'success', 'growl-bottom-right', 'fa-smile-o');
+					}
+				});	
+			}
+		});
 	}
 
 	getUserById (userId) {

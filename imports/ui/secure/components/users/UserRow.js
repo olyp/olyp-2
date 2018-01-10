@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import { Link } from 'react-router';
 import { Glyphicon } from 'react-bootstrap';
 import { withTracker } from 'meteor/react-meteor-data';
-import swal from 'sweetalert2';
+// import swal from 'sweetalert2';
 
 import DoorCodes from '../../../../api/collections/doorCodes.js'
 

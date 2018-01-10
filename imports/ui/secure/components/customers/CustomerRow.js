@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 // import { Link } from 'react-router';
-import swal from 'sweetalert2';
+// import swal from 'sweetalert2';
 
 // import AwsImage from '../../../shared/files/awsImage.js';
 
@@ -28,7 +28,7 @@ class CustomerRow extends Component {
 			<div onClick={this.props.onClick}>
 				<div className="row customer-row hover">
 					<div className="col-xs-4">
-						<span className="glyphicon glyphicon-briefcase nav-lock"></span>
+						<span className="glyphicon glyphicon-briefcase nav-lock" style={{padding: '13px'}}></span>
 					</div>
 					<div className="col-xs-8">
 						<h4>{customer.name}</h4>
