@@ -80,7 +80,7 @@ class CustomerAddCompany extends Component {
 			swal.queue(steps).then((result) => {
 				swal.resetDefaults();
 				if (result.value) {
-					this.addCustomer(customerRaw, result);
+					this.addCustomer(customerRaw, result.value);
 				}
 			}, () => {
 				swal.resetDefaults();

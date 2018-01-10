@@ -41,7 +41,7 @@ class Rooms extends Component {
 			}
 		}).then((result) => {
 			if (result.value) {
-				Meteor.call('room.add', result, (err, res) => {
+				Meteor.call('room.add', result.value, (err, res) => {
 					if (err) {
 						console.log(err);
 					} else {

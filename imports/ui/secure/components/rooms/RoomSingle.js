@@ -52,7 +52,7 @@ class RoomSingle extends Component {
 			}
 		}).then((result) => {
 			if (result.value) {
-				Meteor.call('room.rename', this.props.room._id, result, (err, res) => {
+				Meteor.call('room.rename', this.props.room._id, result.value, (err, res) => {
 					if (err) {
 						console.log(err);
 					} else {

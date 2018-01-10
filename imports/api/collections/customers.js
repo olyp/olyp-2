@@ -80,23 +80,32 @@ const CustomerSchema = new SimpleSchema({
 
 	"roomBookingAgreements.$.type": {
 		type: String,
-		allowedValues: ["hourlyRental"]
+		allowedValues: ["hourlyRental", "monthlyRental"]
+	},
+
+	"roomBookingAgreements.$._id": {
+		type: String
 	},
 
 	"roomBookingAgreements.$.roomId": {
 		type: String
 	},
 
-	"roomBookingAgreements.$.hourlyPrice": {
-		type: Number
+	"roomBookingAgreements.$.price": {
+		type: String
 	},
 
 	"roomBookingAgreements.$.freeHours": {
-		type: Number
+		type: Number,
+		optional: true
 	},
 
 	"roomBookingAgreements.$.tax": {
 		type: Boolean
+	},
+
+	"roomBookingAgreements.$.dateCreated": {
+		type: Date
 	}
 });
 

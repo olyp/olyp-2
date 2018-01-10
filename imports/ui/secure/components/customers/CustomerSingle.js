@@ -2,10 +2,11 @@ import React, { Component } from 'react';
 import { withTracker } from 'meteor/react-meteor-data';
 import { browserHistory, Link } from 'react-router';
 import swal from 'sweetalert2';
-import { Glyphicon } from 'react-bootstrap';
+import { Glyphicon, FormGroup, ControlLabel, FormControl } from 'react-bootstrap';
 
 import CustomersCollection from '../../../../api/collections/customers';
 import Invoices from '../../../../api/collections/invoices';
+import Rooms from '../../../../api/collections/rooms';
 
 import Preloader from '../../../shared/preloader/Preloader';
 import UserRow from '../users/UserRow';
@@ -39,31 +40,69 @@ class CustomerSingle extends Component {
 
 	addRoomBookingAgreement () {
 
-		swal({
-			title: 'Create agreement',
-			html:
-				'<input id="swal-input1" class="swal2-input">' +
-				'<input id="swal-input2" class="swal2-input">',
-			focusConfirm: true,
-			showCancelButton: true,
-			preConfirm: () => {
-				return [
-					$('#swal-input1').val(),
-					$('#swal-input2').val()
-				]
-			}
-		}).then(() => {
-			console.log('done');
+		const rooms = this.props.rooms;
+
+		let roomsString = '<select id="create-agreement-room" class="swal2-input">';
+
+		rooms.map((room) => {
+			roomsString = roomsString + `<option value=${room._id}>${room.name}</option>`;
 		});
 
-		
-		// Meteor.call('customer.addRoomBookingAgreement', this.props.customer._id, agreement, (err, res) => {
-		// 	if (err) {
-		// 		console.log(err);
-		// 	} else {
-		// 		Bert.alert('Agreement added', 'success', 'growl-bottom-right', 'fa-smile-o');
-		// 	}
-		// });
+		roomsString = roomsString + '</select>';
+
+		swal({
+			title: 'Create agreement',
+			html: 
+				'<select id="create-agreement-type" class="swal2-input"><option value="hourlyRental">Hourly</option><option value="monthlyRental">Monthly</option></select>' +
+				roomsString +
+				'<input id="create-agreement-price" class="swal2-input" placeholder="NOK">' +
+				'<input id="create-agreement-freehours" class="swal2-input" placeholder="Free hours">' +
+				'<input type="checkbox" id="create-agreement-tax"> + MVA?',
+			focusConfirm: true,
+			showCancelButton: true
+		}).then((result) => {
+
+			if (result.value) {
+				const type = $('#create-agreement-type').val();
+				const roomId = $('#create-agreement-room').val();
+				const freeHours = $('#create-agreement-freehours').val();
+				const price = $('#create-agreement-price').val();
+				const tax = $('#create-agreement-tax').is(":checked");
+
+				let agreementExists = false;
+
+				this.props.customer.roomBookingAgreements.map((agreement) => {
+					if (agreement.roomId == roomId) {
+						agreementExists = true;
+					}
+				});
+
+				if (price == "") {
+					Bert.alert('You need to enter an price', 'warning', 'growl-bottom-right', 'fa-frown-o');
+				} else if (type == "monthlyRental" && freeHours != "") {
+					Bert.alert('No free hours in monthly agreement', 'warning', 'growl-bottom-right', 'fa-frown-o');
+				} else if (agreementExists) {
+					Bert.alert('An agreement already exists for that room', 'warning', 'growl-bottom-right', 'fa-frown-o');
+				} else {
+
+					const agreement = {
+						type,
+						roomId,
+						price,
+						freeHours,
+						tax
+					};
+
+					Meteor.call('customer.addRoomBookingAgreement', this.props.customer._id, agreement, (err, res) => {
+						if (err) {
+							console.log(err);
+						} else {
+							Bert.alert('Agreement added', 'success', 'growl-bottom-right', 'fa-smile-o');
+						}
+					});
+				}
+			}
+		});
 	}
 
 	removeRoomBookingAgreement (agreementId) {
@@ -191,8 +230,8 @@ class CustomerSingle extends Component {
 				<div className="row">
 					<div className="col-xs-12">
 						<div className="delete-large hover" onClick={this.deleteCustomer.bind(this)}>
-									Delete Customer
-							</div>
+							Delete Customer
+						</div>
 					</div>
 				</div>
 	
@@ -203,11 +242,13 @@ class CustomerSingle extends Component {
 
 export default withTracker((props) => {
 	Meteor.subscribe('allCustomers');
+	Meteor.subscribe('allRooms');
 	Meteor.subscribe('customerInvoices', props.params.customerId);
 	Meteor.subscribe('customerUsers', props.params.customerId);
 
 	return {
 		customer: CustomersCollection.find({_id: props.params.customerId}).fetch()[0],
+		rooms: Rooms.find().fetch(),
 		// invoices: Invoices.find().fetch(),
 		// Restricting again here, in addidtion to in publish since Meteor.userId is already published and logged in user might not be a user of this customer if he/she is an admin
 		users: Meteor.users.find({"customers.id": props.params.customerId}).fetch()

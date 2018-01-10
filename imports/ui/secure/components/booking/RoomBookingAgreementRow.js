@@ -16,12 +16,15 @@ class RoomBookingAgreementRow extends Component {
 		const roomId = agreement.roomId;
 		const room = roomsById[roomId];
 
+		const unity = (agreement.type == 'hourlyRental') ? 'kr/t' : 'kr/mnd';
+		const freeHours = (agreement.type == 'hourlyRental' && agreement.freeHours != 0) ? <div className='col-xs-4 text-right'>{agreement.freeHours}t inkl</div> : null;
+
 		return (
 			<div className="olyp-panel" onClick={this.props.onClick ? this.props.onClick : null}>
 				<div className="row">
 					<div className='col-xs-4'>{room ? room.name : null}</div>
-					<div className='col-xs-4 text-center'>{big(agreement.hourlyPrice).toFixed(0)}kr/t</div>
-					<div className='col-xs-4 text-right'>{agreement.freeHours}t inkl</div>
+					<div className='col-xs-4 text-center'>{big(agreement.price || agreement.hourlyPrice).toFixed(0)}{unity}</div>
+					{freeHours}
 				</div>
 			</div>
 		);
