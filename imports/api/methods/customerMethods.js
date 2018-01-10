@@ -1,3 +1,5 @@
+import uuid from 'uuid/v4';
+
 import Customers from '../collections/customers.js';
 
 Meteor.methods({
@@ -22,6 +24,18 @@ Meteor.methods({
 
 		customer.dateAdded = new Date();
 		customer.addedBy = Meteor.userId();
+		customer.roomBookingAgreements = [
+		    {
+		      _id: uuid(),
+		      type: "hourlyRental",
+		      roomId: Meteor.settings.private.room5Id,
+		      hourlyPrice: "250.00000",
+		      freeHours: 0,
+		      tax: true
+		    }
+		];
+
+		console.log(customer);
 
 		if (!exists) {
 			const newCustomer = Customers.insert(customer);

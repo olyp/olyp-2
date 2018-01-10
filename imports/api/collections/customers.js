@@ -31,11 +31,13 @@ const CustomerSchema = new SimpleSchema({
 	},
 
 	"zip": {
-		type: String
+		type: String,
+		optional: true
 	},
 
 	"city": {
-		type: String
+		type: String,
+		optional: true
 	},
 
 	"brregId": {

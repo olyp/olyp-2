@@ -10,6 +10,9 @@ import CustomersCollection from '../../../../api/collections/customers.js';
 
 import AwsUpload from '../../../shared/files/awsUpload.js';
 import CustomerRow from '../customers/CustomerRow';
+import Preloader from '../../../shared/preloader/Preloader.js';
+
+// TODO: Customers subscription does not update when removing a customer, figure out why.
 
 
 class Profile extends Component {
@@ -206,9 +209,16 @@ class Profile extends Component {
 		const user = this.props.user;
 
 		if (!user) {
-			return (
-				<h1>Loading ...</h1>
-			);	
+			return <Preloader />;	
+		}
+
+		// Have to do the following since the customers subscription does not update when removing a customer from a user
+		let customers = [];
+
+		if (user.customers) {
+			user.customers.map((customer) => {
+				customers.push(CustomersCollection.findOne({_id: customer.id}));
+			});
 		}
 
 		const name = (user && user.profile && user.profile.firstName && user.profile.lastName) ? user.profile.firstName + ' ' + user.profile.lastName : null;
@@ -305,8 +315,12 @@ class Profile extends Component {
 
 				<hr />
 
-				{this.props.customers.map((customer) => {
-					return <CustomerRow customer={customer} key={customer._id} onClick={this.removeCustomerFromUser.bind(this, customer._id) } />
+				{customers.map((customer) => {
+
+					if (customer) {
+						return <CustomerRow customer={customer} key={customer._id} onClick={this.removeCustomerFromUser.bind(this, customer._id) } />
+					}
+
 				})}
 
 				<hr />
