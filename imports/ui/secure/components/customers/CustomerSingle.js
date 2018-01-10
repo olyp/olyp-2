@@ -7,6 +7,7 @@ import CustomersCollection from '../../../../api/collections/customers.js'
 import Invoices from '../../../../api/collections/invoices.js'
 
 import Preloader from '../../../shared/preloader/Preloader.js';
+import UserRow from '../users/UserRow';
 
 class CustomerSingle extends Component {
 
@@ -46,8 +47,6 @@ class CustomerSingle extends Component {
 			);
 		}
 
-		console.log(users);
-
 		return (
 			<div className="container customer-single">
 				<div className="row">
@@ -76,6 +75,19 @@ class CustomerSingle extends Component {
 				<div className="row">
 					<div className="col-xs-12">
 						<h4>Room booking agreements</h4>
+					</div>
+				</div>
+				<div className="row">
+					<div className="col-xs-12">
+						<h4>Users</h4>
+						{users.map((user) => {
+							return (
+								<div key={user._id}>
+									<UserRow user={user} />
+									<hr />
+								</div>
+							);
+						})}
 					</div>
 				</div>
 				<div className="row">

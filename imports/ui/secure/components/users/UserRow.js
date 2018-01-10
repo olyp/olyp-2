@@ -50,7 +50,7 @@ class UserRow extends Component {
 
 		return (
 			<Link to={url}>
-				<div className="row">
+				<div className="row user-row">
 					<div className="col-xs-4">
 
 						{image}

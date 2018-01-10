@@ -23,6 +23,14 @@ class Users extends Component {
 
 	render () {
 
+		if (this.props.users.length == 0) {
+			return (
+				<div>
+					<Preloader />
+				</div>
+			);
+		}
+
 		var filteredUsers = this.props.users.filter(
 			(user) => {
 
@@ -38,14 +46,6 @@ class Users extends Component {
 				}
 			}
 		);
-
-		if (this.props.users.length == 0) {
-			return (
-				<div>
-					<Preloader />
-				</div>
-			);
-		}
 
 		return (
 			<div className="container">
@@ -72,7 +72,7 @@ class Users extends Component {
 					// if (user._id !== Meteor.userId()) {
 
 						return (
-							<div className="user-list" key={user._id}>
+							<div key={user._id}>
 								<UserRow user={user}/>
 								<hr />
 							</div>

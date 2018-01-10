@@ -202,7 +202,7 @@ a:hover,
 
 /*==========  SECURE LAYOUT  ==========*/
 
-.user-list .user-status p,
+.user-row .user-status p,
 .customer-list .customer-status p {
 	display: inline;
 	margin-right: 10px;
@@ -223,7 +223,8 @@ a:hover,
 .search-counter {
 	display: inline-block;
 	padding: 2px 10px 2px 10px;
-	margin-top: 7px;
+	padding-top: 4px;
+	height: 28px;
 	color: white;
 	background-color: rgb(38, 84, 249);
 }

@@ -99,7 +99,16 @@ Meteor.publish('customerUsers', function (customerId) {
 	const isAdmin = Roles.userIsInRole(this.userId, ['admin', 'super-admin'], 'olyp');
 
 	if (isAdmin) {
-		return Meteor.users.find({"customers.id": customerId}, {fields: {"profile": 1, "emails": 1, "createdAt": 1, "roles": 1, "status": 1, "customers": 1, "user.services.facebook.id": 1, "user.services.google.picture": 1}});
+		return Meteor.users.find({"customers.id": customerId}, {fields: {
+			"profile": 1, 
+			"emails": 1, 
+			"createdAt": 1, 
+			"roles": 1, 
+			"status": 1, 
+			"customers": 1, 
+			"services.facebook.id": 1, 
+			"services.google.picture": 1
+		}});
 	} else {
 		return null;
 	}

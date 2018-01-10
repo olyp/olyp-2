@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 import { withTracker } from 'meteor/react-meteor-data';
 import { browserHistory, Link } from 'react-router';
 
-import CustomersCollection from '../../../../api/collections/customers.js';
+import CustomersCollection from '../../../../api/collections/customers';
 
-import CustomerRow from './CustomerRow.js';
+import CustomerRow from './CustomerRow';
+import Preloader from '../../../shared/preloader/Preloader';
 
 class Customers extends Component {
 
@@ -28,6 +29,10 @@ class Customers extends Component {
 	}
 
 	render () {
+
+		if (this.props.customers.length == 0) {
+			return <Preloader />
+		}
 
 		var filteredCustomers = this.props.customers.filter(
 			(customer) => {
