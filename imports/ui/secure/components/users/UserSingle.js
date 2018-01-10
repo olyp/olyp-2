@@ -6,6 +6,7 @@ import { Glyphicon } from 'react-bootstrap';
 
 import Rooms from '../../../../api/collections/rooms.js'
 import DoorCodes from '../../../../api/collections/doorCodes.js'
+import CustomersCollection from '../../../../api/collections/customers.js';
 
 import Preloader from '../../../shared/preloader/Preloader.js';
 // import AwsImage from '../../../shared/files/awsImage.js';
@@ -112,15 +113,27 @@ class UserSingle extends Component {
 
 		const isAdminClass = (user && Roles.userIsInRole(user._id, ['super-admin', 'admin'], 'olyp')) ? 'room-selector-active': '';
 		// const awsKey = (user && user.profile && user.profile.image && user.profile.image.awsKey);
-		const image = (user && user.profile && user.profile.image) ? 
-			<img 
-				src={`/images/${user.profile.image.localId}?size=100x100`}
+		let imageSource = "/images/default_avatar_100x100.jpg"
+
+		if (user.services && user.services.google) {
+			imageSource = user.services.google.picture;
+		}
+
+
+		if (user.services && user.services.facebook) {
+			imageSource = `http://graph.facebook.com/${user.services.facebook.id}/picture?type=square`;
+				
+		}
+
+		if (user.profile && user.profile.image) {
+			imageSource = `/images/${user.profile.image.localId}?size=100x100`;
+				
+		}
+
+		const image = <img 
+				src={imageSource}
 				className="img-responsive"
-			/> :
-			<img 
-				src="/images/default_avatar_100x100.jpg" 
-				className="img-responsive"
-			/>;
+			/>
 			
 		return (
 			<div className="container user-single">
@@ -224,13 +237,12 @@ export default withTracker((props) => {
 	Meteor.subscribe('allUsers');
 	Meteor.subscribe('allRooms');
 	Meteor.subscribe('allDoorCodes');
-
-	const user = Meteor.users.find({_id: props.params.userId}).fetch();
-	const doorCode = DoorCodes.find({userId: props.params.userId}).fetch()
+	Meteor.subscribe('userCustomers');
 
 	return {
-		user: user[0],
+		user: Meteor.users.find({_id: props.params.userId}).fetch()[0],
 		rooms: Rooms.find().fetch(),
-		doorCode: doorCode[0]
+		doorCode: DoorCodes.find({userId: props.params.userId}).fetch()[0],
+		customers: CustomersCollection.find().fetch()
 	};
 })(UserSingle);

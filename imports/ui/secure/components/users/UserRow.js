@@ -10,8 +10,6 @@ class UserRow extends Component {
 
 	render () {
 
-		
-
 		const user = this.props.user;
 		const profile = user.profile;
 		const email = (user && user.emails && user.emails[0]) ? user.emails[0].address : '';
@@ -24,15 +22,27 @@ class UserRow extends Component {
 		};
 		// const awsKey = (user && user.profile && user.profile.image && user.profile.image.awsKey);
 
-		const image = (user && user.profile && user.profile.image) ? 
-			<img 
-				src={`/images/${user.profile.image.localId}?size=100x100`}
+		let imageSource = "/images/default_avatar_100x100.jpg"
+
+		if (user.services && user.services.google) {
+			imageSource = user.services.google.picture;
+		}
+
+
+		if (user.services && user.services.facebook) {
+			imageSource = `http://graph.facebook.com/${user.services.facebook.id}/picture?type=square`;
+				
+		}
+
+		if (user.profile && user.profile.image) {
+			imageSource = `/images/${user.profile.image.localId}?size=100x100`;
+				
+		}
+
+		const image = <img 
+				src={imageSource}
 				className="img-responsive"
-			/> :
-			<img 
-				src="/images/default_avatar_100x100.jpg" 
-				className="img-responsive"
-			/>;
+			/>
 
 
 		const isOnline = (user && user.status && user.status.online) ? <p>online</p> : null;
