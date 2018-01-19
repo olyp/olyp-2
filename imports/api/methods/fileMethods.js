@@ -1,10 +1,18 @@
 import crypto from 'crypto';
 import uuid from 'uuid/v4';
 import moment from 'moment';
+import AWS from 'aws-sdk/global';
 import S3 from 'aws-sdk/clients/s3';
-
 import Files from '../collections/files';
 import Images from '../collections/images';
+
+var myConfig = new AWS.Config({
+	accessKeyId: Meteor.settings.aws.accessKey,
+	secretAccessKey: Meteor.settings.aws.secretKey,
+	region: Meteor.settings.public.aws.region
+});
+
+AWS.config = myConfig;
 
 var s3 = new S3();
 
