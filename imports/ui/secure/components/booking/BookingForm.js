@@ -34,14 +34,16 @@ class BookingForm extends Component {
 		endDateTime: defaultEnd,
 		bookingLength: defaultBookingLength,
 		comment: '',
-		customer: ''
+		customerId: '',
+		customerName: ''
 	}
 
 	componentDidUpdate(prevProps) {
 		// Set first customer as default
 		if (this.props.customers !== prevProps.customers) {
 			this.setState({
-				customer: this.props.customers[0]._id
+				customerId: this.props.customers[0]._id,
+				customerName: this.props.customers[0].name
 			});
 		};
 	}
@@ -122,7 +124,8 @@ class BookingForm extends Component {
 			customer.roomBookingAgreements.map((agreement) => {
 				if (agreement.roomId == this.props.currentRoom) {
 					this.setState({
-						customer: customer._id
+						customerId: customer._id,
+						customerName: customer.name
 					});
 				} else {
 					Bert.alert("That customer can't book this room", 'danger', 'growl-bottom-right', 'fa-frown-o');
@@ -133,11 +136,11 @@ class BookingForm extends Component {
 		}
 	}
 
-	doBooking(customer) {
+	doBooking() {
 
 		const startDateTime = this.state.startDateTime;
 		const endDateTime = this.state.endDateTime;
-		const customerId = this.state.customer;
+		const customerId = this.state.customerId;
 		const roomId = this.props.currentRoom;
 		const comment = this.state.comment;
 
@@ -160,8 +163,7 @@ class BookingForm extends Component {
 			startDateTime: defaultStart,
 			endDateTime: defaultEnd,
 			bookingLength: defaultBookingLength,
-			comment: '',
-			customer: ''
+			comment: ''
 		});
 	}
 
@@ -195,17 +197,14 @@ class BookingForm extends Component {
 					<hr />
 					<p>Choose invoice receiver:</p>
 					{customers.map((customer) => {
-						const active = (customer._id == this.state.customer) ? {color: 'rgb(38, 84, 249)'} : {};
+						const active = (customer._id == this.state.customerId) ? {color: 'rgb(38, 84, 249)'} : {};
 						return (
 							<div style={active} key={customer._id}>
 								<CustomerRow customer={customer} onClick={this.chooseCustomer.bind(this, customer)} />
 							</div>
 						);
 					})}
-					<hr />
-					<p>Don't see the correct invoice receiver? Add one from your <Link to="/secure/profile" style={{color: 'rgb(38, 84, 249)'}}>profile</Link> :)</p>
 				</div>
-
 
 		return (
 			<div>
@@ -281,6 +280,9 @@ class BookingForm extends Component {
 							</form>
 
 							{customersSelector}
+
+							<hr />
+							<p>The invoice will be sendt to {this.state.customerName}, you can add more invoice receivers from your <Link to="/secure/profile" style={{color: 'rgb(38, 84, 249)'}}>profile</Link> :)</p>
 
 							<hr />
 
