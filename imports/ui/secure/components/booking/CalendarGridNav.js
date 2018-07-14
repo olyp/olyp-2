@@ -8,11 +8,23 @@ function currentWeekSummary(baseDayVal, firstDayVal, lastDayVal) {
     var firstMonth = firstDay.format("MMM");
     var lastMonth = lastDay.format("MMM");
 
-    return React.DOM.span(null,
-        firstMonth + " " + firstDay.format("DD")
-        + " - "
-        + (firstMonth === lastMonth ? "" : (lastMonth + " ")) + lastDay.format("DD")
-        + ", " + moment(baseDayVal).format("YYYY"));
+    // return (
+    //   <span>
+    //     {firstMonth} {firstDay.format("DD")} - {(firstMonth === lastMonth ? "" : (lastMonth + " ")) + lastDay.format("DD")}, {moment(baseDayVal).format("YYYY")}
+    //   </span>
+    // );
+
+    return (
+      <span>
+        {moment(baseDayVal).format("YYYY")}
+      </span>
+    );
+
+    // return React.DOM.span(null,
+    //     firstMonth + " " + firstDay.format("DD")
+    //     + " - "
+    //     + (firstMonth === lastMonth ? "" : (lastMonth + " ")) + lastDay.format("DD")
+    //     + ", " + moment(baseDayVal).format("YYYY"));
 }
 
 export default class CalendarGridNav extends Component {

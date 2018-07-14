@@ -10,13 +10,13 @@ Meteor.methods({
 
 		check(payload, Object);
 
-		const bookingForm = payload.bookingForm;
+		// const bookingForm = payload.bookingForm;
 		const roomId = payload.roomId;
 		const userId = Meteor.userId();
 		const customerId = payload.customerId;
 
-		const from = bookingForm.from;
-		const to = bookingForm.to;
+		const from = payload.from;
+		const to = payload.to;
 
 		if (from > to) {
 			throw new Meteor.Error(666, "From must be before to")
@@ -26,7 +26,7 @@ Meteor.methods({
 			throw new Meteor.Error(666, "To must be after from")
 		}
 
-		const overlappingReservations = Reservations.find({from: {$lt: new Date(to)}, to: {$gt: new Date(from)}}).fetch();
+		const overlappingReservations = Reservations.find({from: {$lt: to}, to: {$gt: from}}).fetch();
 		if (overlappingReservations.length > 0) {
 			const overlappingReservation = overlappingReservations[0];
 			const bookingUser = Meteor.users.findOne({'_id': overlappingReservation.booking.userId});
@@ -40,9 +40,9 @@ Meteor.methods({
 				customerId: customerId,
 				isInvoiced: false
 			},
-			comment: bookingForm.comment,
-			from: new Date(bookingForm.from),
-			to: new Date(bookingForm.to),
+			comment: payload.comment,
+			from: from,
+			to: to,
 			roomId: roomId
 		});
 	},

@@ -4,48 +4,48 @@ import { Glyphicon } from 'react-bootstrap';
 
 const hours = [];
 for (let i = 0; i < 24; i++) {
-    hours.push(i);
-}
+	hours.push(i);
+};
 
 function padNum(num) {
-    if (num < 10) {
-        return "0" + num;
-    } else {
-        return num.toString();
-    }
-}
+	if (num < 10) {
+		return "0" + num;
+	} else {
+		return num.toString();
+	}
+};
 
 function formatHour(hour) {
-    return padNum(hour) + ":00";
-}
+	return padNum(hour) + ":00";
+};
 
 const HALF_HOUR_HEIGHT = 13;
 const HOUR_HEIGHT = HALF_HOUR_HEIGHT * 2;
 
 function getOffset(offset) {
-    return (offset / 30) * HALF_HOUR_HEIGHT;
-}
+	return (offset / 30) * HALF_HOUR_HEIGHT;
+};
 
 export default class CalendarGridWeek extends Component {
-    render() {
-        const props = this.props;
+	render() {
+		const props = this.props;
 
-        var calendarGridClassNames = ["calendar-grid-week-content"];
-        if (props.reservations === null) {
-            calendarGridClassNames.push("calendar-grid-week-content-no-data");
-        }
+		var calendarGridClassNames = ["calendar-grid-week-content"];
+		if (props.reservations === null) {
+			calendarGridClassNames.push("calendar-grid-week-content-no-data");
+		};
 
-        return (
-        	<div className='calendar-grid-week'>
+		return (
+			<div className='calendar-grid-week'>
 				<div className='calendar-grid-week-hours'>
 					<div className='calendar-grid-week-hours-header'></div>
 					{hours.map((hour) => {
 						var classNames = ["calendar-grid-week-hour-cell"];
-						if (hour % 2 === 0)
+						if (hour % 2 === 0) {
 							classNames.push("calendar-grid-week-hour-cell-colored-row");
-
+						};
 						return <div key={"hour-" + hour} className={classNames.join(" ")}>{formatHour(hour)}</div>
-					})}
+					})};
 				</div>
 
 				<div className='calendar-grid-week'>
@@ -120,5 +120,5 @@ export default class CalendarGridWeek extends Component {
 				</div>
 			</div>
 		);
-    }
+	}
 }

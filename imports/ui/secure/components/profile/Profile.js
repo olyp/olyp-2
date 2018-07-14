@@ -333,7 +333,7 @@ class Profile extends Component {
 				<div className="row">
 					<div className="col-xs-12">
 						<Link to={addCustomerUrl}>
-							<div className="button-large hover">Legg til fakturamottaker</div>
+							<div className="button-large hover">Add invoice receiver</div>
 						</Link>
 					</div>
 				</div>

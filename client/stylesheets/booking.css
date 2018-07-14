@@ -1,3 +1,7 @@
+/*#booking-room-selector {
+    z-index: 5;
+}*/
+
 .booking-form .input-group {
     z-index: 1;
 }
@@ -17,11 +21,15 @@
 @media only screen and (min-width: 800px) {
     .calendar-grid-week { display: none; }
     
-    .booking-form-calendar-grid { display: flex; flex-direction: row; position: absolute; left: 25px; right: 25px; bottom: 10px; top: 100px; }
+    .booking-form-calendar-grid { display: flex; flex-direction: row; position: absolute; left: 25px; right: 25px; bottom: 10px; top: 150px; }
     .calendar-grid { flex: auto; order: 1; margin-right: 15px; display: flex; flex-flow: column; }
     .calendar-grid-week { overflow-y: auto; }
     .calendar-grid-agenda { flex: auto; padding: 0 15px; }
-    .booking-form { width: 300px; order: 2; z-index: 1;}
+    .booking-form {
+        width: 300px; 
+        order: 2; 
+        z-index: 1;
+    }
 }
 
 @media only screen and (min-width: 1130px) {

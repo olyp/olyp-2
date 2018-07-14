@@ -33,9 +33,10 @@ Meteor.methods({
 		      _id: uuid(),
 		      type: "hourlyRental",
 		      roomId: Meteor.settings.private.room5Id,
-		      hourlyPrice: "250.00000",
+		      price: "255.00000",
 		      freeHours: 0,
-		      tax: true
+		      tax: true,
+		      dateCreated: new Date()
 		    }
 		];
 

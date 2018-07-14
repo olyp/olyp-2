@@ -96,8 +96,7 @@ const CustomerSchema = new SimpleSchema({
 	},
 
 	"roomBookingAgreements.$.freeHours": {
-		type: Number,
-		optional: true
+		type: Number
 	},
 
 	"roomBookingAgreements.$.tax": {

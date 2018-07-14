@@ -9,6 +9,7 @@ html {
 /*	So that the footer can be sticky: All the way down on little content, below content when alot content;*/
 	min-height: 100%;
 	position: relative;
+	box-sizing: border-box;
 }
 
 body {
@@ -597,6 +598,10 @@ a:hover,
 .overlay-letter img {
 	max-width: 50px;
 }
+
+/*.Select-menu-outer {
+	z-index: ;
+}*/
 
 /*==========  Home page overlay END  ==========*/
 
