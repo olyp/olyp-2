@@ -36,7 +36,7 @@ class Booking extends Component {
 	getReservations() {
 		const start = this.state.baseDay;
 		const end = start.clone().add(7, "days");
-		const reservations = Reservations.find({from: {$gt: start.toDate()}, to: {$lt: end.toDate()}, roomId: this.state.currentRoom}).fetch();
+		const reservations = Reservations.find({from: {$gte: start.toDate()}, to: {$lte: end.toDate()}, roomId: this.state.currentRoom}).fetch();
 		return reservations;
 	}
 

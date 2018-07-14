@@ -49,6 +49,8 @@ class BookingForm extends Component {
 	}
 
 	openQueue() {
+		// The date picker calendar opens outside of view if not scrolled to top
+		window.scrollTo(0, 0);
 		this.setState({modal: 1});
 	}
 
