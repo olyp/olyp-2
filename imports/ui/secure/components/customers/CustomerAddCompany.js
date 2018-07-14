@@ -88,8 +88,12 @@ class CustomerAddCompany extends Component {
 
 		} else {
 
-			let customerAlreadyAttatched = this.props.userData.customers.filter((customer) => {
-				return customer.id == existingCustomerId
+			let customerAlreadyAttatched = false;
+
+			this.props.userData.customers.map((customer) => {
+				if (customer.id == existingCustomerId) {
+					customerAlreadyAttatched = true;
+				}
 			});
 
 			if (customerAlreadyAttatched) {
@@ -132,6 +136,7 @@ class CustomerAddCompany extends Component {
 
 		Meteor.call("customer.add", customer, (err, res) => {
 			if (err) {
+
 				console.log(err);
 			} else {
 
@@ -143,7 +148,6 @@ class CustomerAddCompany extends Component {
 						if (err) {
 							console.log(err);
 						} else {
-
 							if (customerResult.newCustomer) {
 								Bert.alert('Customer created and added to user', 'success', 'growl-bottom-right', 'fa-smile-o');
 							} else {
