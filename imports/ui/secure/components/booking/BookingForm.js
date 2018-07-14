@@ -37,6 +37,15 @@ class BookingForm extends Component {
 		customer: ''
 	}
 
+	componentDidUpdate(prevProps) {
+		// Set first customer as default
+		if (this.props.customers !== prevProps.customers) {
+			this.setState({
+				customer: this.props.customers[0]._id
+			});
+		};
+	}
+
 	openQueue() {
 		this.setState({modal: 1});
 	}
@@ -163,14 +172,7 @@ class BookingForm extends Component {
 		}
 
 		const user = this.props.user;
-
-		let customers = [];
-
-		if (user.customers) {
-			user.customers.map((customer) => {
-				customers.push(CustomersCollection.findOne({_id: customer.id}));
-			});
-		};
+		const customers = this.props.customers;
 
 		const BookingButton = 
 			(customers.length == 0) ? 
@@ -185,6 +187,25 @@ class BookingForm extends Component {
 				>
 					<Button bsStyle="success" bsSize="large" onClick={this.openQueue.bind(this)}>Book {this.props.currentRoomName}</Button>
 				</div>;
+
+		const customersSelector = 
+			(customers.length < 2) ?
+				<span></span> :
+				<div>
+					<hr />
+					<p>Choose invoice receiver:</p>
+					{customers.map((customer) => {
+						const active = (customer._id == this.state.customer) ? {color: 'rgb(38, 84, 249)'} : {};
+						return (
+							<div style={active} key={customer._id}>
+								<CustomerRow customer={customer} onClick={this.chooseCustomer.bind(this, customer)} />
+							</div>
+						);
+					})}
+					<hr />
+					<p>Don't see the correct invoice receiver? Add one from your <Link to="/secure/profile" style={{color: 'rgb(38, 84, 249)'}}>profile</Link> :)</p>
+				</div>
+
 
 		return (
 			<div>
@@ -259,20 +280,7 @@ class BookingForm extends Component {
 								</FormGroup>
 							</form>
 
-							<hr />
-
-							<p>Choose invoice receiver:</p>
-
-							{customers.map((customer) => {
-								const active = (customer._id == this.state.customer) ? {color: 'rgb(38, 84, 249)'} : {};
-								return (
-									<div style={active} key={customer._id}>
-										<CustomerRow customer={customer} onClick={this.chooseCustomer.bind(this, customer)} />
-									</div>
-								);
-							})}
-							<hr />
-							<p>Don't see the correct invoice receiver? Add one from your <Link to="/secure/profile" style={{color: 'rgb(38, 84, 249)'}}>profile</Link> :)</p>
+							{customersSelector}
 
 							<hr />
 

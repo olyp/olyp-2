@@ -26,8 +26,8 @@ class Profile extends Component {
 		swal({
 			title: 'Change name',
 			html:
-			    '<input id="swal-firstname" class="swal2-input" placeholder="First name">' +
-			    '<input id="swal-lastname" class="swal2-input" placeholder="Last name">',
+				'<input id="swal-firstname" class="swal2-input" placeholder="First name">' +
+				'<input id="swal-lastname" class="swal2-input" placeholder="Last name">',
 			showCancelButton: true
 		}).then((result) => {
 
@@ -417,8 +417,8 @@ class Profile extends Component {
 				<div className="row">
 					<div className="col-xs-12">
 						<div className="delete-large" onClick={this.deleteUser.bind(this)}>
-      						Delete my user
-    					</div>
+							Delete my user
+						</div>
 					</div>
 				</div>
 

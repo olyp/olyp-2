@@ -23,23 +23,21 @@ class Home extends Component {
 		}
 	}
 
-    componentDidMount () {
-    	this.updateDimensions();
-
-        window.addEventListener("resize", this.updateDimensions.bind(this));
-    }
-    componentWillUnmount () {
-        window.removeEventListener("resize", this.updateDimensions.bind(this));
-    }
+	componentDidMount () {
+		this.updateDimensions();
+		window.addEventListener("resize", this.updateDimensions.bind(this));
+	}
+	componentWillUnmount () {
+		window.removeEventListener("resize", this.updateDimensions.bind(this));
+	}
 
 	updateDimensions () {
-
-        this.setState({
-        	window: {
-        		height: $(window).height()
-        	}
-        });
-    }
+		this.setState({
+			window: {
+				height: $(window).height()
+			}
+		});
+	}
 
 
 	scrollToAnchor(id) {
@@ -321,12 +319,12 @@ class Home extends Component {
 										
 										<VivusContainer duration={200}>
 											<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 104.8 46.1">
-											    <path 
-											    	d="M.5,45.6V.5H30.2V45.6Zm66.4,0V.5H37.2V45.6Zm37.3,0V.5H74.5V45.6Z" 
-											    	fill="none" 
-											    	stroke="#ea2427" 
-											    	strokeMiterlimit="10"
-											    />											
+													<path 
+														d="M.5,45.6V.5H30.2V45.6Zm66.4,0V.5H37.2V45.6Zm37.3,0V.5H74.5V45.6Z" 
+														fill="none" 
+														stroke="#ea2427" 
+														strokeMiterlimit="10"
+													/>											
 											</svg>
 										</VivusContainer>
 
@@ -343,12 +341,12 @@ class Home extends Component {
 
 										<VivusContainer duration={75}>
 											<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 105 64.6">
-											    <path 
-											    	d="M.5,64.1V.5h104V64.1Z" 
-											    	fill="none" 
-											    	stroke="#ea2427" 
-											    	strokeMiterlimit="10"
-											    />											
+													<path 
+														d="M.5,64.1V.5h104V64.1Z" 
+														fill="none" 
+														stroke="#ea2427" 
+														strokeMiterlimit="10"
+													/>											
 											</svg>
 										</VivusContainer>
 
@@ -364,12 +362,12 @@ class Home extends Component {
 
 										<VivusContainer duration={200}>
 											<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 277.3 36.2">
-											    <path 
-											    	d="M277.3,35.6H0M115.1,21a7.3,7.3,0,1,0,7.3,7.3A7.3,7.3,0,0,0,115.1,21Zm0,4.9a2.3,2.3,0,1,0,2.3,2.3A2.3,2.3,0,0,0,115.1,26Zm44.9,0a2.3,2.3,0,1,0,2.3,2.3A2.3,2.3,0,0,0,159.9,26Zm0-4.9a7.3,7.3,0,1,0,7.3,7.3A7.3,7.3,0,0,0,159.9,21Zm7.1,8.2h7.2l1.5-4.3V16.6c-.9-5.8-8.6-5.8-8.6-5.8H153.6L145.4.6H112.7L101.3,11.9V23.4s-.7,5.9,6,5.9m-4.8-18.5h44s.4-2,1.9-2h3.5m-5.4,2.3s.2,1.7,1.7,1.7h2.1s1.1,0,1.1-1.8v-.2h2.1M130.3.6V10.8M118.9.6l-9.5,10.2m-3.6,3h-4.5v7.8h4.5Zm8.2.9h4.7m15.1,0h4.7M121.9,27h31.7m-.9,2.3H121.9"
-											    	fill="none" 
-											    	stroke="#ea2427" 
-											    	strokeMiterlimit="10"
-											    />											
+													<path 
+														d="M277.3,35.6H0M115.1,21a7.3,7.3,0,1,0,7.3,7.3A7.3,7.3,0,0,0,115.1,21Zm0,4.9a2.3,2.3,0,1,0,2.3,2.3A2.3,2.3,0,0,0,115.1,26Zm44.9,0a2.3,2.3,0,1,0,2.3,2.3A2.3,2.3,0,0,0,159.9,26Zm0-4.9a7.3,7.3,0,1,0,7.3,7.3A7.3,7.3,0,0,0,159.9,21Zm7.1,8.2h7.2l1.5-4.3V16.6c-.9-5.8-8.6-5.8-8.6-5.8H153.6L145.4.6H112.7L101.3,11.9V23.4s-.7,5.9,6,5.9m-4.8-18.5h44s.4-2,1.9-2h3.5m-5.4,2.3s.2,1.7,1.7,1.7h2.1s1.1,0,1.1-1.8v-.2h2.1M130.3.6V10.8M118.9.6l-9.5,10.2m-3.6,3h-4.5v7.8h4.5Zm8.2.9h4.7m15.1,0h4.7M121.9,27h31.7m-.9,2.3H121.9"
+														fill="none" 
+														stroke="#ea2427" 
+														strokeMiterlimit="10"
+													/>											
 											</svg>
 										</VivusContainer>
 
