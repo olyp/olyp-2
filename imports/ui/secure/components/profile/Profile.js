@@ -342,8 +342,7 @@ class Profile extends Component {
 
 				<h4>Can Book:</h4>
 
-				<div className="row">
-
+				<div className="row" style={{margin: 0}}>
 					{canBook.map((room) => {
 						return (
 							<div 
@@ -360,8 +359,7 @@ class Profile extends Component {
 
 				<h4>Can Access:</h4>
 
-				<div className="row">
-
+				<div className="row" style={{margin: 0}}>
 					{canAccess.map((room) => {
 						return (
 							<div 
