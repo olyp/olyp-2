@@ -406,7 +406,7 @@ class Profile extends Component {
 
 				<div className="row">
 					<div className="col-xs-12">
-						<div className="button-large hover" onClick={this.changePassword.bind(this)}>Change</div>
+						<div className="button-large hover" onClick={this.changePassword.bind(this)}>Change password</div>
 					</div>
 				</div>
 
