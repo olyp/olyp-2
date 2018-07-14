@@ -32,7 +32,8 @@ const ReservationsSchema = new SimpleSchema({
 		type: Boolean
 	},
 	"comment": {
-		type: String
+		type: String,
+		optional: true
 	},
     "from": {
         type: Date

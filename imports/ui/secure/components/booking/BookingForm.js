@@ -41,10 +41,17 @@ class BookingForm extends Component {
 	componentDidUpdate(prevProps) {
 		// Set first customer as default
 		if (this.props.customers !== prevProps.customers) {
-			this.setState({
-				customerId: this.props.customers[0]._id,
-				customerName: this.props.customers[0].name
-			});
+			if (this.props.customers[0]) {
+				this.setState({
+					customerId: this.props.customers[0]._id,
+					customerName: this.props.customers[0].name
+				});
+			} else {
+				this.setState({
+					// Open "add invoice receiver dialog"
+					modal: 2
+				});
+			}
 		};
 	}
 
@@ -62,38 +69,36 @@ class BookingForm extends Component {
 		this.setState({ 
 			startDate: moment(date) 
 		},
-			this.setBookingDuration
+			this.validateDateTime
 		);
-		
-	};
+	}
 
 	cangeStartTime(time) {
 		this.setState({
 			startTime: time
 		},
-			this.setBookingDuration
+			this.validateDateTime
 		);
-		
 	}
 
 	changeEndDate(date) {
 		this.setState({ 
 			endDate: moment(date)
 		},
-			this.setBookingDuration
+			this.validateDateTime
 		);
-	};
+	}
 
 	cangeEndTime(time) {
 		this.setState({
 			endTime: time
 		},
-			this.setBookingDuration
+			this.validateDateTime
 		);
 	}
 
-	setBookingDuration() {
-
+	validateDateTime() {
+		// Do validation here in the future if needed
 		const startDate = this.state.startDate.format('DD/MM/YYYY');
 		const endDate = this.state.endDate.format('DD/MM/YYYY');
 		const startTime = this.state.startTime.format('HH:mm');
@@ -102,18 +107,25 @@ class BookingForm extends Component {
 		const startDateTime = moment(startDate + " " + startTime, 'DD/MM/YYYY HH:mm');
 		const endDateTime = moment(endDate + " " + endTime, 'DD/MM/YYYY HH:mm');
 
-		const duration = moment.duration(endDateTime.diff(startDateTime));
+		this.setState({
+			startDateTime,
+			endDateTime
+		},
+			this.setBookingDuration
+		);
+	}
+
+	setBookingDuration() {
+		const duration = moment.duration(this.state.endDateTime.diff(this.state.startDateTime));
 		const days = (parseInt(duration.asDays()) == 0) ? '' : `${parseInt(duration.asDays())}d `;
 		const hours = ((parseInt(duration.asHours()) % 24) == 0) ? '' : `${parseInt(duration.asHours()) % 24}h `;
 		const minutes = ((parseInt(duration.asMinutes()) % 60) == 0) ? '' : `${parseInt(duration.asMinutes()) % 60}m `;
 		const bookingLength = days + hours + minutes;
 
 		this.setState({
-			startDateTime,
-			endDateTime,
 			bookingLength
 		});
-	};
+	}
 
 	changeComment(comment) {
 		this.setState({
@@ -146,6 +158,19 @@ class BookingForm extends Component {
 		const roomId = this.props.currentRoom;
 		const comment = this.state.comment;
 
+		if (endDateTime.isSameOrBefore(startDateTime)) {
+			Bert.alert("End time cannot be same as or before start time", 'danger', 'growl-bottom-right', 'fa-frown-o');
+			return;
+		}
+
+		if (customerId == '') {
+			Bert.alert("You have to add an invoice receiver before booking", 'danger', 'growl-bottom-right', 'fa-frown-o');
+		}
+
+		if (roomId == '') {
+			Bert.alert("You have to choose a room first", 'danger', 'growl-bottom-right', 'fa-frown-o');
+		}
+
 		const payload = {
 			customerId: customerId,
 			roomId: roomId,
@@ -177,10 +202,9 @@ class BookingForm extends Component {
 
 		const user = this.props.user;
 		const customers = this.props.customers;
+		const addCustomerUrl = '/secure/addCustomer/' + Meteor.userId();
 
 		const BookingButton = 
-			(customers.length == 0) ? 
-				<p><Link to="/secure/profile" style={{color: 'rgb(38, 84, 249)'}}>Add invoice reveicer</Link> before you can book</p> : 
 				<div
 					style={{
 						position: 'fixed',
@@ -189,7 +213,7 @@ class BookingForm extends Component {
 						right: '20px'
 					}}
 				>
-					<Button bsStyle="success" bsSize="large" onClick={this.openQueue.bind(this)}>Book {this.props.currentRoomName}</Button>
+					<Button bsStyle="success" bsSize="large" disabled={customers.length == 0} onClick={this.openQueue.bind(this)}>Book {this.props.currentRoomName}</Button>
 				</div>;
 
 		const customersSelector = 
@@ -213,6 +237,13 @@ class BookingForm extends Component {
 				<div>
 					{BookingButton}
 				</div>
+
+				<Modal show={this.state.modal == 2}>
+					<Modal.Header>Add invoice receiver</Modal.Header>
+					<Modal.Body>
+						<p><Link to={addCustomerUrl} style={{color: 'rgb(38, 84, 249)'}}>Add invoice reveicer</Link> before you can book.</p>
+					</Modal.Body>
+				</Modal>
 
 				<Modal show={this.state.modal == 1} onHide={this.handleClose.bind(this)}>
 					<Modal.Header closeButton>
@@ -252,7 +283,6 @@ class BookingForm extends Component {
 										onChange={this.changeEndDate.bind(this)}
 										value={this.state.endDate.toDate()}
 										locale='no-nb'
-										minDate={this.state.startDate.toDate()}
 									/>
 								</div>
 								<div className="col-xs-8">
