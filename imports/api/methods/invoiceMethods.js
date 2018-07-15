@@ -113,7 +113,7 @@ function getRoomLineForMonth(includeFreeHours, customerId, roomId, roomReservati
 		"booking.isInvoiced": true,
 		"booking.customerId": customerId,
 		"roomId": roomId,
-		"from": {"$gt": startOfMonth.toDate()},
+		"from": {"$gte": startOfMonth.toDate()},
 		"to": {"$lt": startOfNextMonth.toDate()}
 	}).fetch();
 
@@ -127,7 +127,7 @@ function getRoomLineForMonth(includeFreeHours, customerId, roomId, roomReservati
 	const freeHours = big(roomBookingAgreement.freeHours);
 	const availableFreeHours = bigMax(big0, freeHours.minus(big(totalInvoicedHours)));
 	const numDiscountedHours = bigMin(availableFreeHours, totalHours);
-	const pricePerHour = big(roomBookingAgreement.hourlyPrice);
+	const pricePerHour = big(roomBookingAgreement.price);
 	const billableHours = includeFreeHours ? bigMax(big0, totalHours.minus(availableFreeHours)) : totalHours;
 
 	const sumWithoutTax = pricePerHour.times(billableHours);
@@ -168,10 +168,17 @@ function getRoomLines(includeFreeHours, customerId, roomId, allRoomReservations,
 }
 
 function getInvoiceDataFromQuery({customerId, reservationIds, extraLines, includeFreeHours}) {
-	const customer = Customers.findOne({_id: customerId});
 
-	const roomReservations = reservationIds.map((reservationId) =>
-		Reservations.findOne({_id: reservationId}));
+	console.log(customerId);
+	console.log(reservationIds);
+	console.log(extraLines);
+	console.log(includeFreeHours);
+
+	const customer = Customers.findOne({_id: customerId});
+	const roomReservations = reservationIds.map((reservationId) => Reservations.findOne({_id: reservationId}));
+
+	console.log(customer);
+	console.log(roomReservations);
 
 	const roomReservationsByRoom = {};
 	roomReservations.forEach((roomReservation) => {
@@ -180,12 +187,14 @@ function getInvoiceDataFromQuery({customerId, reservationIds, extraLines, includ
 		roomReservationsByRoom[roomId].push(roomReservation);
 	});
 
+	console.log(roomReservationsByRoom);
 
 	let roomBookingLines = [];
 
 	for (const roomId in roomReservationsByRoom) {
-		const roomBookingAgreement = customer.roomBookingAgreements.filter(
-			(roomBookingAgreement) => roomBookingAgreement.roomId === roomId)[0];
+
+		const roomBookingAgreement = customer.roomBookingAgreements.filter((roomBookingAgreement) => roomBookingAgreement.roomId === roomId)[0];
+		console.log(roomBookingAgreement);
 		roomBookingLines = roomBookingLines.concat(getRoomLines(includeFreeHours && includeFreeHours[roomId], customerId, roomId, roomReservationsByRoom[roomId], roomBookingAgreement));
 	}
 
@@ -224,6 +233,7 @@ Meteor.methods({
 	},
 
 	"invoice.generateData": function (queries) {
+		
 		return queries.reduce((res, query) => {
 			const customerId = query.customerId;
 			const invoiceData = getInvoiceDataFromQuery(query);
@@ -283,7 +293,7 @@ Meteor.methods({
 					roomId: line.roomId,
 					roomReservationIds: line.roomReservationIds,
 					roomBookingAgreementId: roomBookingAgreement["_id"],
-					hourlyPrice: roomBookingAgreement["hourlyPrice"],
+					price: roomBookingAgreement["price"],
 					tax: roomBookingAgreement["tax"],
 					freeHours: roomBookingAgreement["freeHours"],
 					lines: lines

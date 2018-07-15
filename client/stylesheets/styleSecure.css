@@ -19,3 +19,9 @@
 /*.user-row-background .user-row {
 	background-color: grey;
 }*/
+
+.uninvoiced-booking-line {
+	padding-top: 20px;
+	padding-bottom: 20px;
+	border-top: 1px solid #eee;
+}

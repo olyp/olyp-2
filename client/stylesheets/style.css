@@ -44,6 +44,14 @@ input[type=password] {
 	text-align: center;
 }
 
+.label, .panel {
+	border-radius: 0;
+}
+
+.panel-default {
+	border-color: black;
+}
+
 #home-container a,
 #home-container h1,
 #home-container h4,

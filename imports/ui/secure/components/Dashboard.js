@@ -58,6 +58,11 @@ class Dashboard extends Component {
 						{doorCode}
 					</div>
 				</div>
+				<div className="row">
+					<div className="col-xs-12">
+						<p>Mer fornuftig stæsj kommer her ...</p>
+					</div>
+				</div>
 			</div>
 			
 		);

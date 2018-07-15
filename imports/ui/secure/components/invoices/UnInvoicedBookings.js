@@ -258,8 +258,8 @@ class UninvoicedBookings extends Component {
 		return (
 			<div>
 				{Object.keys(reservationsByCustomer).sort().map((customerId) => {
-					const reservations = reservationsByCustomer[customerId]
-						.sort((a, b) => a.from.getTime() - b.from.getTime());
+					// console.log(customerId);
+					const reservations = reservationsByCustomer[customerId].sort((a, b) => a.from.getTime() - b.from.getTime());
 					const customer = customersById[customerId];
 					const customerForm = this.state.invoiceForm[customerId];
 					const extraLines = customerForm && customerForm.extraLines;
@@ -277,17 +277,18 @@ class UninvoicedBookings extends Component {
 						<div style={{maxWidth: 288}} className="panel panel-default">
 							<div className="panel-body">
 								{customer.roomBookingAgreements.map((roomBookingAgreement) => {
+									const price = roomBookingAgreement.price || roomBookingAgreement.hourlyPrice;
 									const roomId = roomBookingAgreement.roomId;
 									const room = roomsById[roomId];
 									return <div key={`customer_${customerId}-agreement-${roomId}`} className='row' >
 										<div className='col-xs-4'>{room ? room.name : roomId}</div>
-										<div className='col-xs-4'>{big(roomBookingAgreement.hourlyPrice).toFixed(0)}kr/t</div>
+										<div className='col-xs-4'>{big(price).toFixed(0)}kr/t</div>
 										<div className='col-xs-4'>{roomBookingAgreement.freeHours}t inkl</div>
 									</div>
 								})}
 							</div>
 						</div>
-						<hr />
+
 						{reservations.map((reservation) => {
 							const reservationId = reservation._id;
 							const formReservations = customerForm && customerForm.reservations;
@@ -295,27 +296,33 @@ class UninvoicedBookings extends Component {
 							const user = Meteor.users.findOne({_id: reservation.booking.userId});
 							let userName = (user && user.profile) ? user.profile.firstName + ' ' + user.profile.lastName : null;
 
+							let userId = '';
+
+							if (user) {
+								userId = user._id;
+							}
+
 							if (userName) {
 								userName = userName.substring(0, 15);
-							}
+							};
+
+							const checked = formReservations ? formReservations.hasOwnProperty(reservationId) : false;
+							const active = checked ? {backgroundColor: 'rgb(38, 84, 249)'} : {};
 							
 							return (
 								<div key={reservation._id}>
-									<div className="row uninvoiced-booking-line">		
-										<div className="col-xs-2">
-											<Checkbox
-												   checked={formReservations ? formReservations.hasOwnProperty(reservationId) : false}
-												   onClick={(e) => this.onReservationCheckboxClicked(e.target.checked, customer, reservation)} />
-										</div>
-										<div className="col-xs-5">
-											{reservation.comment}
+									<div className="row uninvoiced-booking-line" style={active} onClick={() => this.onReservationCheckboxClicked(!checked, customer, reservation)}>	
+										<div className="col-xs-7">
+											<div style={{color: 'white', backgroundColor: 'black', padding: '.2em .6em .3em'}}>
+												{reservation.comment}
+											</div>
 										</div>
 										<div className="col-xs-5 text-right">
 											<Link to={`/secure/rooms/${room._id}`}>
 												<Label bsStyle="primary">{room && room.name}</Label>
 											</Link>
 											<br />
-											<Link to={`/secure/users/${user._id}`}>
+											<Link to={`/secure/users/${userId}`}>
 												<Label bsStyle="primary">{userName}</Label>
 											</Link>
 											<br />
@@ -327,11 +334,11 @@ class UninvoicedBookings extends Component {
 											<Label bsStyle="success">{dateRangeString(moment(reservation.from), moment(reservation.to))}</Label>
 										</div>
 									</div>
-
-									<hr />
 								</div>
 							);
 						})}
+
+						<hr />
 
 						<p><a className="btn btn-default btn-sm" onClick={(e) => this.onAddInvoiceLineClicked(customerId)}>Legg til fakturalinje</a></p>
 
@@ -339,9 +346,9 @@ class UninvoicedBookings extends Component {
 							return <div key={`invoice_line_${idx}`} className="row">
 								<div className="col-xs-1">
 									<a className="btn btn-danger btn-xs"
-									   onClick={(e) => this.onExtraLineRemoveClicked(customerId, idx)}>Fjern</a>
+									   onClick={(e) => this.onExtraLineRemoveClicked(customerId, idx)}>x</a>
 								</div>
-								<div className="col-xs-3">
+								<div className="col-xs-7">
 									<input type="text"
 										   value={invoiceLine.note}
 										   onChange={(e) => this.onExtraLineNoteChange(e.target.value, customerId, idx)}/>
@@ -349,8 +356,8 @@ class UninvoicedBookings extends Component {
 
 								<div className="col-xs-3">
 									<input type="text"
-										   value={invoiceLine.sum}
-										   onChange={(e) => this.onExtraLinesumChange(e.target.value, customerId, idx)}/>
+										value={invoiceLine.sum}
+										onChange={(e) => this.onExtraLinesumChange(e.target.value, customerId, idx)}/>
 								</div>
 							</div>
 						})}
@@ -362,10 +369,11 @@ class UninvoicedBookings extends Component {
 
 							return <div key={`room_booking_${roomId}_${monthStr}`}>
 								<div className="row">
+									<hr />
 									<div className="col-xs-1">
 									</div>
-									<div className="col-xs-3">
-										Booking, {room.name}, {formatTime(big(invoiceLine.totalHours))} timer, {moment(monthStr, "YYYY-MM").format("MMMM, YYYY")}
+									<div className="col-xs-7">
+										{room.name}, {formatTime(big(invoiceLine.totalHours))} timer, {moment(monthStr, "YYYY-MM").format("MM/YY")}
 									</div>
 									<div className="col-xs-3">
 										{big(invoiceLine.baseSumWithoutTax).toFixed(2)}
@@ -373,12 +381,13 @@ class UninvoicedBookings extends Component {
 								</div>
 
 								{invoiceLine.hasFreeHours && <div className="row">
+									<hr />
 									<div className="col-xs-1">
 										<input type="checkbox"
-											   checked={invoiceLine.includeFreeHours}
-											   onChange={(e) => this.onRoomInvoiceIncludeFreeHoursChecked(e.target.checked, customerId, roomId, monthStr)} />
+											checked={invoiceLine.includeFreeHours}
+											onChange={(e) => this.onRoomInvoiceIncludeFreeHoursChecked(e.target.checked, customerId, roomId, monthStr)} />
 									</div>
-									<div className="col-xs-3">
+									<div className="col-xs-7">
 										Gratis timer ({formatTime(big(invoiceLine.numDiscountedHours))}), {room.name}
 									</div>
 									<div className="col-xs-3">
@@ -389,13 +398,15 @@ class UninvoicedBookings extends Component {
 						})}
 
 						{invoiceData && <div className="row">
+							<hr />
 							<div className="col-xs-1">
 							</div>
-							<div className="col-xs-3">
+							<div className="col-xs-7">
 							</div>
 							<div className="col-xs-3">
 								Total: {big(invoiceData.total).toFixed(2)}
 							</div>
+							<hr />
 						</div>}
 
 						<p>
