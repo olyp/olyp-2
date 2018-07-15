@@ -40,7 +40,7 @@ class BookingForm extends Component {
 
 	componentDidUpdate(prevProps) {
 		// Set first customer as default
-		if (this.props.customers !== prevProps.customers) {
+		if (this.props.customers !== prevProps.customers && !this.props.loading) {
 			if (this.props.customers[0]) {
 				this.setState({
 					customerId: this.props.customers[0]._id,
@@ -48,7 +48,7 @@ class BookingForm extends Component {
 				});
 			} else {
 				this.setState({
-					// Open "add invoice receiver dialog"
+					// Open "add invoice receiver dialog if user has none"
 					modal: 2
 				});
 			}
@@ -165,11 +165,28 @@ class BookingForm extends Component {
 
 		if (customerId == '') {
 			Bert.alert("You have to add an invoice receiver before booking", 'danger', 'growl-bottom-right', 'fa-frown-o');
+			return;
 		}
 
 		if (roomId == '') {
 			Bert.alert("You have to choose a room first", 'danger', 'growl-bottom-right', 'fa-frown-o');
+			return;
 		}
+
+		let customerHasAgreement = false;
+
+		this.props.customers.map((customer) => {
+			customer.roomBookingAgreements.map((agreement) => {
+				if (agreement.roomId == roomId) {
+					customerHasAgreement = true;
+				};
+			});
+		});
+
+		if (!customerHasAgreement) {
+			Bert.alert("The customer has no booking agreement for that room", 'danger', 'growl-bottom-right', 'fa-frown-o');
+			return;
+		};
 
 		const payload = {
 			customerId: customerId,

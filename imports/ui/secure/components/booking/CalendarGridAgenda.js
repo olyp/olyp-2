@@ -55,7 +55,7 @@ export default class CalendarGridAgenda extends Component {
 									<div style={{fontWeight: "bold", fontSize: 16, lineHeight: 1.2}}>{profileName}</div>
 									<div style={{ fontStyle: "italic", color: "#666", fontSize: 11}}>{reservation.comment}</div>
 								</div>
-								<div className="col-xs-2">
+								<div className="col-xs-2 text-right">
 									{deleteButton}
 								</div>
 

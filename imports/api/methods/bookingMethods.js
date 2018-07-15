@@ -26,7 +26,7 @@ Meteor.methods({
 			throw new Meteor.Error(666, "To must be after from")
 		}
 
-		const overlappingReservations = Reservations.find({from: {$lt: to}, to: {$gt: from}}).fetch();
+		const overlappingReservations = Reservations.find({from: {$lt: to}, to: {$gt: from}, roomId: roomId}).fetch();
 		if (overlappingReservations.length > 0) {
 			const overlappingReservation = overlappingReservations[0];
 			const bookingUser = Meteor.users.findOne({'_id': overlappingReservation.booking.userId});
