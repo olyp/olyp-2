@@ -43,10 +43,6 @@ export default class CalendarGridNav extends Component {
 					<a className='btn btn-default' onClick={(e) => props.gotoWeek(1)}>
 						<span className='glyphicon glyphicon-chevron-right' />
 					</a>
-					<div className='btn btn-default'>
-						iCal
-					</div>
-					
 				</div>
 				{currentWeekSummary(props.baseDay, props.days[0], props.days[props.days.length - 1])}
 			</div>

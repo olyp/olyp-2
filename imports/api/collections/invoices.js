@@ -25,12 +25,13 @@ const InvoicesSchema = new SimpleSchema({
 	"customerId": {
 		type: "String"
 	},
-
+	"createdAt": {
+		type: Date
+	},
 	"paid": {
 		type: Boolean,
 		optional: true
 	},
-
 	"hourlyBookingLines": {
 		type: [Object]
 	},
@@ -40,7 +41,7 @@ const InvoicesSchema = new SimpleSchema({
 	"hourlyBookingLines.$.roomBookingAgreementId": {
 		type: String
 	},
-	"hourlyBookingLines.$.hourlyPrice": {
+	"hourlyBookingLines.$.price": {
 		type: String
 	},
 	"hourlyBookingLines.$.tax": {

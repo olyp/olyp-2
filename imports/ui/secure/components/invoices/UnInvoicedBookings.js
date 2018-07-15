@@ -371,26 +371,65 @@ class UninvoicedBookings extends Component {
 
 						<hr />
 
-						<p><a className="btn btn-default btn-sm" onClick={(e) => this.onAddInvoiceLineClicked(customerId)}>Legg til fakturalinje</a></p>
+						<p>
+							<a 
+								className="btn btn-default btn-sm" 
+								onClick={(e) => this.onAddInvoiceLineClicked(customerId)}
+								style={{
+									borderRadius: 0
+								}}
+							>Legg til fakturalinje</a>
+						</p>
+						<div className="spacer-10"></div>
+						<div className="spacer-10"></div>
 
 						{extraLines && extraLines.map((invoiceLine, idx) => {
-							return <div key={`invoice_line_${idx}`} className="row">
-								<div className="col-xs-1">
-									<a className="btn btn-danger btn-xs"
-									   onClick={(e) => this.onExtraLineRemoveClicked(customerId, idx)}>x</a>
+							return (
+								<div 
+									key={`invoice_line_${idx}`} 
+									className="row" 
+									style={{marginBottom: '5px'}}
+								>
+									<div 
+										className="col-xs-12"
+										style={{display: 'flex'}}
+									>
+										<a className="btn btn-danger btn-xs"
+											onClick={(e) => this.onExtraLineRemoveClicked(customerId, idx)}
+											style={{
+												marginRight: '5px',
+												padding: '6px 12px'
+											}}
+										>
+											<span 
+												className='glyphicon glyphicon-trash'
+												style={{
+													color: 'white'
+												}}
+											/>
+										</a>
+										<input 
+											type="text"
+											placeholder='Ekstra lager ...'
+											value={invoiceLine.note}
+											onChange={(e) => this.onExtraLineNoteChange(e.target.value, customerId, idx)}
+											style={{
+												textAlign: 'left',
+												paddingLeft: '7px'
+											}}
+										/>
+										<input type="text"
+											placeholder='NOK'
+											value={invoiceLine.sum}
+											style={{
+												marginLeft: '5px',
+												maxWidth: '75px'
+											}}
+											onChange={(e) => this.onExtraLinesumChange(e.target.value, customerId, idx)}
+										/>
+									</div>
 								</div>
-								<div className="col-xs-7">
-									<input type="text"
-										   value={invoiceLine.note}
-										   onChange={(e) => this.onExtraLineNoteChange(e.target.value, customerId, idx)}/>
-								</div>
-
-								<div className="col-xs-3">
-									<input type="text"
-										value={invoiceLine.sum}
-										onChange={(e) => this.onExtraLinesumChange(e.target.value, customerId, idx)}/>
-								</div>
-							</div>
+							);
 						})}
 
 						{invoiceData && invoiceData.lines.map((invoiceLine) => {
@@ -398,54 +437,101 @@ class UninvoicedBookings extends Component {
 							const monthStr = invoiceLine.month;
 							const room = roomsById[roomId];
 
-							return <div key={`room_booking_${roomId}_${monthStr}`}>
-								<div className="row">
+							return (
+								<div 
+									key={`room_booking_${roomId}_${monthStr}`} 
+									className="row"
+								>
 									<hr />
-									<div className="col-xs-1">
+									<div 
+										className="col-xs-12"
+										style={{
+											display: 'flex'
+										}}
+									>
+										<div style={{marginLeft: '50px'}}>
+											{room.name} // {moment(monthStr, "YYYY-MM").format("MMM 'YY")} // {formatTime(big(invoiceLine.totalHours))}t
+										</div>
+										<div style={{
+											marginLeft: 'auto',
+											marginRight: '8px'
+										}}>
+											{big(invoiceLine.baseSumWithoutTax).toFixed(2)}
+										</div>
 									</div>
-									<div className="col-xs-7">
-										{room.name}, {formatTime(big(invoiceLine.totalHours))} timer, {moment(monthStr, "YYYY-MM").format("MM/YY")}
-									</div>
-									<div className="col-xs-3">
-										{big(invoiceLine.baseSumWithoutTax).toFixed(2)}
-									</div>
-								</div>
 
-								{invoiceLine.hasFreeHours && <div className="row">
-									<hr />
-									<div className="col-xs-1">
-										<input type="checkbox"
-											checked={invoiceLine.includeFreeHours}
-											onChange={(e) => this.onRoomInvoiceIncludeFreeHoursChecked(e.target.checked, customerId, roomId, monthStr)} />
-									</div>
-									<div className="col-xs-7">
-										Gratis timer ({formatTime(big(invoiceLine.numDiscountedHours))}), {room.name}
-									</div>
-									<div className="col-xs-3">
-										{big(invoiceLine.freeHoursSumWithoutTax).toFixed(2)}
-									</div>
-								</div>}
-							</div>;
+									{invoiceLine.hasFreeHours && 
+										<div>
+											<hr />
+											<div 
+												className="col-xs-12"
+												style={{
+													display: 'flex'
+												}}
+											>
+												<div>
+													<input type="checkbox"
+														checked={invoiceLine.includeFreeHours}
+														onChange={(e) => this.onRoomInvoiceIncludeFreeHoursChecked(e.target.checked, customerId, roomId, monthStr)} />
+												</div>
+												<div style={{marginLeft: '38px'}}>
+													{formatTime(big(invoiceLine.numDiscountedHours))} gratistimer // {room.name}
+												</div>
+												<div style={{
+													marginLeft: 'auto',
+													marginRight: '8px'
+												}}>
+													{big(invoiceLine.freeHoursSumWithoutTax).toFixed(2)}
+												</div>
+											</div>
+										</div>
+									}
+								</div>
+							);
 						})}
 
-						{invoiceData && <div className="row">
-							<hr />
-							<div className="col-xs-1">
+						{invoiceData && 
+							<div className="row">
+								<hr />
+								<div 
+									className="col-xs-12"
+									style={{
+										display: 'flex'
+									}}
+								>
+									<div
+										style={{
+											marginLeft: 'auto',
+											marginRight: '8px'
+										}}
+									>
+										Total: {big(invoiceData.total).toFixed(2)}
+									</div>
+								</div>
 							</div>
-							<div className="col-xs-7">
-							</div>
-							<div className="col-xs-3">
-								Total: {big(invoiceData.total).toFixed(2)}
-							</div>
-							<hr />
-						</div>}
-
+						}
+						<hr />
 						<p>
-							<a className="btn btn-primary" disabled={this.state.isSubmitting || !invoiceData} onClick={() => { this.submitInvoice(customerId) }}>
-								Opprett faktura for {customer && customer.name}
+							<a 
+								className="btn btn-success" 
+								disabled={this.state.isSubmitting || !invoiceData} 
+								onClick={() => { this.submitInvoice(customerId)}}
+								style={{
+									whiteSpace: 'normal',
+									borderRadius: 0,
+									minWidth: '100%'
+								}}
+							>
+								Opprett faktura til {customer && customer.name}
 							</a>
 						</p>
+						<div className="spacer-50"></div>
+						<hr 
+							style={{borderTop: '10px solid rgb(38, 84, 249)'}}
+						/>
+						<div className="spacer-50"></div>
 					</div>
+
 				})}
 			</div>
 		);
