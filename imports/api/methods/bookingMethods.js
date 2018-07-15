@@ -10,23 +10,34 @@ Meteor.methods({
 
 		check(payload, Object);
 
-		// const bookingForm = payload.bookingForm;
 		const roomId = payload.roomId;
 		const userId = Meteor.userId();
 		const customerId = payload.customerId;
 
-		const from = payload.from;
-		const to = payload.to;
+		// Using start/end instead of from/to since from is reserved
+		const start = payload.from;
+		const end = payload.to;
 
-		if (from > to) {
-			throw new Meteor.Error(666, "From must be before to")
+		if (start > end) {
+			throw new Meteor.Error(666, "From must be before to");
 		}
 
-		if (to < from) {
-			throw new Meteor.Error(666, "To must be after from")
+		if (end < start) {
+			throw new Meteor.Error(666, "To must be after from");
 		}
 
-		const overlappingReservations = Reservations.find({from: {$lt: to}, to: {$gt: from}, roomId: roomId}).fetch();
+		// const overlappingReservations = Reservations.find({
+		// 	from: {$lt: to}, 
+		// 	to: {$gt: from}, 
+		// 	roomId: roomId
+		// }).fetch();
+
+		const overlappingReservations = Reservations.find({
+			from: {$gte: start},
+			to: {$lte: end},
+			roomId: roomId
+		}).fetch();
+
 		if (overlappingReservations.length > 0) {
 			const overlappingReservation = overlappingReservations[0];
 			const bookingUser = Meteor.users.findOne({'_id': overlappingReservation.booking.userId});
@@ -41,8 +52,8 @@ Meteor.methods({
 				isInvoiced: false
 			},
 			comment: payload.comment,
-			from: from,
-			to: to,
+			from: start,
+			to: end,
 			roomId: roomId
 		});
 	},

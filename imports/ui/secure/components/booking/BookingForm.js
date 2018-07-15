@@ -35,23 +35,62 @@ class BookingForm extends Component {
 		bookingLength: defaultBookingLength,
 		comment: '',
 		customerId: '',
-		customerName: ''
+		customerName: '',
+		validCustomers: []
 	}
 
 	componentDidUpdate(prevProps) {
 		// Set first customer as default
-		if (this.props.customers !== prevProps.customers && !this.props.loading) {
-			if (this.props.customers[0]) {
+		if (this.props !== prevProps && !this.props.loading) {
+
+			// Show "add customer" if user has no customers
+			if (this.props.customers.length == 0) {
 				this.setState({
-					customerId: this.props.customers[0]._id,
-					customerName: this.props.customers[0].name
-				});
-			} else {
-				this.setState({
-					// Open "add invoice receiver dialog if user has none"
 					modal: 2
 				});
+				return;
 			}
+
+			// Get customers with valid agreement for current room and set first as default if there are more
+			const customers = this.props.customers;
+			let customersWithRoomBookingAgreement = [];
+
+			customers.map((customer) => {
+				customer.roomBookingAgreements.map((agreement) => {
+					if (agreement.roomId == this.props.currentRoomId) {
+						customersWithRoomBookingAgreement.push(customer);
+					}
+				})
+			});
+
+			if (customersWithRoomBookingAgreement[0]) {
+				this.setState({
+					customerId: customersWithRoomBookingAgreement[0]._id,
+					customerName: customersWithRoomBookingAgreement[0].name,
+					validCustomers: customersWithRoomBookingAgreement
+				})
+			} else {
+				this.setState({
+					customerId: '',
+					customerName: '',
+					validCustomers: []
+				})
+			};
+
+
+
+
+			// if (this.props.customers[0]) {
+			// 	this.setState({
+			// 		customerId: this.props.customers[0]._id,
+			// 		customerName: this.props.customers[0].name
+			// 	});
+			// } else {
+			// 	this.setState({
+			// 		// Open "add invoice receiver dialog if user has none"
+			// 		modal: 2
+			// 	});
+			// }
 		};
 	}
 
@@ -135,26 +174,31 @@ class BookingForm extends Component {
 
 	chooseCustomer(customer) {
 
-		let customerHasAgreement = false;
+		this.setState({
+			customerId: customer._id,
+			customerName: customer.name
+		});
 
-		if (customer.roomBookingAgreements) {
-			customer.roomBookingAgreements.map((agreement) => {
-				if (agreement.roomId == this.props.currentRoom) {
-					customerHasAgreement = true
-				}
-			});
-		} else {
-			Bert.alert("That customer can't book this room", 'danger', 'growl-bottom-right', 'fa-frown-o');
-		}
+		// let customerHasAgreement = false;
 
-		if (customerHasAgreement) {
-			this.setState({
-				customerId: customer._id,
-				customerName: customer.name
-			});
-		} else {
-			Bert.alert("That customer can't book this room", 'danger', 'growl-bottom-right', 'fa-frown-o');
-		}
+		// if (customer.roomBookingAgreements) {
+		// 	customer.roomBookingAgreements.map((agreement) => {
+		// 		if (agreement.roomId == this.props.currentRoomId) {
+		// 			customerHasAgreement = true
+		// 		}
+		// 	});
+		// } else {
+		// 	Bert.alert("That customer can't book this room", 'danger', 'growl-bottom-right', 'fa-frown-o');
+		// }
+
+		// if (customerHasAgreement) {
+		// 	this.setState({
+		// 		customerId: customer._id,
+		// 		customerName: customer.name
+		// 	});
+		// } else {
+		// 	Bert.alert("That customer can't book this room", 'danger', 'growl-bottom-right', 'fa-frown-o');
+		// }
 	}
 
 	doBooking() {
@@ -162,7 +206,7 @@ class BookingForm extends Component {
 		const startDateTime = this.state.startDateTime;
 		const endDateTime = this.state.endDateTime;
 		const customerId = this.state.customerId;
-		const roomId = this.props.currentRoom;
+		const roomId = this.props.currentRoomId;
 		const comment = this.state.comment;
 
 		if (endDateTime.isSameOrBefore(startDateTime)) {
@@ -224,31 +268,47 @@ class BookingForm extends Component {
 			return null;
 		}
 
-		const user = this.props.user;
-		const customers = this.props.customers;
+		// const user = this.props.user;
+		// const customers = this.props.customers;
 		const addCustomerUrl = '/secure/addCustomer/' + Meteor.userId();
 
-		const BookingButton = 
-				<div
-					style={{
-						position: 'fixed',
-						'zIndex': '1',
-						bottom: '20px',
-						right: '20px'
-					}}
-				>
-					<Button bsStyle="success" bsSize="large" disabled={customers.length == 0} onClick={this.openQueue.bind(this)}>Book {this.props.currentRoomName}</Button>
-				</div>;
+		// let customersWithRoomBookingAgreement = [];
 
-		// TODO: only show customers that has an agreement for the current room
-		// if the room has no customers with agreement, show "contact us"-error
-		const customersSelector = 
-			(customers.length < 2) ?
-				<span></span> :
+		// customers.map((customer) => {
+		// 	customer.roomBookingAgreements.map((agreement) => {
+		// 		if (agreement.roomId == this.props.currentRoomId) {
+		// 			customersWithRoomBookingAgreement.push(customer);
+		// 		}
+		// 	})
+		// });
+
+		const BookingButton = 
+			<div
+				style={{
+					position: 'fixed',
+					'zIndex': '1',
+					bottom: '20px',
+					right: '20px'
+				}}
+			>
+				<Button bsStyle="success" bsSize="large" onClick={this.openQueue.bind(this)}>Book {this.props.currentRoomName}</Button>
+			</div>;
+
+		let customersSelector = null;
+		let canBook = true;
+
+		if (this.state.validCustomers.length == 0) {
+			customersSelector =
+				<p>You have no customers with a deal to book this room. Send me an <a href='mailto:jonas@olyp.no' style={{color: 'rgb(38, 84, 249)'}}>e-mail</a> or give me a <a hreft='tlf:004741547798' style={{color: 'rgb(38, 84, 249)'}}>call</a> :)</p>
+			canBook = false;
+		}
+
+		if (this.state.validCustomers.length > 1) {
+			customersSelector =
 				<div>
 					<hr />
 					<p>Choose invoice receiver:</p>
-					{customers.map((customer) => {
+					{this.state.validCustomers.map((customer) => {
 						const active = (customer._id == this.state.customerId) ? {color: 'rgb(38, 84, 249)'} : {};
 						return (
 							<div style={active} key={customer._id}>
@@ -257,6 +317,13 @@ class BookingForm extends Component {
 						);
 					})}
 				</div>
+		}
+
+		const deliveryInfo = canBook ?
+			<div>
+				<hr />
+				<p>The invoice will be sendt to {this.state.customerName}, you can add more invoice receivers from your <Link to="/secure/profile" style={{color: 'rgb(38, 84, 249)'}}>profile</Link> :)</p>
+			</div> : null;
 
 		return (
 			<div>
@@ -324,7 +391,7 @@ class BookingForm extends Component {
 
 							<hr />
 
-							<p>Description:</p>
+							<p>Comment:</p>
 
 							<form>
 								<FormGroup>
@@ -338,9 +405,7 @@ class BookingForm extends Component {
 							</form>
 
 							{customersSelector}
-
-							<hr />
-							<p>The invoice will be sendt to {this.state.customerName}, you can add more invoice receivers from your <Link to="/secure/profile" style={{color: 'rgb(38, 84, 249)'}}>profile</Link> :)</p>
+							{deliveryInfo}
 
 							<hr />
 
@@ -348,8 +413,9 @@ class BookingForm extends Component {
 								onClick={this.doBooking.bind(this)}
 								bsStyle="success" 
 								bsSize="large" 
+								disabled={!canBook}
 								block
-							>Book {this.state.bookingLength}
+							>Book {this.props.currentRoomName} | <span style={{color: 'rgb(38, 84, 249)'}}>{this.state.bookingLength}</span>
 							</Button>
 
 						</Modal.Body>

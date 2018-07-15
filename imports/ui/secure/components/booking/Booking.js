@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { withTracker } from 'meteor/react-meteor-data';
-import moment from "moment-timezone";
+import moment from 'moment-timezone';
 
-import Calendar from "./Calendar";
-import BookingForm from "./BookingForm";
+import Calendar from './Calendar';
+import BookingForm from './BookingForm';
 import Preloader from '../../../shared/preloader/Preloader';
 
 import Reservations from '../../../../api/collections/reservations';
@@ -29,23 +29,30 @@ function getToday() {
 class Booking extends Component {
 	state = {
 		baseDay: getToday(),
-		currentRoom: Meteor.settings.public.room5Id,
+		currentRoomId: Meteor.settings.public.room5Id,
 		currentRoomName: Meteor.settings.public.room5Name
 	}
 
 	getReservations() {
 		const start = this.state.baseDay;
 		const end = start.clone().add(7, "days");
-		const reservations = Reservations.find({from: {$gte: start.toDate()}, to: {$lte: end.toDate()}, roomId: this.state.currentRoom}).fetch();
+
+		// Find reservations on current room that either starts within range or ends within range
+		const reservations = Reservations.find({
+			$or: [
+				{$and: [
+					{from: {$gte: start.toDate()}},
+					{from: {$lte: end.toDate()}}
+				]},
+				{$and: [
+					{to: {$gte: start.toDate()}},
+					{to: {$lte: end.toDate()}}
+				]}
+			],
+			roomId: this.state.currentRoomId
+		}).fetch();
+
 		return reservations;
-	}
-
-	getRoomName() {
-		const room = Rooms.find({name: {"$regex": "5$"}}).fetch()[0];
-	}
-
-	getUserCustomer() {
-		return Customers.find().fetch()[0];
 	}
 
 	getProfileNameById(id) {
@@ -79,18 +86,17 @@ class Booking extends Component {
 
 	changeRoom = (currentRoom) => {
 		this.setState({
-			currentRoom: currentRoom._id,
+			currentRoomId: currentRoom._id,
 			currentRoomName: currentRoom.name
 		});
 	}
 
 	render() {
-
 		if (this.props.loading) {
 			return <Preloader />
 		}
 
-		const { currentRoom } = this.state;
+		// const { currentRoom } = this.state;
 		const rooms = this.props.allRooms;
 
 		const roomSelector = 
@@ -98,7 +104,7 @@ class Booking extends Component {
 			<p>You are not allowed to book any rooms</p> :
 			<div className="row">
 				{rooms.map((room) => {
-					const active = (room._id == this.state.currentRoom) ? 'room-selector-active' : '';
+					const active = (room._id == this.state.currentRoomId) ? 'room-selector-active' : '';
 					return (
 						<div 
 							key={room._id}
@@ -115,7 +121,7 @@ class Booking extends Component {
 			<div>
 				{roomSelector}
 				<br />
-				<BookingForm onSubmit={(payload) => {this.submitBooking(payload)}} currentRoom={this.state.currentRoom} currentRoomName={this.state.currentRoomName} />
+				<BookingForm onSubmit={(payload) => {this.submitBooking(payload)}} currentRoomId={this.state.currentRoomId} currentRoomName={this.state.currentRoomName} />
 				<div className='row booking-form-calendar-grid'>
 					<div className='calendar-grid container'>
 						<Calendar
