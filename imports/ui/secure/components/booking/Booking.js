@@ -125,6 +125,7 @@ class Booking extends Component {
 				<div className='row booking-form-calendar-grid'>
 					<div className='calendar-grid container'>
 						<Calendar
+							roomId={this.state.currentRoomId}
 							baseDay={this.state.baseDay}
 							days={getDaysForBaseDay(this.state.baseDay)}
 							reservations={this.getReservations()}

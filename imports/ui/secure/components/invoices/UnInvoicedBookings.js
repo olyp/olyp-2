@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { withTracker } from 'meteor/react-meteor-data'
 import moment from 'moment-timezone';
 import big from 'big.js';
-import _ from 'lodash';
+// import _ from 'lodash';
 import { Label, Checkbox } from 'react-bootstrap';
 import { Link } from 'react-router';
 
@@ -100,7 +100,8 @@ class UninvoicedBookings extends Component {
 		super();
 		this.state = {
 			invoiceForm: {},
-			invoiceDataByCustomerId: {}
+			invoiceDataByCustomerId: {},
+			loadingReservations: []
 		};
 
 		this.fetchNewInvoiceData = asyncKeepLast(
@@ -132,6 +133,7 @@ class UninvoicedBookings extends Component {
 	}
 
 	onReservationCheckboxClicked (checked, customer, reservation) {
+
 		const customerId = customer["_id"];
 		const reservationId = reservation["_id"];
 
@@ -147,6 +149,12 @@ class UninvoicedBookings extends Component {
 
 		this.updateInvoiceForm(newInvoiceForm);
 	}
+
+	// setReservationLoading(reservationId) {
+	// 	this.setState(prevState => ({
+ //  		loadingReservations: [...prevState.loadingReservations, reservation._id]
+	// 	}));
+	// }
 
 	onRoomInvoiceIncludeFreeHoursChecked (includeFreeHours, customerId, roomId, monthStr) {
 		const newInvoiceForm = Object.assign({}, this.state.invoiceForm);
@@ -258,12 +266,10 @@ class UninvoicedBookings extends Component {
 		return (
 			<div>
 				{Object.keys(reservationsByCustomer).sort().map((customerId) => {
-					// console.log(customerId);
 					const reservations = reservationsByCustomer[customerId].sort((a, b) => a.from.getTime() - b.from.getTime());
 					const customer = customersById[customerId];
 					const customerForm = this.state.invoiceForm[customerId];
 					const extraLines = customerForm && customerForm.extraLines;
-
 					const invoiceData = this.state.invoiceDataByCustomerId[customerId];
 
 					// Filter out customers with no roombooking-agreement
@@ -295,6 +301,7 @@ class UninvoicedBookings extends Component {
 							const room = roomsById[reservation.roomId];
 							const user = Meteor.users.findOne({_id: reservation.booking.userId});
 							let userName = (user && user.profile) ? user.profile.firstName + ' ' + user.profile.lastName : null;
+							const comment = reservation.comment || 'No comment ...';
 
 							let userId = '';
 
@@ -309,12 +316,36 @@ class UninvoicedBookings extends Component {
 							const checked = formReservations ? formReservations.hasOwnProperty(reservationId) : false;
 							const active = checked ? {backgroundColor: 'rgb(38, 84, 249)'} : {};
 							
+
+							// TODO: implement loading for better user experience
+							// Should probably also refactor this file into smaller components
+
+							// const loading = (this.state.loadingReservations.indexOf(reservationId) != -1);
+
+							// if (loading) {
+							// 	return (
+							// 		<div 
+							// 			key={reservation._id}
+							// 			style={{
+							// 				display: 'flex',
+							// 				justifyContent: 'center',
+							// 				alignItems: 'center',
+							// 				height: '120px'
+							// 			}}
+							// 		>
+							// 			<div className="row uninvoiced-booking-line">
+							// 				<div className="spinner"></div>
+							// 			</div>
+							// 		</div>
+							// 	);
+							// }
+
 							return (
 								<div key={reservation._id}>
 									<div className="row uninvoiced-booking-line" style={active} onClick={() => this.onReservationCheckboxClicked(!checked, customer, reservation)}>	
 										<div className="col-xs-7">
 											<div style={{color: 'white', backgroundColor: 'black', padding: '.2em .6em .3em'}}>
-												{reservation.comment}
+												{comment}
 											</div>
 										</div>
 										<div className="col-xs-5 text-right">
@@ -427,7 +458,7 @@ export default withTracker((props) => {
 	const allRoomsHandle = Meteor.subscribe("allRooms");
 	const allProfilesHandle = Meteor.subscribe("allProfiles");
 
-	const loading = !allUnInvoicedBookingsHandle.ready() && !allCustomersHandle.ready() && !allRoomsHandle.ready();
+	const loading = !allUnInvoicedBookingsHandle.ready() && !allCustomersHandle.ready() && !allRoomsHandle.ready() && !allProfilesHandle.ready();
 	
 	return {
 		loading,

@@ -13,7 +13,8 @@ export default class Calendar extends Component {
 					baseDay={props.baseDay}
 					days={props.days}
 					gotoToday={props.gotoToday}
-					gotoWeek={props.gotoWeek}/>
+					gotoWeek={props.gotoWeek}
+					roomId={props.roomId}/>
 				<CalendarGridAgenda
 					reservations={props.reservations}
 					days={props.days}
