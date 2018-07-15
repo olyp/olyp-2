@@ -134,16 +134,23 @@ class BookingForm extends Component {
 	}
 
 	chooseCustomer(customer) {
+
+		let customerHasAgreement = false;
+
 		if (customer.roomBookingAgreements) {
 			customer.roomBookingAgreements.map((agreement) => {
 				if (agreement.roomId == this.props.currentRoom) {
-					this.setState({
-						customerId: customer._id,
-						customerName: customer.name
-					});
-				} else {
-					Bert.alert("That customer can't book this room", 'danger', 'growl-bottom-right', 'fa-frown-o');
+					customerHasAgreement = true
 				}
+			});
+		} else {
+			Bert.alert("That customer can't book this room", 'danger', 'growl-bottom-right', 'fa-frown-o');
+		}
+
+		if (customerHasAgreement) {
+			this.setState({
+				customerId: customer._id,
+				customerName: customer.name
 			});
 		} else {
 			Bert.alert("That customer can't book this room", 'danger', 'growl-bottom-right', 'fa-frown-o');
@@ -233,6 +240,8 @@ class BookingForm extends Component {
 					<Button bsStyle="success" bsSize="large" disabled={customers.length == 0} onClick={this.openQueue.bind(this)}>Book {this.props.currentRoomName}</Button>
 				</div>;
 
+		// TODO: only show customers that has an agreement for the current room
+		// if the room has no customers with agreement, show "contact us"-error
 		const customersSelector = 
 			(customers.length < 2) ?
 				<span></span> :
