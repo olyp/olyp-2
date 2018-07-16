@@ -11,6 +11,7 @@ import Customers from '../../../../api/collections/customers';
 import Rooms from '../../../../api/collections/rooms';
 
 import Preloader from '../../../shared/preloader/Preloader';
+import InvoiceLine from './InvoiceLine';
 
 function dateRangeString(from, to) {
 	const fromYmd = from.format("DD/MM-YY");
@@ -443,48 +444,21 @@ class UninvoicedBookings extends Component {
 									className="row"
 								>
 									<hr />
-									<div 
-										className="col-xs-12"
-										style={{
-											display: 'flex'
-										}}
-									>
-										<div style={{marginLeft: '50px'}}>
-											{room.name} // {moment(monthStr, "YYYY-MM").format("MMM 'YY")} // {formatTime(big(invoiceLine.totalHours))}t
-										</div>
-										<div style={{
-											marginLeft: 'auto',
-											marginRight: '8px'
-										}}>
-											{big(invoiceLine.baseSumWithoutTax).toFixed(2)}
-										</div>
-									</div>
+
+									<InvoiceLine 
+										description={`${room.name} // ${moment(monthStr, "YYYY-MM").format("MMM 'YY")} // ${formatTime(big(invoiceLine.totalHours))}t`}
+										amount={big(invoiceLine.baseSumWithoutTax).toFixed(2)}
+									/>
 
 									{invoiceLine.hasFreeHours && 
-										<div>
-											<hr />
-											<div 
-												className="col-xs-12"
-												style={{
-													display: 'flex'
-												}}
-											>
-												<div>
-													<input type="checkbox"
-														checked={invoiceLine.includeFreeHours}
-														onChange={(e) => this.onRoomInvoiceIncludeFreeHoursChecked(e.target.checked, customerId, roomId, monthStr)} />
-												</div>
-												<div style={{marginLeft: '38px'}}>
-													{formatTime(big(invoiceLine.numDiscountedHours))} gratistimer // {room.name}
-												</div>
-												<div style={{
-													marginLeft: 'auto',
-													marginRight: '8px'
-												}}>
-													{big(invoiceLine.freeHoursSumWithoutTax).toFixed(2)}
-												</div>
-											</div>
-										</div>
+
+										<InvoiceLine 
+											description={`${formatTime(big(invoiceLine.numDiscountedHours))} gratistimer // ${room.name}`}
+											amount={big(invoiceLine.freeHoursSumWithoutTax).toFixed(2)}
+											checkBox
+											checked={invoiceLine.includeFreeHours}
+											onChange={(e) => this.onRoomInvoiceIncludeFreeHoursChecked(e.target.checked, customerId, roomId, monthStr)} 
+										/>
 									}
 								</div>
 							);
