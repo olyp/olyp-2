@@ -8,17 +8,16 @@ import big from 'big.js';
 import Invoices from '../../../../api/collections/invoices';
 import Customers from '../../../../api/collections/customers';
 
+import Preloader from '../../../shared/preloader/Preloader';
+
 import 'react-table/react-table.css';
 
 // TODO: implement sorting
 
 class InvoicesTable extends Component {
 
-	constructor (props) {
-		super(props);
-		this.state = {
-			data: []
-		}
+	state = {
+		data: []
 	}
 
 	goToInvoice (invoiceId) {
@@ -42,57 +41,30 @@ class InvoicesTable extends Component {
 
 		// this.props.reOrder('date');
 
+		if (this.props.loading) {
+			return <Preloader />
+		}
+
 		const customers = this.props.customers;
 		const invoices = this.props.invoices;
-
-		if (!customers && !invoices) {
-			return (
-				<div>Loading</div>
-			);
-		}
 
 		const customersById = {};
 		customers.forEach((customer) => customersById[customer["_id"]] = customer);
 
-
 		const columns = [
+			{
+				Header: 'Date',
+				accessor: 'date',
+				headerClassName: 'room-selector room-selector-active hover',
+				headerStyle: {padding: '10px 0px'},
+				maxWidth: 100,
+				className: 'text-center'
+			},
 			{
 				Header: 'Customer',
 				accessor: 'customer',
 				headerClassName: 'room-selector room-selector-active hover',
 				headerStyle: {padding: '10px 0px'}
-			},
-			{
-				Header: 'Invoiced',
-				accessor: 'createdAt',
-				headerClassName: 'room-selector room-selector-active hover',
-				headerStyle: {padding: '10px 0px'},
-				maxWidth: 100,
-				className: 'text-center'
-			},
-			{
-				Header: 'Due',
-				accessor: 'dueDate',
-				headerClassName: 'room-selector room-selector-active hover',
-				headerStyle: {padding: '10px 0px'},
-				maxWidth: 100,
-				className: 'text-center'
-			},
-			{
-				Header: 'Amount',
-				accessor: 'sum',
-				headerClassName: 'room-selector room-selector-active hover',
-				headerStyle: {padding: '10px 0px'},
-				maxWidth: 100,
-				className: 'text-right'
-			},
-			{
-				Header: 'Paid',
-				accessor: 'paid',
-				headerClassName: 'room-selector room-selector-active hover',
-				headerStyle: {padding: '10px 0px'},
-				maxWidth: 50,
-				className: 'hover'
 			}
 		];
 
@@ -102,15 +74,25 @@ class InvoicesTable extends Component {
 
 			const customer = customersById[invoice.customerId];
 			const sumWithTax = big(invoice.sumWithTax).toFixed(2);
+			const glyph = (customer && customer.type == 'person') ? 'glyphicon-user' : 'glyphicon-briefcase';
+			const customerName = (customer.name.length > 18) ? `${customer.name.substring(0, 18)} ...` : customer.name;
+
+			const dateCell = 
+				<div>
+					{moment(invoice.createdAt).format('DD.MM.YYYY')}
+				</div>;
+
+			const customerCell = 
+				<div>
+					<span className={`glyphicon ${glyph}`}></span> {customerName}
+					<p style={{margin: 0}}>kr {sumWithTax}</p>
+					<p># xxxx</p>
+				</div>
 
 			data.push({
-				customer: customer.name,
-				createdAt: moment(invoice.createdAt).format('YYYY-MM-DD'),
-				dueDate: '',
-				sum: sumWithTax,
-				paid: invoice.paid,
+				date: dateCell,
+				customer: customerCell,
 				_id: invoice._id
-
 			});
 		});
 
@@ -161,13 +143,16 @@ class InvoicesTable extends Component {
 
 export default withTracker((props) => {
 
-	Meteor.subscribe('allCustomers');
-	Meteor.subscribe('allInvoices');
+	const customersHandle = Meteor.subscribe('allCustomers');
+	const invoicesHandle = Meteor.subscribe('allInvoices');
+
+	const loading = !customersHandle.ready() && !invoicesHandle.ready();
 
 	var sort = {};
 	sort[props.sortField] = props.sortDirection;
 
 	return {
+		loading,
 		customers: Customers.find().fetch(),
 		invoices: Invoices.find({}, {sort: sort, skip: props.pageSize * (props.currentPage - 1), limit: props.pageSize}).fetch()
 	}
