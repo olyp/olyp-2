@@ -212,7 +212,7 @@ a:hover,
 /*==========  SECURE LAYOUT  ==========*/
 
 .user-row .user-status p,
-.customer-list .customer-status p {
+.customer-status p {
 	display: inline;
 	margin-right: 10px;
 	background-color: rgb(38, 84, 249);

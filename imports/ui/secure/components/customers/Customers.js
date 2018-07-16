@@ -86,7 +86,7 @@ class Customers extends Component {
 
 						return (
 							<div className="customer-list" key={customer._id}>
-								<CustomerRow customer={customer} onClick={onClick} />
+								<CustomerRow customer={customer} onClick={onClick} hover />
 								<hr />
 							</div>
 						);

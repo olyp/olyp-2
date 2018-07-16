@@ -11,6 +11,7 @@ import Rooms from '../../../../api/collections/rooms';
 import Preloader from '../../../shared/preloader/Preloader';
 import UserRow from '../users/UserRow';
 import RoomBookingAgreementRow from '../booking/RoomBookingAgreementRow';
+import CustomerRow from './CustomerRow';
 
 class CustomerSingle extends Component {
 
@@ -159,20 +160,7 @@ class CustomerSingle extends Component {
 
 		return (
 			<div className="container customer-single">
-				<div className="row">
-					<div className="col-xs-4 text-center">
-						<Glyphicon 
-							glyph="briefcase" 
-							style={{fontSize: 'xx-large', marginTop: '16px'}}
-						/>
-					</div>
-					<div className="col-xs-8">
-						<h4>{customer.name}</h4>
-						<div className="customer-status">
-							{type}
-						</div>
-					</div>
-				</div>
+				<CustomerRow customer={customer} />
 				<hr />
 				<div className="row">
 					<div className="text-right">
