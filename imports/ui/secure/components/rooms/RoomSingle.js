@@ -70,7 +70,11 @@ class RoomSingle extends Component {
 
 	render () {
 
-		const room = (this.props.room);
+		if (this.props.loading) {
+			return <Preloader />
+		}
+
+		const room = this.props.room;
 		const name = (room && room.name);
 		const usersWhoCanBook = (room && room.canBook) ? room.canBook : [];
 		const usersWhoCanAccess = (room && room.canAccess) ? room.canAccess : [];
@@ -128,13 +132,20 @@ class RoomSingle extends Component {
 }
 
 export default withTracker((props) => {
-	Meteor.subscribe('allRooms');
-	Meteor.subscribe('allUsers');
+	const rommsHandle = Meteor.subscribe('allRooms');
+	const usersHandle = Meteor.subscribe('allUsers');
 
-	const room = Rooms.find({_id: props.params.roomId}).fetch();
+	const loading = !rommsHandle.ready() && usersHandle.ready();
+
+	let room = null;
+
+	if (!loading) {
+		room = Rooms.find({_id: props.params.roomId}).fetch()[0];
+	}
 
 	return {
-		room: room[0],
+		loading,
+		room: room,
 		users: Meteor.users.find().fetch()
 	};
 })(RoomSingle);
