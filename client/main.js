@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {Router, Route, IndexRoute, browserHistory} from 'react-router';
+import { Router, Route, IndexRoute, browserHistory } from 'react-router';
 
 // LAYOUTS
 import FrontLayout from '../imports/ui/front/components/FrontLayout.js';
@@ -117,9 +117,8 @@ const routes = (
 			<Route path="profile" name="PROFILE" component={Profile} />
 			<Route path="addCustomer/:userId" name="ADD CUSTOMER" component={CustomerAdd} />
 
-			<Route path="users" name="USERS" component={Users} />
-			<Route path="users/:userId" name="USER" component={UserSingle} />
-
+			<Route path="users" name="USERS" component={Users} onEnter={authenticateAdmin} />
+			<Route path="users/:userId" name="USER" component={UserSingle} onEnter={authenticateAdmin} />
 			<Route path="customers" name="CUSTOMERS" component={Customers} onEnter={authenticateAdmin} />
 			<Route path="customers/:customerId" name="CUSTOMER" component={CustomerSingle} onEnter={authenticateAdmin} />
 			<Route path="invoices" name="INVOICES" component={Invoices} onEnter={authenticateAdmin} />
@@ -127,9 +126,8 @@ const routes = (
 			<Route path="uninvoiced_bookings" name="UNINVOICED BOOKINGS" component={UnInvoicedBookings} onEnter={authenticateAdmin} />
 			<Route path="addCustomer" name="ADD CUSTOMER" component={CustomerAdd} onEnter={authenticateAdmin} />
 			<Route path="editCustomerRoomAgreement/:customerId/:roomId" name="EDIT CUSTOMER" component={CustomerRoomAgreement} onEnter={authenticateAdmin} />
-
-			<Route path="rooms" name="ROOMS" component={Rooms} />
-			<Route path="rooms/:roomId" name="ROOM" component={RoomSingle} />
+			<Route path="rooms" name="ROOMS" component={Rooms} onEnter={authenticateAdmin} />
+			<Route path="rooms/:roomId" name="ROOM" component={RoomSingle} onEnter={authenticateAdmin} />
 
 			<Route path="upload" name="UPLOAD" component={awsUpload} />
 		</Route>

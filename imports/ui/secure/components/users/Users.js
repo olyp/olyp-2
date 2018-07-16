@@ -1,18 +1,17 @@
 import React, {Component} from 'react';
 import { withTracker } from 'meteor/react-meteor-data';
 
+import DoorCodes from '../../../../api/collections/doorCodes.js';
+
 import Preloader from '../../../shared/preloader/Preloader.js';
 
 import UserRow from './UserRow.js';
 
 class Users extends Component {
 
-	constructor(props) {
-		super(props);
-		this.state = {
-			query: '',
-			result: []
-		}
+	state = {
+		query: '',
+		result: []
 	}
 
 	search () {
@@ -23,13 +22,11 @@ class Users extends Component {
 
 	render () {
 
-		if (this.props.users.length == 0) {
-			return (
-				<div>
-					<Preloader />
-				</div>
-			);
+		if (this.props.loading) {
+			return <Preloader />
 		}
+
+		const doorCodes = this.props.doorCodes;
 
 		var filteredUsers = this.props.users.filter(
 			(user) => {
@@ -69,17 +66,22 @@ class Users extends Component {
 				<hr />
 
 				{filteredUsers.map((user, i) => {
+					let hasDoorCode = false;
 
-					// if (user._id !== Meteor.userId()) {
+					for (const code of doorCodes) {
+						if (code.userId == user._id) {
+							hasDoorCode = true;
+							break;
+						}
+					}
 
-						return (
-							<div key={user._id}>
-								<UserRow user={user}/>
-								<hr />
-							</div>
-						);
-					// }
-					
+					return (
+						<div key={user._id}>
+							<UserRow user={user} hasDoorCode={hasDoorCode} />
+							<hr />
+						</div>
+					);
+
 				})}
 			</div>
 		);
@@ -87,9 +89,13 @@ class Users extends Component {
 }
 
 export default withTracker(() => {
-	Meteor.subscribe('allUsers');
+	const usersHandle = Meteor.subscribe('allUsers');
+	const doorCodesHandle = Meteor.subscribe('allDoorCodes');
 
+	const loading = !usersHandle.ready() && !doorCodesHandle.ready();
 	return {
-		users: Meteor.users.find().fetch()
+		loading,
+		users: Meteor.users.find().fetch(),
+		doorCodes: DoorCodes.find().fetch()
 	};
 })(Users);

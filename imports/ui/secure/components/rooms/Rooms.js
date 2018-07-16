@@ -3,8 +3,7 @@ import { Link } from 'react-router';
 import { withTracker } from 'meteor/react-meteor-data';
 import swal from 'sweetalert2';
 
-// import Preloader from '../../../shared/preloader/Preloader.js';
-
+import Preloader from '../../../shared/preloader/Preloader.js';
 import RoomsCollection from '../../../../api/collections/rooms.js';
 
 class Rooms extends Component {
@@ -53,6 +52,10 @@ class Rooms extends Component {
 	}
 
 	render () {
+
+		if (this.props.loading) {
+			return <Preloader />
+		}
 
 		var filteredRooms = this.props.rooms.filter(
 			(room) => {
@@ -107,9 +110,10 @@ class Rooms extends Component {
 }
 
 export default withTracker(() => {
-	Meteor.subscribe('allRooms');
-
+	const roomsHandle = Meteor.subscribe('allRooms');
+	const loading = !roomsHandle.ready();
 	return {
+		loading,
 		rooms: RoomsCollection.find().fetch()
 	};
 })(Rooms);

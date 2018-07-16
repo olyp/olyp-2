@@ -11,6 +11,49 @@ const InvoiceLine = (props) => {
 			/>
 		</div> : null;
 
+	if (props.type == 'extraLine') {
+		return (
+			<div 
+				className="col-xs-12"
+				style={{display: 'flex'}}
+			>
+				<a className="btn btn-danger btn-xs"
+					onClick={(e) => props.delClick(e)}
+					style={{
+						marginRight: '5px',
+						padding: '6px 12px'
+					}}
+				>
+					<span 
+						className='glyphicon glyphicon-trash'
+						style={{
+							color: 'white'
+						}}
+					/>
+				</a>
+				<input 
+					type="text"
+					placeholder='Ekstra lager ...'
+					value={props.description}
+					onChange={(e) => props.descChange(e)}
+					style={{
+						textAlign: 'left',
+						paddingLeft: '7px'
+					}}
+				/>
+				<input type="text"
+					placeholder='NOK'
+					value={props.amount}
+					style={{
+						marginLeft: '5px',
+						maxWidth: '75px'
+					}}
+					onChange={(e) => props.amountChange(e)}
+				/>
+			</div>
+		);
+	}
+
 	return (
 		<div 
 			className="col-xs-12"

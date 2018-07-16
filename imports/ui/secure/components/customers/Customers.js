@@ -30,7 +30,7 @@ class Customers extends Component {
 
 	render () {
 
-		if (this.props.customers.length == 0) {
+		if (this.props.loading) {
 			return <Preloader />
 		}
 
@@ -99,9 +99,10 @@ class Customers extends Component {
 }
 
 export default withTracker(() => {
-	Meteor.subscribe('allCustomers');
-
+	const customersHandle = Meteor.subscribe('allCustomers');
+	const loading = !customersHandle.ready();
 	return {
+		loading,
 		customers: CustomersCollection.find().fetch()
 	};
 })(Customers);

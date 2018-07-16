@@ -36,7 +36,13 @@ class MenuContent extends Component {
 				<hr />
 				<h1 className="hover" onClick={() => {this.props.onLinkClick('/#contact-mobile')}}>Contact</h1>
 				<br />
-				<h1 className="hover" onClick={() => {Meteor.logout()}}>Log out</h1>
+				<h1 className="hover" onClick={() => {Meteor.logout((err) => {
+					if (err) {
+						console.log(err);
+					} else {
+						browserHistory.push('/login');
+					}
+				})}}>Log out</h1>
 			</div> :
 
 			// Not logged in

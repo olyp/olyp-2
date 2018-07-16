@@ -85,8 +85,8 @@ class InvoicesTable extends Component {
 			const customerCell = 
 				<div>
 					<span className={`glyphicon ${glyph}`}></span> {customerName}
-					<p style={{margin: 0}}>kr {sumWithTax}</p>
-					<p># xxxx</p>
+					<p style={{margin: 0, color: 'grey'}}>kr {sumWithTax}</p>
+					<p  style={{color: 'grey'}}># xxxx</p>
 				</div>
 
 			data.push({

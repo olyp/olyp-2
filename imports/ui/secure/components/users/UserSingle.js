@@ -98,14 +98,13 @@ class UserSingle extends Component {
 
 	render () {
 
-		const user = (this.props.user) ? this.props.user : null;
-
-
-		if (!user) {
+		if (this.props.loading) {
 			return (
 				<Preloader />
 			);
 		}
+
+		const user = this.props.user;
 
 		const name = (user && user.profile && user.profile.firstName && user.profile.lastName) ? user.profile.firstName + ' ' + user.profile.lastName : null;
 		const email = (user && user.emails && user.emails[0] && user.emails[0].address);
@@ -236,12 +235,15 @@ class UserSingle extends Component {
 }
 
 export default withTracker((props) => {
-	Meteor.subscribe('allUsers');
-	Meteor.subscribe('allRooms');
-	Meteor.subscribe('allDoorCodes');
-	Meteor.subscribe('userCustomers');
+	const usersHandle = Meteor.subscribe('allUsers');
+	const roomsHandle = Meteor.subscribe('allRooms');
+	const doorCodesHandle = Meteor.subscribe('allDoorCodes');
+	const customersHandle = Meteor.subscribe('userCustomers');
+
+	const loading = !usersHandle.ready() && !roomsHandle.ready() && !doorCodesHandle.ready() && !customersHandle.ready();
 
 	return {
+		loading,
 		user: Meteor.users.find({_id: props.params.userId}).fetch()[0],
 		rooms: Rooms.find().fetch(),
 		doorCode: DoorCodes.find({userId: props.params.userId}).fetch()[0],

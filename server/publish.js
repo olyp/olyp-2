@@ -71,6 +71,8 @@ Meteor.publish('allRooms', function () {
 
 	if (isAdmin) {
 		return Rooms.find();
+	} else {
+		return this.ready();
 	}
 });
 

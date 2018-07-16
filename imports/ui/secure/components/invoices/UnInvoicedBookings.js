@@ -274,7 +274,7 @@ class UninvoicedBookings extends Component {
 					const invoiceData = this.state.invoiceDataByCustomerId[customerId];
 
 					// Filter out customers with no roombooking-agreement
-					if (!customer.roomBookingAgreements || customer.roomBookingAgreements.length == 0) {
+					if (!customer || !customer.roomBookingAgreements || customer.roomBookingAgreements.length == 0) {
 						return null;
 					}
 
@@ -369,9 +369,7 @@ class UninvoicedBookings extends Component {
 								</div>
 							);
 						})}
-
 						<hr />
-
 						<p>
 							<a 
 								className="btn btn-default btn-sm" 
@@ -391,44 +389,14 @@ class UninvoicedBookings extends Component {
 									className="row" 
 									style={{marginBottom: '5px'}}
 								>
-									<div 
-										className="col-xs-12"
-										style={{display: 'flex'}}
-									>
-										<a className="btn btn-danger btn-xs"
-											onClick={(e) => this.onExtraLineRemoveClicked(customerId, idx)}
-											style={{
-												marginRight: '5px',
-												padding: '6px 12px'
-											}}
-										>
-											<span 
-												className='glyphicon glyphicon-trash'
-												style={{
-													color: 'white'
-												}}
-											/>
-										</a>
-										<input 
-											type="text"
-											placeholder='Ekstra lager ...'
-											value={invoiceLine.note}
-											onChange={(e) => this.onExtraLineNoteChange(e.target.value, customerId, idx)}
-											style={{
-												textAlign: 'left',
-												paddingLeft: '7px'
-											}}
-										/>
-										<input type="text"
-											placeholder='NOK'
-											value={invoiceLine.sum}
-											style={{
-												marginLeft: '5px',
-												maxWidth: '75px'
-											}}
-											onChange={(e) => this.onExtraLinesumChange(e.target.value, customerId, idx)}
-										/>
-									</div>
+									<InvoiceLine 
+										description={invoiceLine.note}
+										amount={invoiceLine.sum}
+										delClick={(e) => this.onExtraLineRemoveClicked(customerId, idx)}
+										descChange={(e) => this.onExtraLineNoteChange(e.target.value, customerId, idx)}
+										amountChange={(e) => this.onExtraLinesumChange(e.target.value, customerId, idx)}
+										type='extraLine'
+									/>
 								</div>
 							);
 						})}

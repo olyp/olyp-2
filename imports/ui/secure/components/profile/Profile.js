@@ -211,11 +211,11 @@ class Profile extends Component {
 
 	render () {
 
-		const user = this.props.user;
-
-		if (!user) {
+		if (this.props.loading) {
 			return <Preloader />;	
 		}
+
+		const user = this.props.user;
 
 		// Have to do the following since the customers subscription does not update when removing a customer from a user
 		let customers = [];
@@ -428,12 +428,15 @@ class Profile extends Component {
 }
 
 export default withTracker(() => {
-	Meteor.subscribe('profile');
-	Meteor.subscribe('doorCode');
-	Meteor.subscribe('userRooms');
-	Meteor.subscribe('userCustomers');
+	const profileHandle = Meteor.subscribe('profile');
+	const doorCodeHandle = Meteor.subscribe('doorCode');
+	const userRoomsHandle = Meteor.subscribe('userRooms');
+	const userCustomersHandle = Meteor.subscribe('userCustomers');
+
+	const loading = !profileHandle.ready() && !doorCodeHandle.ready() && !userRoomsHandle.ready() && !userCustomersHandle.ready();
 
 	return {
+		loading,
 		doorCode: DoorCodes.find().fetch()[0],
 		user: Meteor.users.find().fetch()[0],
 		rooms: RoomsCollection.find().fetch(),

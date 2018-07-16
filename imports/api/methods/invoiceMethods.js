@@ -169,16 +169,8 @@ function getRoomLines(includeFreeHours, customerId, roomId, allRoomReservations,
 
 function getInvoiceDataFromQuery({customerId, reservationIds, extraLines, includeFreeHours}) {
 
-	console.log(customerId);
-	console.log(reservationIds);
-	console.log(extraLines);
-	console.log(includeFreeHours);
-
 	const customer = Customers.findOne({_id: customerId});
 	const roomReservations = reservationIds.map((reservationId) => Reservations.findOne({_id: reservationId}));
-
-	console.log(customer);
-	console.log(roomReservations);
 
 	const roomReservationsByRoom = {};
 	roomReservations.forEach((roomReservation) => {
@@ -187,14 +179,11 @@ function getInvoiceDataFromQuery({customerId, reservationIds, extraLines, includ
 		roomReservationsByRoom[roomId].push(roomReservation);
 	});
 
-	console.log(roomReservationsByRoom);
-
 	let roomBookingLines = [];
 
 	for (const roomId in roomReservationsByRoom) {
 
 		const roomBookingAgreement = customer.roomBookingAgreements.filter((roomBookingAgreement) => roomBookingAgreement.roomId === roomId)[0];
-		console.log(roomBookingAgreement);
 		roomBookingLines = roomBookingLines.concat(getRoomLines(includeFreeHours && includeFreeHours[roomId], customerId, roomId, roomReservationsByRoom[roomId], roomBookingAgreement));
 	}
 
@@ -270,7 +259,8 @@ Meteor.methods({
 						totalMinutesRounded: line.totalMinutesRounded
 					},
 					tax: roomBookingAgreement.tax,
-					note: `Booking, ${room.name}, ${formatTime(big(line.totalHours))} timer, ${moment(line.month, "YYYY-MM").format("MMMM, YYYY")}`,
+					note: `${room.name} // ${moment(line.month, "YYYY-MM").format("MMM 'YY")} // ${formatTime(big(line.totalHours))}t`,
+					// note: `Booking, ${room.name}, ${formatTime(big(line.totalHours))} timer, ${moment(line.month, "YYYY-MM").format("MMMM, YYYY")}`,
 					sumWithoutTax: line.baseSumWithoutTax,
 					sumWithTax: line.baseSumWithTax
 				});
@@ -283,7 +273,8 @@ Meteor.methods({
 							discountedHours: line.numDiscountedHours
 						},
 						tax: roomBookingAgreement.tax,
-						note: `Gratis timer (${formatTime(big(line.numDiscountedHours))}), ${room.name}`,
+						note: `${formatTime(big(line.numDiscountedHours))} gratistimer // ${room.name}`,
+						// note: `Gratis timer (${formatTime(big(line.numDiscountedHours))}), ${room.name}`,
 						sumWithoutTax: line.freeHoursSumWithoutTax,
 						sumWithTax: line.freeHoursSumWithTax
 					});
