@@ -352,6 +352,7 @@ class BookingForm extends Component {
 										onChange={this.changeStartDate.bind(this)}
 										value={this.state.startDate.toDate()}
 										locale='no-nb'
+										withPortal
 									/>
 								</div>
 								<div className="col-xs-8">
