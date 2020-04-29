@@ -16,7 +16,7 @@
     "hoek": "~> 4.2.1",
     "ical-generator": "^1.0.1",
     "indexof": "0.0.1",
-    "jquery": "2.2.4",
+    "jquery": "3.5.0",
     "moment": "^2.22.1",
     "moment-timezone": "^0.5.16",
     "rc-time-picker": "^3.3.1",
