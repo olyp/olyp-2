@@ -18,7 +18,7 @@
     "indexof": "0.0.1",
     "jquery": "2.2.4",
     "moment": "^2.22.1",
-    "moment-timezone": "^0.5.16",
+    "moment-timezone": "^0.5.35",
     "rc-time-picker": "^3.3.1",
     "react": "^16.3.2",
     "react-addons-css-transition-group": "^15.4.2",
